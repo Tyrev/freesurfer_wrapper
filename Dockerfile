@@ -6,7 +6,8 @@ RUN mkdir env
 ENV VIRTUAL_ENV=/root/env
 RUN python3 -m venv $VIRTUAL_ENV
 ENV PATH="$VIRTUAL_ENV/bin:$PATH"
-ENV SUBJECTS_DIR="/root/FS_OUTPUTS"
+RUN pip install pandas
+ENV SUBJECTS_DIR="/root/freesurfer_wrapper/FS_OUTPUTS"
 
-WORKDIR /root
+WORKDIR /root/freesurfer_wrapper
 CMD ["/bin/bash"]

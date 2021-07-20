@@ -162,7 +162,7 @@ def recon_edit(recon_edit_args: list) -&gt; str:
     subjects_dir = os.environ[&#39;SUBJECTS_DIR&#39;] # SUBJECTS_DIR environment variable set in Dockerfile
     
     cmd_brainmask_cp = f&#34;cp {subjects_dir}/{subjid}/mri/brainmask.tmp{tissue_ratio}.mgz {subjects_dir}/{subjid}/mri/brainmask.auto.mgz &amp;&amp; cp {subjects_dir}/{subjid}/mri/brainmask.tmp{tissue_ratio}.mgz {subjects_dir}/{subjid}/mri/brainmask.mgz&#34;
-    cmd_recon_all_edit = f&#34;recon-all -autorecon2-wm -autorecon3 --bigventricles -3T -s ${subjid}&#34;
+    cmd_recon_all_edit = f&#34;recon-all -autorecon2-wm -autorecon3 --bigventricles -3T -s {subjid}&#34;
     cmd_line = f&#34;{cmd_brainmask_cp} &amp;&amp; {cmd_recon_all_edit}&#34;
 
     return cmd_line
@@ -182,7 +182,7 @@ def worker(cmd: str) -&gt; &#34;subprocess.run&#34;:
     
     &#34;&#34;&#34;
 
-    return subprocess.run(cmd.split()) # split() because run() needs a list with each component of the command
+    return subprocess.run(cmd, shell=True)
 
 def parse_input_file(input_file: str) -&gt; &#34;List[List[str]]&#34;:
     &#34;&#34;&#34;
@@ -542,7 +542,7 @@ recon-all re-runs -autorecon2-wm -autorecon3 stream with the new mask.</p>
     subjects_dir = os.environ[&#39;SUBJECTS_DIR&#39;] # SUBJECTS_DIR environment variable set in Dockerfile
     
     cmd_brainmask_cp = f&#34;cp {subjects_dir}/{subjid}/mri/brainmask.tmp{tissue_ratio}.mgz {subjects_dir}/{subjid}/mri/brainmask.auto.mgz &amp;&amp; cp {subjects_dir}/{subjid}/mri/brainmask.tmp{tissue_ratio}.mgz {subjects_dir}/{subjid}/mri/brainmask.mgz&#34;
-    cmd_recon_all_edit = f&#34;recon-all -autorecon2-wm -autorecon3 --bigventricles -3T -s ${subjid}&#34;
+    cmd_recon_all_edit = f&#34;recon-all -autorecon2-wm -autorecon3 --bigventricles -3T -s {subjid}&#34;
     cmd_line = f&#34;{cmd_brainmask_cp} &amp;&amp; {cmd_recon_all_edit}&#34;
 
     return cmd_line</code></pre>
@@ -591,7 +591,7 @@ recon-all re-runs -autorecon2-wm -autorecon3 stream with the new mask.</p>
 </details>
 </dd>
 <dt id="freesurfer_wrapper.run.worker"><code class="name flex">
-<span>def <span class="ident">worker</span></span>(<span>cmd: str) ‑> <function run at 0x7f59cec0f0e0></span>
+<span>def <span class="ident">worker</span></span>(<span>cmd: str) ‑> <function run at 0x7f00d11760e0></span>
 </code></dt>
 <dd>
 <div class="desc"><p>Invokes a subprocess running the command.</p>
@@ -624,7 +624,7 @@ recon-all re-runs -autorecon2-wm -autorecon3 stream with the new mask.</p>
     
     &#34;&#34;&#34;
 
-    return subprocess.run(cmd.split()) # split() because run() needs a list with each component of the command</code></pre>
+    return subprocess.run(cmd, shell=True)</code></pre>
 </details>
 </dd>
 </dl>

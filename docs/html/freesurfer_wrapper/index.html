@@ -34,8 +34,148 @@ It is a Python wrapper to execute parallel runs of recon-all and some pial edits
 <li><a href="https://www.docker.com/">Docker</a></li>
 <li><a href="https://surfer.nmr.mgh.harvard.edu/registration.html">FreeSurfer license key</a></li>
 </ul>
-<h2 id="usage">Usage</h2>
-<h2 id="example">Example</h2>
+<h2 id="preparation">Preparation</h2>
+<p>1) Place the license in a <code>license.txt</code> file in the same folder as the Dockerfile.</p>
+<p>2) Place your dataset folder in the same folder as the Dockerfile.</p>
+<p>3) Build the docker image:</p>
+<pre><code class="language-bash">docker build -t fs_wrapper .
+</code></pre>
+<h2 id="overview-run">Overview run</h2>
+<p>The main script has 3 commands, each of them is explained below.</p>
+<pre><code class="language-bash">python run.py -h
+usage: run.py [-h] {recon,edit,recon_edit} ...
+
+Command-line wrapper tool to execute parallel runs of FreeSurfer recon-all and
+some pial edits algorithms.
+
+positional arguments:
+  {recon,edit,recon_edit}
+    recon               Run FreeSurfer recon-all.
+    edit                Run mri_gcut and mri_binarize for pial edits.
+    recon_edit          Re-run recon-all for pial edits.
+
+optional arguments:
+  -h, --help            show this help message and exit
+</code></pre>
+<h3 id="recon">recon</h3>
+<p>Run FreeSurfer recon-all.</p>
+<pre><code class="language-bash">python run.py recon -h
+usage: run.py recon [-h] -i INPUT [-p PARALLEL]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -i INPUT, --input INPUT
+                        Tab separated file. First column: unique ID. Second
+                        column: path to dcm/nii file.
+  -p PARALLEL, --parallel PARALLEL
+                        Number of parallel runs (default: number of CPUs).
+</code></pre>
+<h3 id="edit">edit</h3>
+<p>Run mri_gcut and mri_binarize for pial edits.</p>
+<pre><code class="language-bash">python run.py edit -h
+usage: run.py edit [-h] -i INPUT [-p PARALLEL]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -i INPUT, --input INPUT
+                        Tab separated file. First column: unique ID. Second
+                        column: path to dcm/nii file. Third column: tissue
+                        ratio
+  -p PARALLEL, --parallel PARALLEL
+                        Number of parallel FS runs (default: number of CPUs).
+</code></pre>
+<h3 id="recon_edit">recon_edit</h3>
+<p>Re-run recon-all for pial edits.</p>
+<pre><code class="language-bash">python run.py recon_edit -h
+usage: run.py recon_edit [-h] -i INPUT [-p PARALLEL]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -i INPUT, --input INPUT
+                        Subject id list file.
+  -p PARALLEL, --parallel PARALLEL
+                        Number of parallel FS runs (default: number of CPUs).
+</code></pre>
+<h2 id="how-to-run-recon">How to run recon</h2>
+<h3 id="create-the-input-file">Create the input file</h3>
+<p>A tab-separated file is needed as input with the following characteristics:</p>
+<ul>
+<li>Each line must represent a single scan.</li>
+<li>First column: unique ID. </li>
+<li>Second column: path to dcm/nii file.</li>
+</ul>
+<p>For the ADNI dataset, you can create this file using the <code>create_recon_input.py</code> script. This will create a <code>recon_input.txt</code> file. The script will combine the subject ID and the session ID to create a unique ID.</p>
+<pre><code class="language-bash">docker run --rm -it -v $(pwd):/root/freesurfer_wrapper fs_wrapper \
+python scripts/create_recon_input.py
+</code></pre>
+<p>As an example, a <code>recon_input.txt</code> file for some ADNI records will look like this:</p>
+<pre><code class="language-bash">137_S_1414_S46193   ADNI/137_S_1414/MP-RAGE/2008-02-26_11_57_53.0/S46193/ADNI_137_S_1414_MR_MP-RAGE__br_raw_20080226130530486_1_S46193_I92752.dcm
+137_S_1414_S72806   ADNI/137_S_1414/MP-RAGE/2009-08-26_11_06_33.0/S72806/ADNI_137_S_1414_MR_MP-RAGE__br_raw_20090827101803061_1_S72806_I153787.dcm
+</code></pre>
+<p>For other datasets you can try to edit the PATH_PATTERN variable in <code>scripts/create_recon_input.py</code>.</p>
+<h3 id="run-recon">Run <strong>recon</strong></h3>
+<p>Now you can run the <code>recon</code> command using Docker.
+This can take several hours.</p>
+<pre><code class="language-bash">docker run --rm -it -v $(pwd):/root/freesurfer_wrapper fs_wrapper \
+python run.py recon -i recon_input.txt
+</code></pre>
+<p>This command will use the maximum number of CPUs. You can append the <code>-p &lt;INT&gt;</code> flag where <code>&lt;INT&gt;</code> is the number of parallel runs you want.</p>
+<h2 id="how-to-run-edit">How to run edit</h2>
+<h3 id="create-the-input-file_1">Create the input file</h3>
+<p>After running <code>recon</code> you can check your results using <code>freeview</code>.
+It is not possible to run <code>freeview</code> using Docker, the graphical user interface cannot be displayed. Therefore, use your host machine <code>freeview</code> command to check the results.</p>
+<pre><code class="language-bash">SUBJECTS_DIR=$(pwd)/FS_OUTPUTS 
+freeview -recon &lt;UNIQUE_ID&gt;
+</code></pre>
+<p>If any skull edits are necessary, you need to create an input table to run <code>edit</code> with the following characteristics:</p>
+<ul>
+<li>Each line must represent a single scan.</li>
+<li>First column: unique ID. </li>
+<li>Second column: path to dcm/nii file.</li>
+<li>Third column: the tissue ratio for WM edits.</li>
+</ul>
+<p>Tissue ratio is the threshold to value (%) of WM intensity. The value should be &gt;0 and &lt;1; larger values would correspond to cleaner skull-strip but higher chance of brain erosion.</p>
+<p>You can copy the recon input table, keep only the lines for the scans that need pial edits, and add the column with the tissue ratio values.</p>
+<p>As an example, a <code>edit_input.txt</code> file for some ADNI records will look like this:</p>
+<pre><code class="language-bash">137_S_1414_S46193   ADNI/137_S_1414/MP-RAGE/2008-02-26_11_57_53.0/S46193/ADNI_137_S_1414_MR_MP-RAGE__br_raw_20080226130530486_1_S46193_I92752.dcm 0.5
+137_S_1414_S72806   ADNI/137_S_1414/MP-RAGE/2009-08-26_11_06_33.0/S72806/ADNI_137_S_1414_MR_MP-RAGE__br_raw_20090827101803061_1_S72806_I153787.dcm  0.3
+</code></pre>
+<h3 id="run-edit">Run <strong>edit</strong></h3>
+<p>Now you can run the <code>edit</code> command using Docker.</p>
+<pre><code class="language-bash">docker run --rm -it -v $(pwd):/root/freesurfer_wrapper fs_wrapper \
+python run.py edit -i edit_input.txt
+</code></pre>
+<p>This command will use the maximum number of CPUs. You can append the <code>-p &lt;INT&gt;</code> flag where <code>&lt;INT&gt;</code> is the number of parallel runs you want.</p>
+<p>You can check the resulting edited mask using <code>freeview</code>:</p>
+<pre><code class="language-bash">SUBJECTS_DIR=$(pwd)/FS_OUTPUTS
+freeview -recon &lt;UNIQUE_ID&gt; -v brainmask.gcutsT$&lt;TISSUE_RATIO&gt;.mgz:colormap=heat:opacity=0.5
+</code></pre>
+<p>If still not good, change the tissue ratio value in the input file and run <code>edit</code> again.
+When all masks are OK, proceed to <code>recon_edit</code> command.</p>
+<h2 id="how-to-run-recon_edit">How to run recon_edit</h2>
+<h3 id="create-the-input-file_2">Create the input file</h3>
+<p>The input file is the table used for <code>edit</code> with the final values for tissue ratio.</p>
+<h3 id="run-recon_edit">Run <strong>recon_edit</strong></h3>
+<p><code>recon_edit</code> will re-run parts of FS recon-all using the edited masks. This can take several hours.</p>
+<pre><code class="language-bash">docker run --rm -it -v $(pwd):/root/freesurfer_wrapper fs_wrapper python run.py recon_edit -i edit_input.txt
+</code></pre>
+<p>This command will use the maximum number of CPUs. You can append the <code>-p &lt;INT&gt;</code> flag where <code>&lt;INT&gt;</code> is the number of parallel runs you want.</p>
+<h2 id="how-to-check-for-completed-runs-and-hard-errors">How to check for completed runs and hard errors</h2>
+<p>FreeSurfer's recon-all command creates different logs while running.
+The <code>recon-all.done</code> log is created only for completed runs. The <code>recon-all.error</code> is created for hard failures. </p>
+<p>You can check these logs using a custom script. The script was written to work on ADNI folder structure. For other datasets you can try to edit the PATH_PATTERN variable in scripts/check_logs.py.</p>
+<h3 id="done">Done</h3>
+<pre><code class="language-bash">docker run --rm -it -v $(pwd):/root/freesurfer_wrapper fs_wrapper \
+python scripts/check_logs.py done
+</code></pre>
+<p>You can also pipe the output to bash word count command to get a quick count:</p>
+<pre><code class="language-bash">docker run --rm -it -v $(pwd):/root/freesurfer_wrapper fs_wrapper \
+python scripts/check_logs.py done | wc -l
+</code></pre>
+<h3 id="error">Error</h3>
+<pre><code class="language-bash">docker run --rm -it -v $(pwd):/root/freesurfer_wrapper fs_wrapper \
+python scripts/check_logs.py error
+</code></pre>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -71,8 +211,33 @@ It is a Python wrapper to execute parallel runs of recon-all and some pial edits
 <ul>
 <li><a href="#freesurfer_wrapper">freesurfer_wrapper</a><ul>
 <li><a href="#requirements">Requirements</a></li>
-<li><a href="#usage">Usage</a></li>
-<li><a href="#example">Example</a></li>
+<li><a href="#preparation">Preparation</a></li>
+<li><a href="#overview-run">Overview run</a><ul>
+<li><a href="#recon">recon</a></li>
+<li><a href="#edit">edit</a></li>
+<li><a href="#recon_edit">recon_edit</a></li>
+</ul>
+</li>
+<li><a href="#how-to-run-recon">How to run recon</a><ul>
+<li><a href="#create-the-input-file">Create the input file</a></li>
+<li><a href="#run-recon">Run recon</a></li>
+</ul>
+</li>
+<li><a href="#how-to-run-edit">How to run edit</a><ul>
+<li><a href="#create-the-input-file_1">Create the input file</a></li>
+<li><a href="#run-edit">Run edit</a></li>
+</ul>
+</li>
+<li><a href="#how-to-run-recon_edit">How to run recon_edit</a><ul>
+<li><a href="#create-the-input-file_2">Create the input file</a></li>
+<li><a href="#run-recon_edit">Run recon_edit</a></li>
+</ul>
+</li>
+<li><a href="#how-to-check-for-completed-runs-and-hard-errors">How to check for completed runs and hard errors</a><ul>
+<li><a href="#done">Done</a></li>
+<li><a href="#error">Error</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>

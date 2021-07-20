@@ -123,7 +123,7 @@ def recon_edit(recon_edit_args: list) -> str:
     subjects_dir = os.environ['SUBJECTS_DIR'] # SUBJECTS_DIR environment variable set in Dockerfile
     
     cmd_brainmask_cp = f"cp {subjects_dir}/{subjid}/mri/brainmask.tmp{tissue_ratio}.mgz {subjects_dir}/{subjid}/mri/brainmask.auto.mgz && cp {subjects_dir}/{subjid}/mri/brainmask.tmp{tissue_ratio}.mgz {subjects_dir}/{subjid}/mri/brainmask.mgz"
-    cmd_recon_all_edit = f"recon-all -autorecon2-wm -autorecon3 --bigventricles -3T -s ${subjid}"
+    cmd_recon_all_edit = f"recon-all -autorecon2-wm -autorecon3 --bigventricles -3T -s {subjid}"
     cmd_line = f"{cmd_brainmask_cp} && {cmd_recon_all_edit}"
 
     return cmd_line
@@ -143,7 +143,7 @@ def worker(cmd: str) -> "subprocess.run":
     
     """
 
-    return subprocess.run(cmd.split()) # split() because run() needs a list with each component of the command
+    return subprocess.run(cmd, shell=True)
 
 def parse_input_file(input_file: str) -> "List[List[str]]":
     """
