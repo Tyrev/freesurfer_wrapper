@@ -1,6 +1,6 @@
 ---
 description: |
-    API documentation for modules: freesurfer_wrapper, freesurfer_wrapper.run, freesurfer_wrapper.scripts, freesurfer_wrapper.scripts.create_recon_input.
+    API documentation for modules: freesurfer_wrapper, freesurfer_wrapper.run, freesurfer_wrapper.scripts, freesurfer_wrapper.scripts.check_logs, freesurfer_wrapper.scripts.create_recon_input.
 
 lang: en
 
@@ -258,7 +258,7 @@ Pass the appropriate command function to the worker handler.
 
 >     def worker(
 >         cmd: str
->     ) ‑> <function run at 0x7fba824b30e0>
+>     ) ‑> <function run at 0x7ffb9dabb0e0>
 
 
 Invokes a subprocess running the command.
@@ -287,7 +287,84 @@ Invokes a subprocess running the command.
     
 ## Sub-modules
 
+* [freesurfer_wrapper.scripts.check_logs](#freesurfer_wrapper.scripts.check_logs)
 * [freesurfer_wrapper.scripts.create_recon_input](#freesurfer_wrapper.scripts.create_recon_input)
+
+
+
+
+
+
+    
+# Module `freesurfer_wrapper.scripts.check_logs` {#freesurfer_wrapper.scripts.check_logs}
+
+Script to check recon-all logs for each run
+
+usage: python check_logs.py <done|error>
+
+Please edit the **PATH_PATTERN** variable with the appropriate
+pathname pattern to find each file.
+
+This file can also be imported as a module and contains the following
+functions:
+
+    * get_logs - get the path for each log based on pathname pattern.
+    * print_id_from_logs - prints the IDs from a list of logs.
+
+
+
+
+    
+## Functions
+
+
+    
+### Function `get_logs` {#freesurfer_wrapper.scripts.check_logs.get_logs}
+
+
+
+
+>     def get_logs(
+>         path_pattern: str
+>     ) ‑> list
+
+
+Get the path for each log based on pathname pattern.
+
+###### Parameters
+
+**```path_pattern```** :&ensp;<code>str</code>
+:   Glob pathname pattern to find each log.
+
+###### Returns
+
+<code>List</code> of <code>log paths</code>
+:   &nbsp;
+
+
+
+    
+### Function `print_id_from_logs` {#freesurfer_wrapper.scripts.check_logs.print_id_from_logs}
+
+
+
+
+>     def print_id_from_logs(
+>         logs: list
+>     )
+
+
+Prints the IDs from a list of logs.
+
+###### Parameters
+
+**```logs```** :&ensp;<code>list</code>
+:   List of log paths
+
+###### Returns
+
+<code>None</code>
+:   &nbsp;
 
 
 

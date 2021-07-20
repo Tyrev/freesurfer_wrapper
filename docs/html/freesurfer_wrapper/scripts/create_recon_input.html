@@ -75,6 +75,8 @@ def create_input_file(path_pattern: str):
 
     &#34;&#34;&#34;
     files = glob(path_pattern)
+    # combine subject_id (file.split(&#39;/&#39;)[1]) and session id (file.split(&#39;/&#39;)[-2])
+    # to create a unique ID for each record
     data = [[f&#34;{file.split(&#39;/&#39;)[1]}_{file.split(&#39;/&#39;)[-2]}&#34;, file] for file in files]
     table = pd.DataFrame(data)
     table.to_csv(&#34;recon_input.txt&#34;, sep=&#34;\t&#34;, index=False, header=False)
@@ -128,6 +130,8 @@ Second column: path to DICOM file.</p>
 
     &#34;&#34;&#34;
     files = glob(path_pattern)
+    # combine subject_id (file.split(&#39;/&#39;)[1]) and session id (file.split(&#39;/&#39;)[-2])
+    # to create a unique ID for each record
     data = [[f&#34;{file.split(&#39;/&#39;)[1]}_{file.split(&#39;/&#39;)[-2]}&#34;, file] for file in files]
     table = pd.DataFrame(data)
     table.to_csv(&#34;recon_input.txt&#34;, sep=&#34;\t&#34;, index=False, header=False)</code></pre>

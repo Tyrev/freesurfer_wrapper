@@ -38,6 +38,8 @@ def create_input_file(path_pattern: str):
 
     """
     files = glob(path_pattern)
+    # combine subject_id (file.split('/')[1]) and session id (file.split('/')[-2])
+    # to create a unique ID for each record
     data = [[f"{file.split('/')[1]}_{file.split('/')[-2]}", file] for file in files]
     table = pd.DataFrame(data)
     table.to_csv("recon_input.txt", sep="\t", index=False, header=False)
