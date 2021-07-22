@@ -176,6 +176,14 @@ python scripts/check_logs.py done | wc -l
 <pre><code class="language-bash">docker run --rm -it -v $(pwd):/root/freesurfer_wrapper fs_wrapper \
 python scripts/check_logs.py error
 </code></pre>
+<h2 id="quality-control">Quality control</h2>
+<p>The tool is packaged with <a href="https://github.com/Deep-MI/qatools-python"><strong>qatools-python</strong></a> version 1.2 for quality control measurements.
+This script was developed by <a href="https://deep-mi.org/">Reuter DeepMI Lab</a> as a revision, extension, and translation to the Python language of the Freesurfer QA Tools.</p>
+<pre><code class="language-bash">docker run --rm -it -v $(pwd):/root/freesurfer_wrapper fs_wrapper \
+python scripts/qatools-python/qatools.py --subjects_dir FS_OUTPUTS --output_dir QC \
+--screenshots --outlier --fornix
+</code></pre>
+<p>This will create <code>qatools-results.csv</code> file; <code>screenshots</code>, <code>outliers</code> and <code>fornix</code> folders inside the QC folder. Please consult <a href="scripts/qatools-python/README.md#description">qatools-python docs</a> for a full explanation of each QC measurement.</p>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -238,6 +246,7 @@ python scripts/check_logs.py error
 <li><a href="#error">Error</a></li>
 </ul>
 </li>
+<li><a href="#quality-control">Quality control</a></li>
 </ul>
 </li>
 </ul>

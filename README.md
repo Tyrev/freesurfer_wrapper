@@ -203,3 +203,16 @@ python scripts/check_logs.py done | wc -l
 docker run --rm -it -v $(pwd):/root/freesurfer_wrapper fs_wrapper \
 python scripts/check_logs.py error
 ```
+
+## Quality control
+
+The tool is packaged with [**qatools-python**](https://github.com/Deep-MI/qatools-python) version 1.2 for quality control measurements.
+This script was developed by [Reuter DeepMI Lab](https://deep-mi.org/) as a revision, extension, and translation to the Python language of the Freesurfer QA Tools.
+
+```bash
+docker run --rm -it -v $(pwd):/root/freesurfer_wrapper fs_wrapper \
+python scripts/qatools-python/qatools.py --subjects_dir FS_OUTPUTS --output_dir QC \
+--screenshots --outlier --fornix
+```
+
+This will create `qatools-results.csv` file; `screenshots`, `outliers` and `fornix` folders inside the QC folder. Please consult [qatools-python docs](scripts/qatools-python/README.md#description) for a full explanation of each QC measurement.

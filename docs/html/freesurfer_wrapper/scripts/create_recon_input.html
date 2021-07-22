@@ -51,7 +51,7 @@ functions:
 &#34;&#34;&#34;
 
 from glob import glob
-import pandas as pd
+import csv
 
 # Pathname pattern to find each file
 # * is a wildcard standing for &#34;any string of characters&#34;
@@ -78,8 +78,9 @@ def create_input_file(path_pattern: str):
     # combine subject_id (file.split(&#39;/&#39;)[1]) and session id (file.split(&#39;/&#39;)[-2])
     # to create a unique ID for each record
     data = [[f&#34;{file.split(&#39;/&#39;)[1]}_{file.split(&#39;/&#39;)[-2]}&#34;, file] for file in files]
-    table = pd.DataFrame(data)
-    table.to_csv(&#34;recon_input.txt&#34;, sep=&#34;\t&#34;, index=False, header=False)
+    with open(&#34;recon_input.txt&#34;,&#34;w&#34;) as f:
+        wr = csv.writer(f, delimiter=&#34;\t&#34;)
+        wr.writerows(data)
 
 if __name__ == &#39;__main__&#39;:
     create_input_file(PATH_PATTERN)</code></pre>
@@ -133,8 +134,9 @@ Second column: path to DICOM file.</p>
     # combine subject_id (file.split(&#39;/&#39;)[1]) and session id (file.split(&#39;/&#39;)[-2])
     # to create a unique ID for each record
     data = [[f&#34;{file.split(&#39;/&#39;)[1]}_{file.split(&#39;/&#39;)[-2]}&#34;, file] for file in files]
-    table = pd.DataFrame(data)
-    table.to_csv(&#34;recon_input.txt&#34;, sep=&#34;\t&#34;, index=False, header=False)</code></pre>
+    with open(&#34;recon_input.txt&#34;,&#34;w&#34;) as f:
+        wr = csv.writer(f, delimiter=&#34;\t&#34;)
+        wr.writerows(data)</code></pre>
 </details>
 </dd>
 </dl>
