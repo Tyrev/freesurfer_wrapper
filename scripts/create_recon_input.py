@@ -14,7 +14,7 @@ functions:
 """
 
 from glob import glob
-import pandas as pd
+import csv
 
 # Pathname pattern to find each file
 # * is a wildcard standing for "any string of characters"
@@ -41,8 +41,9 @@ def create_input_file(path_pattern: str):
     # combine subject_id (file.split('/')[1]) and session id (file.split('/')[-2])
     # to create a unique ID for each record
     data = [[f"{file.split('/')[1]}_{file.split('/')[-2]}", file] for file in files]
-    table = pd.DataFrame(data)
-    table.to_csv("recon_input.txt", sep="\t", index=False, header=False)
+    with open("recon_input.txt","w") as f:
+        wr = csv.writer(f, delimiter="\t")
+        wr.writerows(data)
 
 if __name__ == '__main__':
     create_input_file(PATH_PATTERN)
