@@ -1,0 +1,7 @@
+numpy
+scipy
+pandas
+matplotlib
+transforms3d
+nibabel
+scikit-image
