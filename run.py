@@ -70,7 +70,7 @@ def recon(recon_args: list) -> str:
 
     subjid = recon_args[0]
     volume = recon_args[1]
-    cmd_line = f"recon-all -all -s {subjid} -i {volume} -bigventricles -3T"
+    cmd_line = f"recon-all -all -s {subjid} -i {volume}"
 
     return cmd_line
 
@@ -123,7 +123,7 @@ def recon_edit(recon_edit_args: list) -> str:
     subjects_dir = os.environ['SUBJECTS_DIR'] # SUBJECTS_DIR environment variable set in Dockerfile
     
     cmd_brainmask_cp = f"cp {subjects_dir}/{subjid}/mri/brainmask.tmp{tissue_ratio}.mgz {subjects_dir}/{subjid}/mri/brainmask.auto.mgz && cp {subjects_dir}/{subjid}/mri/brainmask.tmp{tissue_ratio}.mgz {subjects_dir}/{subjid}/mri/brainmask.mgz"
-    cmd_recon_all_edit = f"recon-all -autorecon2-wm -autorecon3 --bigventricles -3T -s {subjid}"
+    cmd_recon_all_edit = f"recon-all -autorecon2-wm -autorecon3 -s {subjid}"
     cmd_line = f"{cmd_brainmask_cp} && {cmd_recon_all_edit}"
 
     return cmd_line
