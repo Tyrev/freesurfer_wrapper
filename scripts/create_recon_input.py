@@ -19,7 +19,7 @@ import csv
 # Pathname pattern to find each file
 # * is a wildcard standing for "any string of characters"
 # ADNI/ALL_SUBJECTS/MP-RAGE/ALL_TIME_POINTS/SESSION_ID/FIRST_DCM_FILE
-PATH_PATTERN = "ADNI/*/MP-RAGE/*/*/*_1_*"
+PATH_PATTERN = "ADNI/*/*/*/*/*_1_*"
 
 def create_input_file(path_pattern: str):
     """
