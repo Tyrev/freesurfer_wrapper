@@ -17,7 +17,7 @@ pdoc --force --html ../ --output-dir html
 pdoc --force --pdf ../ > markdown/docs.md
 pandoc --metadata=title:"FreeSurfer Multiprocessing Pipeline" \
        --from=markdown+abbreviations+tex_math_single_backslash \
-       --latex-engine=xelatex \
+       --pdf-engine=xelatex \
        --variable=mainfont:"DejaVu Sans" \
        --toc \
        --toc-depth=4 \

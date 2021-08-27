@@ -204,6 +204,17 @@ docker run --rm -it -v $(pwd):/root/freesurfer_wrapper fs_wrapper \
 python scripts/check_logs.py error
 ```
 
+## How to restart after a computer failure
+If the execution of the pipeline is halted by a computer failure or system restart then you have to update the input file of the `recon` command.
+
+```bash
+bash scripts/update_recon_input.sh
+```
+
+This will remove all "done" samples from the original recon_input. It will also delete the folders from the samples that were running when the failure happened. These samples will run again from scratch.
+
+Now run again the [`recon` command](#run-recon) but using the new input file (`<YYYY-MM-DD>_recon_input.txt`).
+
 ## Quality control
 
 The tool is packaged with [**qatools-python**](https://github.com/Deep-MI/qatools-python) version 1.2 for quality control measurements.
