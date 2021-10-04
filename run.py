@@ -209,7 +209,10 @@ def run_command(args):
     """
 
     if args.command == "recon":
-        handle_workers(p=args.parallel, command=recon, input_file=args.input)
+        # QUICKFIX: use GNU parallel. The original code with multiprocessing is crashing.
+        cmd=f"parallel --tmpdir tmpdir/ --lb -j {args.parallel} --colsep '\t' recon-all -all -s {{1}} -i {{2}} :::: {args.input}"
+        worker(cmd)
+        #handle_workers(p=args.parallel, command=recon, input_file=args.input)
     if args.command == "edit":
         handle_workers(p=args.parallel, command=edit, input_file=args.input)
     if args.command == "recon_edit":
