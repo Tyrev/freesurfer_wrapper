@@ -4,3 +4,4 @@ license.txt
 ADNI/
 *.dcm
 .vscode
+recon_input.txt
