@@ -1,6 +1,6 @@
 ---
 description: |
-    API documentation for modules: freesurfer_wrapper, freesurfer_wrapper.run, freesurfer_wrapper.scripts, freesurfer_wrapper.scripts.check_logs, freesurfer_wrapper.scripts.create_recon_input.
+    API documentation for modules: freesurfer_wrapper, freesurfer_wrapper.run, freesurfer_wrapper.scripts, freesurfer_wrapper.scripts.check_logs, freesurfer_wrapper.scripts.create_recon_input, freesurfer_wrapper.scripts.view.
 
 lang: en
 
@@ -139,13 +139,7 @@ This command will use the maximum number of CPUs. You can append the `-p <INT>` 
 
 ## How to run edit
 ### Create the input file
-After running <code>recon</code> you can check your results using <code>freeview</code>. 
-It is not possible to run <code>freeview</code> using Docker, the graphical user interface cannot be displayed. Therefore, use your host machine <code>freeview</code> command to check the results.
-
-```bash
-SUBJECTS_DIR=$(pwd)/FS_OUTPUTS 
-freeview -recon <UNIQUE_ID>
-```
+After running <code>recon</code> you can check your results using <code>freeview</code>. Please refer to [Manual quality analysis section](#manual-quality-analysis) to use a custom script.
 
 If any skull edits are necessary, you need to create an input table to run <code>edit</code> with the following characteristics:
 
@@ -235,6 +229,8 @@ Now run again the [`recon` command](#run-recon) but using the new input file (`<
 
 ## Quality control
 
+### Automated quality analysis
+
 The tool is packaged with [**qatools-python**](https://github.com/Deep-MI/qatools-python) version 1.2 for quality control measurements.
 This script was developed by [Reuter DeepMI Lab](https://deep-mi.org/) as a revision, extension, and translation to the Python language of the Freesurfer QA Tools.
 
@@ -245,6 +241,26 @@ python scripts/qatools-python/qatools.py --subjects_dir FS_OUTPUTS --output_dir 
 ```
 
 This will create `qatools-results.csv` file; <code>screenshots</code>, <code>outliers</code> and <code>fornix</code> folders inside the QC folder. Please consult [qatools-python docs](scripts/qatools-python/README.md#description) for a full explanation of each QC measurement.
+
+### Manual quality analysis
+You can visually inspect each result using <code>freeview</code>. We provide a script to speed up the opening process of each scan. 
+The script also prompts the user about the result of the QC after each window of <code>freeview</code> is closed. The result is saved to manual_QC.txt
+
+It is not possible to run <code>freeview</code> using Docker, the graphical user interface cannot be displayed. Therefore, you need to have FreeSurfer/freeview installed in your host machine.
+
+#### Step 1
+Set SUBJECTS_DIR environment variable. Here, the results are stored inside the FS_OUTPUTS directory.
+
+```bash
+export SUBJECTS_DIR=$(pwd)/FS_OUTPUTS
+```
+
+#### Step 2
+Run the <code>view.py</code> script.
+
+```bash
+python scripts/view.py
+```
 
 
     
@@ -476,7 +492,7 @@ Pass the appropriate command function to the worker handler.
 
 >     def worker(
 >         cmd: str
->     ) ‑> <function run at 0x7f6a967f5670>
+>     ) ‑> <function run at 0x7f3aa69e6670>
 
 
 Invokes a subprocess running the command.
@@ -507,6 +523,7 @@ Invokes a subprocess running the command.
 
 * [freesurfer_wrapper.scripts.check_logs](#freesurfer_wrapper.scripts.check_logs)
 * [freesurfer_wrapper.scripts.create_recon_input](#freesurfer_wrapper.scripts.create_recon_input)
+* [freesurfer_wrapper.scripts.view](#freesurfer_wrapper.scripts.view)
 
 
 
@@ -635,6 +652,81 @@ Second column: path to DICOM file.
 ###### Returns
 
 <code>None</code>
+:   &nbsp;
+
+
+
+
+
+
+    
+# Module `freesurfer_wrapper.scripts.view` {#id}
+
+Script to open the scans in sequence and register if passed or not in QC analysis
+
+This script identifies the subjects present in the folder set in SUBJECTS_DIR environment variable. 
+Using this list, it automatically opens freeview and asks the user input for the result of QC analysis.
+Results are saved in manual_QC.txt file.
+
+This file can also be imported as a module and contains the following
+functions:
+
+    * get_subjects - returns a list of subjects inside the folder.
+    * freeview - returns a freeview command formated as string
+
+
+
+
+    
+## Functions
+
+
+    
+### Function `freeview` {#id}
+
+
+
+
+>     def freeview(
+>         subject_id: str
+>     )
+
+
+Returns a freeview command formated as string.
+
+###### Parameters
+
+**```subject_id```** :&ensp;<code>str</code>
+:   FreeSurfer subject_id.
+
+###### Returns
+
+<code>str</code>
+:   &nbsp;
+
+
+
+    
+### Function `get_subjects` {#id}
+
+
+
+
+>     def get_subjects(
+>         subjects_dir='/subjects'
+>     )
+
+
+Returns a list of subjects inside the folder.
+
+###### Parameters
+
+**```subjects_dir```** :&ensp;<code>str</code>, default=`os.environ['SUBJECTS_DIR']`
+:   FreeSurfer SUBJECTS_DIR.
+
+###### Returns
+
+<code>list</code>
 :   &nbsp;
 
 

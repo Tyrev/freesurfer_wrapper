@@ -122,11 +122,7 @@ python run.py recon -i recon_input.txt
 <p>This command will use the maximum number of CPUs. You can append the <code>-p &lt;INT&gt;</code> flag where <code>&lt;INT&gt;</code> is the number of parallel runs you want.</p>
 <h2 id="how-to-run-edit">How to run edit</h2>
 <h3 id="create-the-input-file_1">Create the input file</h3>
-<p>After running <code>recon</code> you can check your results using <code>freeview</code>.
-It is not possible to run <code>freeview</code> using Docker, the graphical user interface cannot be displayed. Therefore, use your host machine <code>freeview</code> command to check the results.</p>
-<pre><code class="language-bash">SUBJECTS_DIR=$(pwd)/FS_OUTPUTS 
-freeview -recon &lt;UNIQUE_ID&gt;
-</code></pre>
+<p>After running <code>recon</code> you can check your results using <code>freeview</code>. Please refer to <a href="#manual-quality-analysis">Manual quality analysis section</a> to use a custom script.</p>
 <p>If any skull edits are necessary, you need to create an input table to run <code>edit</code> with the following characteristics:</p>
 <ul>
 <li>Each line must represent a single scan.</li>
@@ -183,6 +179,7 @@ python scripts/check_logs.py error
 <p>This will remove all "done" samples from the original recon_input. It will also delete the folders from the samples that were running when the failure happened. These samples will run again from scratch.</p>
 <p>Now run again the <a href="#run-recon"><code>recon</code> command</a> but using the new input file (<code>&lt;YYYY-MM-DD&gt;_recon_input.txt</code>).</p>
 <h2 id="quality-control">Quality control</h2>
+<h3 id="automated-quality-analysis">Automated quality analysis</h3>
 <p>The tool is packaged with <a href="https://github.com/Deep-MI/qatools-python"><strong>qatools-python</strong></a> version 1.2 for quality control measurements.
 This script was developed by <a href="https://deep-mi.org/">Reuter DeepMI Lab</a> as a revision, extension, and translation to the Python language of the Freesurfer QA Tools.</p>
 <pre><code class="language-bash">docker run --rm -it -v $(pwd):/root/freesurfer_wrapper fs_wrapper \
@@ -190,6 +187,18 @@ python scripts/qatools-python/qatools.py --subjects_dir FS_OUTPUTS --output_dir 
 --screenshots --outlier --fornix
 </code></pre>
 <p>This will create <code>qatools-results.csv</code> file; <code>screenshots</code>, <code>outliers</code> and <code>fornix</code> folders inside the QC folder. Please consult <a href="scripts/qatools-python/README.md#description">qatools-python docs</a> for a full explanation of each QC measurement.</p>
+<h3 id="manual-quality-analysis">Manual quality analysis</h3>
+<p>You can visually inspect each result using <code>freeview</code>. We provide a script to speed up the opening process of each scan.
+The script also prompts the user about the result of the QC after each window of <code>freeview</code> is closed. The result is saved to manual_QC.txt</p>
+<p>It is not possible to run <code>freeview</code> using Docker, the graphical user interface cannot be displayed. Therefore, you need to have FreeSurfer/freeview installed in your host machine.</p>
+<h4 id="step-1">Step 1</h4>
+<p>Set SUBJECTS_DIR environment variable. Here, the results are stored inside the FS_OUTPUTS directory.</p>
+<pre><code class="language-bash">export SUBJECTS_DIR=$(pwd)/FS_OUTPUTS
+</code></pre>
+<h4 id="step-2">Step 2</h4>
+<p>Run the <code>view.py</code> script.</p>
+<pre><code class="language-bash">python scripts/view.py
+</code></pre>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -253,7 +262,15 @@ python scripts/qatools-python/qatools.py --subjects_dir FS_OUTPUTS --output_dir 
 </ul>
 </li>
 <li><a href="#how-to-restart-after-a-computer-failure">How to restart after a computer failure</a></li>
-<li><a href="#quality-control">Quality control</a></li>
+<li><a href="#quality-control">Quality control</a><ul>
+<li><a href="#automated-quality-analysis">Automated quality analysis</a></li>
+<li><a href="#manual-quality-analysis">Manual quality analysis</a><ul>
+<li><a href="#step-1">Step 1</a></li>
+<li><a href="#step-2">Step 2</a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>

@@ -121,13 +121,7 @@ This command will use the maximum number of CPUs. You can append the `-p <INT>` 
 
 ## How to run edit
 ### Create the input file
-After running `recon` you can check your results using `freeview`. 
-It is not possible to run `freeview` using Docker, the graphical user interface cannot be displayed. Therefore, use your host machine `freeview` command to check the results.
-
-```bash
-SUBJECTS_DIR=$(pwd)/FS_OUTPUTS 
-freeview -recon <UNIQUE_ID>
-```
+After running `recon` you can check your results using `freeview`. Please refer to [Manual quality analysis section](#manual-quality-analysis) to use a custom script.
 
 If any skull edits are necessary, you need to create an input table to run `edit` with the following characteristics:
 
@@ -217,6 +211,8 @@ Now run again the [`recon` command](#run-recon) but using the new input file (`<
 
 ## Quality control
 
+### Automated quality analysis
+
 The tool is packaged with [**qatools-python**](https://github.com/Deep-MI/qatools-python) version 1.2 for quality control measurements.
 This script was developed by [Reuter DeepMI Lab](https://deep-mi.org/) as a revision, extension, and translation to the Python language of the Freesurfer QA Tools.
 
@@ -227,3 +223,23 @@ python scripts/qatools-python/qatools.py --subjects_dir FS_OUTPUTS --output_dir 
 ```
 
 This will create `qatools-results.csv` file; `screenshots`, `outliers` and `fornix` folders inside the QC folder. Please consult [qatools-python docs](scripts/qatools-python/README.md#description) for a full explanation of each QC measurement.
+
+### Manual quality analysis
+You can visually inspect each result using `freeview`. We provide a script to speed up the opening process of each scan. 
+The script also prompts the user about the result of the QC after each window of `freeview` is closed. The result is saved to manual_QC.txt
+
+It is not possible to run `freeview` using Docker, the graphical user interface cannot be displayed. Therefore, you need to have FreeSurfer/freeview installed in your host machine.
+
+#### Step 1
+Set SUBJECTS_DIR environment variable. Here, the results are stored inside the FS_OUTPUTS directory.
+
+```bash
+export SUBJECTS_DIR=$(pwd)/FS_OUTPUTS
+```
+
+#### Step 2
+Run the `view.py` script.
+
+```bash
+python scripts/view.py
+```

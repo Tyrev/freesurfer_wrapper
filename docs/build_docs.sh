@@ -9,10 +9,8 @@
 # USAGE
 # bash ./build_docs.sh
 # ------------------------------------------
-
 rm -R html markdown pdf
 mkdir html markdown pdf
-
 pdoc --force --html ../ --output-dir html 
 pdoc --force --pdf ../ > markdown/docs.md
 pandoc --metadata=title:"FreeSurfer Multiprocessing Pipeline" \
