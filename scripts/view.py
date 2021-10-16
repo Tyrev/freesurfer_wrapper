@@ -33,14 +33,12 @@ def get_subjects(subjects_dir=os.environ['SUBJECTS_DIR']):
     
     subjects = os.listdir(subjects_dir)
     
-    try:
-        subjects.remove(".gitignore")
-    except ValueError:
-        pass
-    try:
-        subjects.remove("fsaverage")
-    except ValueError:
-        pass
+    ignore = [".gitignore","fsaverage",".DS_Store","thumbs.db","desktop.ini"]
+    for file in ignore:
+        try:
+            subjects.remove(file)
+        except ValueError:
+            pass
     
     return subjects
 
