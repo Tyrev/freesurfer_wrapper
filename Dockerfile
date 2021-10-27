@@ -8,10 +8,11 @@ ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 ENV SUBJECTS_DIR="/root/freesurfer_wrapper/FS_OUTPUTS"
 ENV QC_DIR="/root/freesurfer_wrapper/QC"
 
-RUN yum install -y python3 make
+RUN yum install -y python3 make unzip
 RUN mkdir env
 RUN python3 -m venv $VIRTUAL_ENV
 RUN pip install -r requirements.txt
+RUN fs_install_mcr R2014b
 RUN cd parallel/ && ./configure && make && make install
 
 WORKDIR /root/freesurfer_wrapper
