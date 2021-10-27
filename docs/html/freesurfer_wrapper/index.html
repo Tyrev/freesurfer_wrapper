@@ -41,16 +41,17 @@ It is a Python wrapper to execute parallel runs of recon-all and some pial edits
 <pre><code class="language-bash">docker build -t fs_wrapper .
 </code></pre>
 <h2 id="overview-run">Overview run</h2>
-<p>The main script has 3 commands, each of them is explained below.</p>
+<p>The main script has 4 commands, each of them is explained below.</p>
 <pre><code class="language-bash">python run.py -h
-usage: run.py [-h] {recon,edit,recon_edit} ...
+usage: run.py [-h] {recon,segment_hip_amg,edit,recon_edit} ...
 
 Command-line wrapper tool to execute parallel runs of FreeSurfer recon-all and
 some pial edits algorithms.
 
 positional arguments:
-  {recon,edit,recon_edit}
+  {recon,segment_hip_amg,edit,recon_edit}
     recon               Run FreeSurfer recon-all.
+    segment_hip_amg     Run segmentation of hippocampal subfields and nuclei of the amygdala.
     edit                Run mri_gcut and mri_binarize for pial edits.
     recon_edit          Re-run recon-all for pial edits.
 
@@ -69,6 +70,19 @@ optional arguments:
                         column: path to dcm/nii file.
   -p PARALLEL, --parallel PARALLEL
                         Number of parallel runs (default: number of CPUs).
+</code></pre>
+<h3 id="segment_hip_amg">segment_hip_amg</h3>
+<p>Run segmentation of hippocampal subfields and nuclei of the amygdala.
+Original script by Juan Eugenio Iglesias. For more information, please consult <a href="https://surfer.nmr.mgh.harvard.edu/fswiki/HippocampalSubfieldsAndNucleiOfAmygdala">FS official documentation</a>.</p>
+<pre><code class="language-bash">python run.py segment_hip_amg -h
+usage: run.py segment_hip_amg [-h] -i INPUT [-p PARALLEL]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -i INPUT, --input INPUT
+                        Tab separated file. First column: unique ID. Second column: path to dcm/nii file.
+  -p PARALLEL, --parallel PARALLEL
+                        Number of parallel FS runs (default: number of CPUs).
 </code></pre>
 <h3 id="edit">edit</h3>
 <p>Run mri_gcut and mri_binarize for pial edits.</p>
@@ -120,6 +134,11 @@ This can take several hours.</p>
 python run.py recon -i recon_input.txt
 </code></pre>
 <p>This command will use the maximum number of CPUs. You can append the <code>-p &lt;INT&gt;</code> flag where <code>&lt;INT&gt;</code> is the number of parallel runs you want.</p>
+<h2 id="how-to-run-segment_hip_amg">How to run segment_hip_amg</h2>
+<p>This step requires that a whole brain T1 scan of the subject has been analyzed with the main FreeSurfer stream ("recon-all"). After running <code>recon</code>, you can use the same input table to run <code>segment_hip_amg</code>.</p>
+<pre><code class="language-bash">docker run --rm -it -v $(pwd):/root/freesurfer_wrapper fs_wrapper \
+python run.py segment_hip_amg -i recon_input.txt
+</code></pre>
 <h2 id="how-to-run-edit">How to run edit</h2>
 <h3 id="create-the-input-file_1">Create the input file</h3>
 <p>After running <code>recon</code> you can check your results using <code>freeview</code>. Please refer to <a href="#manual-quality-analysis">Manual quality analysis section</a> to use a custom script.</p>
@@ -237,6 +256,7 @@ The script also prompts the user about the result of the QC after each window of
 <li><a href="#preparation">Preparation</a></li>
 <li><a href="#overview-run">Overview run</a><ul>
 <li><a href="#recon">recon</a></li>
+<li><a href="#segment_hip_amg">segment_hip_amg</a></li>
 <li><a href="#edit">edit</a></li>
 <li><a href="#recon_edit">recon_edit</a></li>
 </ul>
@@ -246,6 +266,7 @@ The script also prompts the user about the result of the QC after each window of
 <li><a href="#run-recon">Run recon</a></li>
 </ul>
 </li>
+<li><a href="#how-to-run-segment_hip_amg">How to run segment_hip_amg</a></li>
 <li><a href="#how-to-run-edit">How to run edit</a><ul>
 <li><a href="#create-the-input-file_1">Create the input file</a></li>
 <li><a href="#run-edit">Run edit</a></li>

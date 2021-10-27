@@ -42,7 +42,11 @@ def argument_parser(args: list) -> "ArgumentParser.parse_args":
     recon = subparsers.add_parser('recon', help='Run FreeSurfer recon-all.')
     recon.add_argument('-i', '--input', type=str, help='Tab separated file. First column: unique ID. Second column: path to dcm/nii file.', required=True)
     recon.add_argument('-p', '--parallel', type=int, help='Number of parallel runs (default: number of CPUs).', default=mp.cpu_count())
-
+    
+    segHA = subparsers.add_parser('segment_hip_amg', help='Run segmentation of hippocampal subfields and nuclei of the amygdala.')
+    segHA.add_argument('-i', '--input', type=str, help='Tab separated file. First column: unique ID. Second column: path to dcm/nii file.', required=True)
+    segHA.add_argument('-p', '--parallel', type=int, help='Number of parallel FS runs (default: number of CPUs).', default=mp.cpu_count())
+    
     edit = subparsers.add_parser('edit', help='Run mri_gcut and mri_binarize for pial edits.')
     edit.add_argument('-i', '--input', type=str, help='Tab separated file. First column: unique ID. Second column: path to dcm/nii file. Third column: tissue ratio', required=True)
     edit.add_argument('-p', '--parallel', type=int, help='Number of parallel FS runs (default: number of CPUs).', default=mp.cpu_count())
@@ -213,6 +217,10 @@ def run_command(args):
         cmd=f"parallel --tmpdir tmpdir/ --lb -j {args.parallel} --colsep '\t' recon-all -all -s {{1}} -i {{2}} :::: {args.input}"
         worker(cmd)
         #handle_workers(p=args.parallel, command=recon, input_file=args.input)
+    if args.command == "segment_hip_amg":
+        # QUICKFIX: use GNU parallel. The original code with multiprocessing is crashing.
+        cmd=f"parallel --tmpdir tmpdir/ --lb -j {args.parallel} --colsep '\t' segmentHA_T1.sh {{1}} :::: {args.input}"
+        worker(cmd)
     if args.command == "edit":
         handle_workers(p=args.parallel, command=edit, input_file=args.input)
     if args.command == "recon_edit":

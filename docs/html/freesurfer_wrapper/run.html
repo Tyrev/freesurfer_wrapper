@@ -81,7 +81,11 @@ def argument_parser(args: list) -&gt; &#34;ArgumentParser.parse_args&#34;:
     recon = subparsers.add_parser(&#39;recon&#39;, help=&#39;Run FreeSurfer recon-all.&#39;)
     recon.add_argument(&#39;-i&#39;, &#39;--input&#39;, type=str, help=&#39;Tab separated file. First column: unique ID. Second column: path to dcm/nii file.&#39;, required=True)
     recon.add_argument(&#39;-p&#39;, &#39;--parallel&#39;, type=int, help=&#39;Number of parallel runs (default: number of CPUs).&#39;, default=mp.cpu_count())
-
+    
+    segHA = subparsers.add_parser(&#39;segment_hip_amg&#39;, help=&#39;Run segmentation of hippocampal subfields and nuclei of the amygdala.&#39;)
+    segHA.add_argument(&#39;-i&#39;, &#39;--input&#39;, type=str, help=&#39;Tab separated file. First column: unique ID. Second column: path to dcm/nii file.&#39;, required=True)
+    segHA.add_argument(&#39;-p&#39;, &#39;--parallel&#39;, type=int, help=&#39;Number of parallel FS runs (default: number of CPUs).&#39;, default=mp.cpu_count())
+    
     edit = subparsers.add_parser(&#39;edit&#39;, help=&#39;Run mri_gcut and mri_binarize for pial edits.&#39;)
     edit.add_argument(&#39;-i&#39;, &#39;--input&#39;, type=str, help=&#39;Tab separated file. First column: unique ID. Second column: path to dcm/nii file. Third column: tissue ratio&#39;, required=True)
     edit.add_argument(&#39;-p&#39;, &#39;--parallel&#39;, type=int, help=&#39;Number of parallel FS runs (default: number of CPUs).&#39;, default=mp.cpu_count())
@@ -252,6 +256,10 @@ def run_command(args):
         cmd=f&#34;parallel --tmpdir tmpdir/ --lb -j {args.parallel} --colsep &#39;\t&#39; recon-all -all -s {{1}} -i {{2}} :::: {args.input}&#34;
         worker(cmd)
         #handle_workers(p=args.parallel, command=recon, input_file=args.input)
+    if args.command == &#34;segment_hip_amg&#34;:
+        # QUICKFIX: use GNU parallel. The original code with multiprocessing is crashing.
+        cmd=f&#34;parallel --tmpdir tmpdir/ --lb -j {args.parallel} --colsep &#39;\t&#39; segmentHA_T1.sh {{1}} :::: {args.input}&#34;
+        worker(cmd)
     if args.command == &#34;edit&#34;:
         handle_workers(p=args.parallel, command=edit, input_file=args.input)
     if args.command == &#34;recon_edit&#34;:
@@ -310,7 +318,11 @@ if __name__ == &#39;__main__&#39;:
     recon = subparsers.add_parser(&#39;recon&#39;, help=&#39;Run FreeSurfer recon-all.&#39;)
     recon.add_argument(&#39;-i&#39;, &#39;--input&#39;, type=str, help=&#39;Tab separated file. First column: unique ID. Second column: path to dcm/nii file.&#39;, required=True)
     recon.add_argument(&#39;-p&#39;, &#39;--parallel&#39;, type=int, help=&#39;Number of parallel runs (default: number of CPUs).&#39;, default=mp.cpu_count())
-
+    
+    segHA = subparsers.add_parser(&#39;segment_hip_amg&#39;, help=&#39;Run segmentation of hippocampal subfields and nuclei of the amygdala.&#39;)
+    segHA.add_argument(&#39;-i&#39;, &#39;--input&#39;, type=str, help=&#39;Tab separated file. First column: unique ID. Second column: path to dcm/nii file.&#39;, required=True)
+    segHA.add_argument(&#39;-p&#39;, &#39;--parallel&#39;, type=int, help=&#39;Number of parallel FS runs (default: number of CPUs).&#39;, default=mp.cpu_count())
+    
     edit = subparsers.add_parser(&#39;edit&#39;, help=&#39;Run mri_gcut and mri_binarize for pial edits.&#39;)
     edit.add_argument(&#39;-i&#39;, &#39;--input&#39;, type=str, help=&#39;Tab separated file. First column: unique ID. Second column: path to dcm/nii file. Third column: tissue ratio&#39;, required=True)
     edit.add_argument(&#39;-p&#39;, &#39;--parallel&#39;, type=int, help=&#39;Number of parallel FS runs (default: number of CPUs).&#39;, default=mp.cpu_count())
@@ -590,6 +602,10 @@ recon-all re-runs -autorecon2-wm -autorecon3 stream with the new mask.</p>
         cmd=f&#34;parallel --tmpdir tmpdir/ --lb -j {args.parallel} --colsep &#39;\t&#39; recon-all -all -s {{1}} -i {{2}} :::: {args.input}&#34;
         worker(cmd)
         #handle_workers(p=args.parallel, command=recon, input_file=args.input)
+    if args.command == &#34;segment_hip_amg&#34;:
+        # QUICKFIX: use GNU parallel. The original code with multiprocessing is crashing.
+        cmd=f&#34;parallel --tmpdir tmpdir/ --lb -j {args.parallel} --colsep &#39;\t&#39; segmentHA_T1.sh {{1}} :::: {args.input}&#34;
+        worker(cmd)
     if args.command == &#34;edit&#34;:
         handle_workers(p=args.parallel, command=edit, input_file=args.input)
     if args.command == &#34;recon_edit&#34;:
@@ -597,7 +613,7 @@ recon-all re-runs -autorecon2-wm -autorecon3 stream with the new mask.</p>
 </details>
 </dd>
 <dt id="freesurfer_wrapper.run.worker"><code class="name flex">
-<span>def <span class="ident">worker</span></span>(<span>cmd: str) ‑> <function run at 0x7ff2f7fb8670></span>
+<span>def <span class="ident">worker</span></span>(<span>cmd: str) ‑> <function run at 0x7efc94660670></span>
 </code></dt>
 <dd>
 <div class="desc"><p>Invokes a subprocess running the command.</p>

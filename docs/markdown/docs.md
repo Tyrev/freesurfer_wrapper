@@ -36,19 +36,20 @@ docker build -t fs_wrapper .
 ```
 ## Overview run
 
-The main script has 3 commands, each of them is explained below.
+The main script has 4 commands, each of them is explained below.
 
 
 ```bash
 python run.py -h
-usage: run.py [-h] {recon,edit,recon_edit} ...
+usage: run.py [-h] {recon,segment_hip_amg,edit,recon_edit} ...
 
 Command-line wrapper tool to execute parallel runs of FreeSurfer recon-all and
 some pial edits algorithms.
 
 positional arguments:
-  {recon,edit,recon_edit}
+  {recon,segment_hip_amg,edit,recon_edit}
     recon               Run FreeSurfer recon-all.
+    segment_hip_amg     Run segmentation of hippocampal subfields and nuclei of the amygdala.
     edit                Run mri_gcut and mri_binarize for pial edits.
     recon_edit          Re-run recon-all for pial edits.
 
@@ -71,6 +72,23 @@ optional arguments:
   -p PARALLEL, --parallel PARALLEL
                         Number of parallel runs (default: number of CPUs).
 ```
+
+### segment_hip_amg
+Run segmentation of hippocampal subfields and nuclei of the amygdala.
+Original script by Juan Eugenio Iglesias. For more information, please consult [FS official documentation](https://surfer.nmr.mgh.harvard.edu/fswiki/HippocampalSubfieldsAndNucleiOfAmygdala).
+
+```bash
+python run.py segment_hip_amg -h
+usage: run.py segment_hip_amg [-h] -i INPUT [-p PARALLEL]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -i INPUT, --input INPUT
+                        Tab separated file. First column: unique ID. Second column: path to dcm/nii file.
+  -p PARALLEL, --parallel PARALLEL
+                        Number of parallel FS runs (default: number of CPUs).
+```
+
 ### edit
 Run mri_gcut and mri_binarize for pial edits.
 
@@ -136,6 +154,15 @@ python run.py recon -i recon_input.txt
 ```
 
 This command will use the maximum number of CPUs. You can append the `-p <INT>` flag where `<INT>` is the number of parallel runs you want.
+
+## How to run segment_hip_amg
+This step requires that a whole brain T1 scan of the subject has been analyzed with the main FreeSurfer stream ("recon-all"). After running <code>recon</code>, you can use the same input table to run <code>segment\_hip\_amg</code>.
+
+```bash
+docker run --rm -it -v $(pwd):/root/freesurfer_wrapper fs_wrapper \
+python run.py segment_hip_amg -i recon_input.txt
+```
+
 
 ## How to run edit
 ### Create the input file
@@ -492,7 +519,7 @@ Pass the appropriate command function to the worker handler.
 
 >     def worker(
 >         cmd: str
->     ) ‑> <function run at 0x7f3aa69e6670>
+>     ) ‑> <function run at 0x7f1070968670>
 
 
 Invokes a subprocess running the command.
