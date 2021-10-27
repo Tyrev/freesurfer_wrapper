@@ -11,6 +11,7 @@ ENV QC_DIR="/root/freesurfer_wrapper/QC"
 RUN yum install -y python3 make unzip
 RUN mkdir env
 RUN python3 -m venv $VIRTUAL_ENV
+RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 RUN fs_install_mcr R2014b
 RUN cd parallel/ && ./configure && make && make install
