@@ -27,138 +27,142 @@
 <h1 id="freesurfer_wrapper">freesurfer_wrapper</h1>
 <blockquote>
 <p><strong>freesurfer_wrapper</strong> aims to facilitate the creation of a multiprocessing pipeline using FreeSurfer.
-It is a Python wrapper to execute parallel runs of recon-all and some pial edits algorithms.</p>
+It is a Python wrapper to execute parallel runs of cross, base and long recon-all. Some pial edits algorithms are also available.</p>
 </blockquote>
 <h2 id="requirements">Requirements</h2>
 <ul>
 <li><a href="https://www.docker.com/">Docker</a></li>
 <li><a href="https://surfer.nmr.mgh.harvard.edu/registration.html">FreeSurfer license key</a></li>
+<li><a href="https://ubuntu.com/desktop">Ubuntu OS</a>: instructions are given, and were tested, considering an Ubuntu OS. It is possible to run using other OS, like Windows, since the wrapper uses Docker. However, keep in mind that adaptations may be necessary.</li>
 </ul>
+<h2 id="files-and-folders-overview">Files and folders overview</h2>
+<pre><code>├── ADNI  # ADNI test data           
+│   └── ...
+├── docs # documentation files
+│   └── ...
+├── FS_OUTPUTS # output folder for processing (freesurfer SUBJECTS_DIR).
+│
+├── QC # output folder for quality control analysis
+│
+├── scripts # additional scripts used by the wrapper
+│   └── ...
+├── run.py # wrapper main script
+</code></pre>
 <h2 id="preparation">Preparation</h2>
 <p>1) Place the license in a <code>license.txt</code> file in the same folder as the Dockerfile.</p>
 <p>2) Place your dataset folder in the same folder as the Dockerfile.</p>
 <p>3) Build the docker image:</p>
-<pre><code class="language-bash">docker build -t fs_wrapper .
+<pre><code class="language-bash">sudo docker build -t fs_wrapper .
 </code></pre>
-<h2 id="overview-run">Overview run</h2>
-<p>The main script has 4 commands, each of them is explained below.</p>
-<pre><code class="language-bash">python run.py -h
-usage: run.py [-h] {recon,segment_hip_amg,edit,recon_edit} ...
-
-Command-line wrapper tool to execute parallel runs of FreeSurfer recon-all and
-some pial edits algorithms.
-
-positional arguments:
-  {recon,segment_hip_amg,edit,recon_edit}
-    recon               Run FreeSurfer recon-all.
-    segment_hip_amg     Run segmentation of hippocampal subfields and nuclei of the amygdala.
-    edit                Run mri_gcut and mri_binarize for pial edits.
-    recon_edit          Re-run recon-all for pial edits.
-
-optional arguments:
-  -h, --help            show this help message and exit
-</code></pre>
-<h3 id="recon">recon</h3>
-<p>Run FreeSurfer recon-all.</p>
-<pre><code class="language-bash">python run.py recon -h
-usage: run.py recon [-h] -i INPUT [-p PARALLEL]
-
-optional arguments:
-  -h, --help            show this help message and exit
-  -i INPUT, --input INPUT
-                        Tab separated file. First column: unique ID. Second
-                        column: path to dcm/nii file.
-  -p PARALLEL, --parallel PARALLEL
-                        Number of parallel runs (default: number of CPUs).
-</code></pre>
-<h3 id="segment_hip_amg">segment_hip_amg</h3>
-<p>Run segmentation of hippocampal subfields and nuclei of the amygdala.
-Original script by Juan Eugenio Iglesias. For more information, please consult <a href="https://surfer.nmr.mgh.harvard.edu/fswiki/HippocampalSubfieldsAndNucleiOfAmygdala">FS official documentation</a>.</p>
-<pre><code class="language-bash">python run.py segment_hip_amg -h
-usage: run.py segment_hip_amg [-h] -i INPUT [-p PARALLEL]
-
-optional arguments:
-  -h, --help            show this help message and exit
-  -i INPUT, --input INPUT
-                        Tab separated file. First column: unique ID. Second column: path to dcm/nii file.
-  -p PARALLEL, --parallel PARALLEL
-                        Number of parallel FS runs (default: number of CPUs).
-</code></pre>
-<h3 id="edit">edit</h3>
-<p>Run mri_gcut and mri_binarize for pial edits.</p>
-<pre><code class="language-bash">python run.py edit -h
-usage: run.py edit [-h] -i INPUT [-p PARALLEL]
-
-optional arguments:
-  -h, --help            show this help message and exit
-  -i INPUT, --input INPUT
-                        Tab separated file. First column: unique ID. Second
-                        column: path to dcm/nii file. Third column: tissue
-                        ratio
-  -p PARALLEL, --parallel PARALLEL
-                        Number of parallel FS runs (default: number of CPUs).
-</code></pre>
-<h3 id="recon_edit">recon_edit</h3>
-<p>Re-run recon-all for pial edits.</p>
-<pre><code class="language-bash">python run.py recon_edit -h
-usage: run.py recon_edit [-h] -i INPUT [-p PARALLEL]
-
-optional arguments:
-  -h, --help            show this help message and exit
-  -i INPUT, --input INPUT
-                        Subject id list file.
-  -p PARALLEL, --parallel PARALLEL
-                        Number of parallel FS runs (default: number of CPUs).
-</code></pre>
-<h2 id="how-to-run-recon">How to run recon</h2>
-<h3 id="create-the-input-file">Create the input file</h3>
-<p>A tab-separated file is needed as input with the following characteristics:</p>
+<h2 id="workflow-overview">Workflow overview</h2>
+<p>In this section, a usage example is shown using data from the <a href="https://adni.loni.usc.edu/">Alzheimer's Disease Neuroimaging Initiative</a> dataset.
+The <a href="ADNI">ADNI</a> folder contains MP-RAGE data from 3 visits of subject <code>137_S_1414</code>.</p>
+<h3 id="recon-all-cross-processing">recon-all [CROSS] processing</h3>
+<p>Cross-sectionally process all time points with the default workflow.</p>
+<h4 id="input-file">Input file</h4>
+<p>CROSS processing requires a tab separated file with named columns:</p>
 <ul>
-<li>Each line must represent a single scan.</li>
-<li>First column: unique ID. </li>
-<li>Second column: path to dcm/nii file.</li>
+<li>Mandatory columns:</li>
+<li>id: unique id.</li>
+<li>
+<p>dcm_path: path to one dcm/nii file.</p>
+</li>
+<li>
+<p>Additional columns (<strong>required only in case of BASE and LONG processing</strong>):</p>
+</li>
+<li>subject: subject base ID</li>
+<li>session: session ID</li>
+<li>date: folder named with scan date</li>
+<li>visit: time point relative to the ones contained in the subject folder.</li>
 </ul>
-<p>For the ADNI dataset, you can create this file using the <code>create_recon_input.py</code> script. This will create a <code>recon_input.txt</code> file. The script will combine the subject ID and the session ID to create a unique ID.</p>
-<pre><code class="language-bash">docker run --rm -it -v $(pwd):/root/freesurfer_wrapper fs_wrapper \
-python scripts/create_recon_input.py
+<p>For the ADNI dataset example, you can create this file using <code>create_recon_input.py all -i &lt;PATH_TO_SAMPLES_FOLDER&gt;</code>. This will create a <code>recon_all_input.txt</code> file. The script will combine the subject ID and the session ID to create the unique ID.</p>
+<pre><code class="language-bash">sudo docker run --rm -it -v &quot;$(pwd):/root/freesurfer_wrapper&quot; fs_wrapper python3 scripts/create_recon_input.py all -i ADNI/
 </code></pre>
-<p>As an example, a <code>recon_input.txt</code> file for some ADNI records will look like this:</p>
-<pre><code class="language-bash">137_S_1414_S46193   ADNI/137_S_1414/MP-RAGE/2008-02-26_11_57_53.0/S46193/ADNI_137_S_1414_MR_MP-RAGE__br_raw_20080226130530486_1_S46193_I92752.dcm
-137_S_1414_S72806   ADNI/137_S_1414/MP-RAGE/2009-08-26_11_06_33.0/S72806/ADNI_137_S_1414_MR_MP-RAGE__br_raw_20090827101803061_1_S72806_I153787.dcm
+<p><code>recon_all_input.txt</code> example:</p>
+<pre><code class="language-bash">id  subject session date    visit   dcm_path
+137_S_1414_I64472   137_S_1414  I64472  2007-08-01_10_14_02.0   1   ADNI/137_S_1414/MP-RAGE/2007-08-01_10_14_02.0/I64472/ADNI_137_S_1414_MR_MP-RAGE__br_raw_20070803075521213_1_S36840_I64472.dcm
+137_S_1414_I153787  137_S_1414  I153787 2009-08-26_11_06_33.0   2   ADNI/137_S_1414/MP-RAGE/2009-08-26_11_06_33.0/I153787/ADNI_137_S_1414_MR_MP-RAGE__br_raw_20090827101803061_1_S72806_I153787.dcm
+137_S_1414_I190917  137_S_1414  I190917 2010-08-18_14_20_16.0   3   ADNI/137_S_1414/MP-RAGE/2010-08-18_14_20_16.0/I190917/ADNI_137_S_1414_MR_MP-RAGE__br_raw_20100819090950301_1_S90858_I190917.dcm
 </code></pre>
-<p>For other datasets you can try to edit the PATH_PATTERN variable in <code>scripts/create_recon_input.py</code>.</p>
-<h3 id="run-recon">Run <strong>recon</strong></h3>
-<p>Now you can run the <code>recon</code> command using Docker.
-This can take several hours.</p>
-<pre><code class="language-bash">docker run --rm -it -v $(pwd):/root/freesurfer_wrapper fs_wrapper \
-python run.py recon -i recon_input.txt
+<h4 id="run-recon-all-cross">Run recon-all [CROSS]</h4>
+<pre><code class="language-bash">sudo docker run --rm -it -v &quot;$(pwd):/root/freesurfer_wrapper&quot; fs_wrapper python3 run.py recon_all -i recon_all_input.txt
 </code></pre>
 <p>This command will use the maximum number of CPUs. You can append the <code>-p &lt;INT&gt;</code> flag where <code>&lt;INT&gt;</code> is the number of parallel runs you want.</p>
-<h2 id="how-to-run-segment_hip_amg">How to run segment_hip_amg</h2>
-<p>This step requires that a whole brain T1 scan of the subject has been analyzed with the main FreeSurfer stream ("recon-all"). After running <code>recon</code>, you can use the same input table to run <code>segment_hip_amg</code>.</p>
-<pre><code class="language-bash">docker run --rm -it -v $(pwd):/root/freesurfer_wrapper fs_wrapper \
-python run.py segment_hip_amg -i recon_input.txt
+<h3 id="recon-all-base-processing">recon-all [BASE] processing</h3>
+<p>Create an unbiased template from all time points for each subject.</p>
+<h4 id="input-file_1">Input file</h4>
+<p>BASE processing requires a single column file were each line must be a command string with the following template:</p>
+<p><code>recon-all -base &lt;subject&gt; -tp &lt;unique_id&gt; -tp &lt;unique_id&gt; ... -all</code></p>
+<p>For the ADNI dataset example, you can create this file using <code>create_recon_input.py base -i recon_all_input.txt</code>. This will use the <code>recon_all_input.txt</code> file created previously for the CROSS processing. If necessary, edit this <code>recon_all_input.txt</code> to contain <strong>only the samples that have been successfully processed</strong>.</p>
+<pre><code class="language-bash">sudo docker run --rm -it -v &quot;$(pwd):/root/freesurfer_wrapper&quot; fs_wrapper python3 scripts/create_recon_input.py base -i recon_all_input.txt
 </code></pre>
-<h2 id="how-to-run-edit">How to run edit</h2>
-<h3 id="create-the-input-file_1">Create the input file</h3>
-<p>After running <code>recon</code> you can check your results using <code>freeview</code>. Please refer to <a href="#manual-quality-analysis">Manual quality analysis section</a> to use a custom script.</p>
+<p><code>recon_base_input.txt</code> example:</p>
+<pre><code class="language-bash">recon-all -base 137_S_1414 -tp 137_S_1414_I64472 -tp 137_S_1414_I153787 -tp 137_S_1414_I190917 -all
+</code></pre>
+<h4 id="run-recon-all-base">Run recon-all [BASE]</h4>
+<pre><code class="language-bash">sudo docker run --rm -it -v &quot;$(pwd):/root/freesurfer_wrapper&quot; fs_wrapper python3 run.py recon_base -i recon_base_input.txt
+</code></pre>
+<p>This command will use the maximum number of CPUs. You can append the <code>-p &lt;INT&gt;</code> flag where <code>&lt;INT&gt;</code> is the number of parallel runs you want.</p>
+<h3 id="recon-all-long-processing">recon-all [LONG] processing</h3>
+<p>Longitudinally process all timepoints.</p>
+<h4 id="input-file_2">Input file</h4>
+<p>LONG processing requires a single column file were each line must be a command string with the following template:</p>
+<p><code>recon-all -long &lt;unique_id&gt; &lt;subject&gt; -all</code></p>
+<p>For the ADNI dataset example, you can create this file using <code>create_recon_input.py long -i recon_all_input.txt</code>. This will use the <code>recon_all_input.txt</code> file created previously for the CROSS processing. If necessary, edit this <code>recon_all_input.txt</code> to contain <strong>only the samples that have been successfully processed</strong>.</p>
+<pre><code class="language-bash">sudo docker run --rm -it -v &quot;$(pwd):/root/freesurfer_wrapper&quot; fs_wrapper python3 scripts/create_recon_input.py long -i recon_all_input.txt
+</code></pre>
+<p><code>recon_long_input.txt</code> example:</p>
+<pre><code class="language-bash">recon-all -long 137_S_1414_I64472 137_S_1414 -all
+recon-all -long 137_S_1414_I153787 137_S_1414 -all
+recon-all -long 137_S_1414_I190917 137_S_1414 -all
+</code></pre>
+<h4 id="run-recon-all-long">Run recon-all [LONG]</h4>
+<pre><code class="language-bash">sudo docker run --rm -it -v &quot;$(pwd):/root/freesurfer_wrapper&quot; fs_wrapper python3 run.py recon_long -i recon_long_input.txt
+</code></pre>
+<p>This command will use the maximum number of CPUs. You can append the <code>-p &lt;INT&gt;</code> flag where <code>&lt;INT&gt;</code> is the number of parallel runs you want.</p>
+<h3 id="segmentation-of-hippocampal-subfields-and-nuclei-of-the-amygdala-cross-processing">Segmentation of hippocampal subfields and nuclei of the amygdala [CROSS] processing</h3>
+<p>Original script by Juan Eugenio Iglesias. For more information and citation requirements, please consult <a href="https://surfer.nmr.mgh.harvard.edu/fswiki/HippocampalSubfieldsAndNucleiOfAmygdala">FS official documentation</a>.</p>
+<h4 id="input-file_3">Input file</h4>
+<p>CROSS processing requires a tab separated file with named columns:</p>
+<ul>
+<li>Mandatory columns:</li>
+<li>id: unique id.</li>
+</ul>
+<p>For the ADNI dataset example, you can use the <code>recon_all_input.txt</code> file created previously for the recon-all CROSS processing. If necessary, edit this <code>recon_all_input.txt</code> to contain <strong>only the samples that have been successfully processed</strong>.</p>
+<h4 id="run-segment_ha-cross">Run segment_HA [CROSS]</h4>
+<pre><code class="language-bash">sudo docker run --rm -it -v &quot;$(pwd):/root/freesurfer_wrapper&quot; fs_wrapper python3 run.py segment_HA -i recon_all_input.txt
+</code></pre>
+<p>This command will use the maximum number of CPUs. You can append the <code>-p &lt;INT&gt;</code> flag where <code>&lt;INT&gt;</code> is the number of parallel runs you want.</p>
+<h3 id="segmentation-of-hippocampal-subfields-and-nuclei-of-the-amygdala-long-processing">Segmentation of hippocampal subfields and nuclei of the amygdala [LONG] processing</h3>
+<p>Original script by Juan Eugenio Iglesias. For more information and citation requirements, please consult <a href="https://surfer.nmr.mgh.harvard.edu/fswiki/HippocampalSubfieldsAndNucleiOfAmygdala">FS official documentation</a>.</p>
+<h4 id="input-file_4">Input file</h4>
+<p>LONG processing requires a tab separated file with named columns:</p>
+<ul>
+<li>Mandatory columns:</li>
+<li>subject: base ID from subject processed with recon-all [BASE]</li>
+</ul>
+<p>For the ADNI dataset example, you can use the <code>recon_all_input.txt</code> file created previously for the recon-all CROSS processing. If necessary, edit this <code>recon_all_input.txt</code> to contain <strong>only the samples that have been successfully processed</strong>.</p>
+<h4 id="run-segment_ha-long">Run segment_HA [LONG]</h4>
+<pre><code class="language-bash">sudo docker run --rm -it -v &quot;$(pwd):/root/freesurfer_wrapper&quot; fs_wrapper python3 run.py segment_HA_long -i recon_all_input.txt
+</code></pre>
+<p>This command will use the maximum number of CPUs. You can append the <code>-p &lt;INT&gt;</code> flag where <code>&lt;INT&gt;</code> is the number of parallel runs you want.</p>
+<h2 id="tissue-ratio-correction">Tissue ratio correction</h2>
+<p>After running <code>recon_all</code> you can check your results using <code>freeview</code>. Please refer to <a href="#manual-quality-analysis">Manual quality analysis section</a> to use a custom script.</p>
 <p>If any skull edits are necessary, you need to create an input table to run <code>edit</code> with the following characteristics:</p>
 <ul>
-<li>Each line must represent a single scan.</li>
-<li>First column: unique ID. </li>
-<li>Second column: path to dcm/nii file.</li>
-<li>Third column: the tissue ratio for WM edits.</li>
+<li>Mandatory columns:</li>
+<li>id: unique id.</li>
+<li>ratio: the threshold to value (%) of WM intensity. The value should be &gt;0 and &lt;1; larger values would correspond to cleaner skull-strip but higher chance of brain erosion.</li>
 </ul>
-<p>Tissue ratio is the threshold to value (%) of WM intensity. The value should be &gt;0 and &lt;1; larger values would correspond to cleaner skull-strip but higher chance of brain erosion.</p>
-<p>You can copy the recon input table, keep only the lines for the scans that need pial edits, and add the column with the tissue ratio values.</p>
-<p>As an example, a <code>edit_input.txt</code> file for some ADNI records will look like this:</p>
-<pre><code class="language-bash">137_S_1414_S46193   ADNI/137_S_1414/MP-RAGE/2008-02-26_11_57_53.0/S46193/ADNI_137_S_1414_MR_MP-RAGE__br_raw_20080226130530486_1_S46193_I92752.dcm 0.5
-137_S_1414_S72806   ADNI/137_S_1414/MP-RAGE/2009-08-26_11_06_33.0/S72806/ADNI_137_S_1414_MR_MP-RAGE__br_raw_20090827101803061_1_S72806_I153787.dcm  0.3
+<p>You can copy the <code>recon_all_input.txt</code> content, keep only the lines for the scans that need edits, and add the column with the tissue ratio values.</p>
+<p>As an example, an <code>edit_input.txt</code> file for some ADNI records would look like this:</p>
+<pre><code class="language-bash">id  subject session date    visit   dcm_path    ratio
+137_S_1414_I64472   137_S_1414  I64472  2007-08-01_10_14_02.0   1   ADNI/137_S_1414/MP-RAGE/2007-08-01_10_14_02.0/I64472/ADNI_137_S_1414_MR_MP-RAGE__br_raw_20070803075521213_1_S36840_I64472.dcm 0.5
+137_S_1414_I153787  137_S_1414  I153787 2009-08-26_11_06_33.0   2   ADNI/137_S_1414/MP-RAGE/2009-08-26_11_06_33.0/I153787/ADNI_137_S_1414_MR_MP-RAGE__br_raw_20090827101803061_1_S72806_I153787.dcm 0.8
 </code></pre>
-<h3 id="run-edit">Run <strong>edit</strong></h3>
-<p>Now you can run the <code>edit</code> command using Docker.</p>
-<pre><code class="language-bash">docker run --rm -it -v $(pwd):/root/freesurfer_wrapper fs_wrapper \
-python run.py edit -i edit_input.txt
+<h3 id="run-edit">Run edit</h3>
+<pre><code class="language-bash">sudo docker run --rm -it -v &quot;$(pwd):/root/freesurfer_wrapper&quot; fs_wrapper \
+python3 run.py edit -i edit_input.txt
 </code></pre>
 <p>This command will use the maximum number of CPUs. You can append the <code>-p &lt;INT&gt;</code> flag where <code>&lt;INT&gt;</code> is the number of parallel runs you want.</p>
 <p>You can check the resulting edited mask using <code>freeview</code>:</p>
@@ -167,42 +171,54 @@ freeview -recon &lt;UNIQUE_ID&gt; -v brainmask.gcutsT$&lt;TISSUE_RATIO&gt;.mgz:c
 </code></pre>
 <p>If still not good, change the tissue ratio value in the input file and run <code>edit</code> again.
 When all masks are OK, proceed to <code>recon_edit</code> command.</p>
-<h2 id="how-to-run-recon_edit">How to run recon_edit</h2>
-<h3 id="create-the-input-file_2">Create the input file</h3>
-<p>The input file is the table used for <code>edit</code> with the final values for tissue ratio.</p>
-<h3 id="run-recon_edit">Run <strong>recon_edit</strong></h3>
-<p><code>recon_edit</code> will re-run parts of FS recon-all using the edited masks. This can take several hours.</p>
-<pre><code class="language-bash">docker run --rm -it -v $(pwd):/root/freesurfer_wrapper fs_wrapper python run.py recon_edit -i edit_input.txt
+<h3 id="recon_edit">recon_edit</h3>
+<p><code>recon_edit</code> will re-run parts of FS recon-all using the edited masks.
+The input file is the table used for <code>edit</code> with the final values for tissue ratio.</p>
+<pre><code class="language-bash">sudo docker run --rm -it -v &quot;$(pwd):/root/freesurfer_wrapper&quot; fs_wrapper python3 run.py recon_edit -i edit_input.txt
 </code></pre>
 <p>This command will use the maximum number of CPUs. You can append the <code>-p &lt;INT&gt;</code> flag where <code>&lt;INT&gt;</code> is the number of parallel runs you want.</p>
-<h2 id="how-to-check-for-completed-runs-and-hard-errors">How to check for completed runs and hard errors</h2>
+<h2 id="how-to-check-for-completed-runs-and-hard-recon-all-errors">How to check for completed runs and hard recon-all errors</h2>
 <p>FreeSurfer's recon-all command creates different logs while running.
 The <code>recon-all.done</code> log is created only for completed runs. The <code>recon-all.error</code> is created for hard failures. </p>
 <p>You can check these logs using a custom script. The script was written to work on ADNI folder structure. For other datasets you can try to edit the PATH_PATTERN variable in scripts/check_logs.py.</p>
 <h3 id="done">Done</h3>
-<pre><code class="language-bash">docker run --rm -it -v $(pwd):/root/freesurfer_wrapper fs_wrapper \
-python scripts/check_logs.py done
+<pre><code class="language-bash">sudo docker run --rm -it -v &quot;$(pwd):/root/freesurfer_wrapper&quot; fs_wrapper \
+python3 scripts/check_logs.py done
 </code></pre>
 <p>You can also pipe the output to bash word count command to get a quick count:</p>
-<pre><code class="language-bash">docker run --rm -it -v $(pwd):/root/freesurfer_wrapper fs_wrapper \
-python scripts/check_logs.py done | wc -l
+<pre><code class="language-bash">sudo docker run --rm -it -v &quot;$(pwd):/root/freesurfer_wrapper&quot; fs_wrapper \
+python3 scripts/check_logs.py done | wc -l
 </code></pre>
 <h3 id="error">Error</h3>
-<pre><code class="language-bash">docker run --rm -it -v $(pwd):/root/freesurfer_wrapper fs_wrapper \
-python scripts/check_logs.py error
+<pre><code class="language-bash">sudo docker run --rm -it -v &quot;$(pwd):/root/freesurfer_wrapper&quot; fs_wrapper \
+python3 scripts/check_logs.py error
 </code></pre>
 <h2 id="how-to-restart-after-a-computer-failure">How to restart after a computer failure</h2>
-<p>If the execution of the pipeline is halted by a computer failure or system restart then you have to update the input file of the <code>recon</code> command.</p>
-<pre><code class="language-bash">bash scripts/update_recon_input.sh
+<p>If the execution of the pipeline is halted by a computer failure or system restart then you have to update the input file of the <code>recon</code> commands.</p>
+<p>To update <code>recon_all_input.txt</code>:</p>
+<pre><code class="language-bash">sudo docker run --rm -it -v &quot;$(pwd):/root/freesurfer_wrapper&quot; fs_wrapper python3 scripts/update_recon_input.py all -i recon_all_input.txt
 </code></pre>
-<p>This will remove all "done" samples from the original recon_input. It will also delete the folders from the samples that were running when the failure happened. These samples will run again from scratch.</p>
-<p>Now run again the <a href="#run-recon"><code>recon</code> command</a> but using the new input file (<code>&lt;YYYY-MM-DD&gt;_recon_input.txt</code>).</p>
+<p>To update <code>recon_base_input.txt</code>:</p>
+<pre><code class="language-bash">sudo docker run --rm -it -v &quot;$(pwd):/root/freesurfer_wrapper&quot; fs_wrapper python3 scripts/update_recon_input.py base -i recon_base_input.txt
+</code></pre>
+<p>To update <code>recon_long_input.txt</code>:</p>
+<pre><code class="language-bash">sudo docker run --rm -it -v &quot;$(pwd):/root/freesurfer_wrapper&quot; fs_wrapper python3 scripts/update_recon_input.py long -i recon_long_input.txt
+</code></pre>
+<p>This will remove all "done" samples from the original input and create a new input file (<code>&lt;YYYY-MM-DD&gt;_recon_&lt;all|base|long&gt;_input.txt</code>).</p>
+<p>To delete the folders from the samples that were running when the failure happened:</p>
+<pre><code class="language-bash"># first check the list
+IsRunning=(ls FS_OUTPUTS/*/scripts/*IsRunning* | cut -f 1,2 -d /)
+echo $IsRunning
+
+# if it is ok, delete
+sudo rm -R $IsRunning
+</code></pre>
 <h2 id="quality-control">Quality control</h2>
 <h3 id="automated-quality-analysis">Automated quality analysis</h3>
 <p>The tool is packaged with <a href="https://github.com/Deep-MI/qatools-python"><strong>qatools-python</strong></a> version 1.2 for quality control measurements.
 This script was developed by <a href="https://deep-mi.org/">Reuter DeepMI Lab</a> as a revision, extension, and translation to the Python language of the Freesurfer QA Tools.</p>
-<pre><code class="language-bash">docker run --rm -it -v $(pwd):/root/freesurfer_wrapper fs_wrapper \
-python scripts/qatools-python/qatools.py --subjects_dir FS_OUTPUTS --output_dir QC \
+<pre><code class="language-bash">sudo docker run --rm -it -v &quot;$(pwd):/root/freesurfer_wrapper&quot; fs_wrapper \
+python3 scripts/qatools-python/qatools.py --subjects_dir FS_OUTPUTS --output_dir QC \
 --screenshots --outlier --fornix
 </code></pre>
 <p>This will create <code>qatools-results.csv</code> file; <code>screenshots</code>, <code>outliers</code> and <code>fornix</code> folders inside the QC folder. Please consult <a href="scripts/qatools-python/README.md#description">qatools-python docs</a> for a full explanation of each QC measurement.</p>
@@ -216,7 +232,7 @@ The script also prompts the user about the result of the QC after each window of
 </code></pre>
 <h4 id="step-2">Step 2</h4>
 <p>Run the <code>view.py</code> script.</p>
-<pre><code class="language-bash">python scripts/view.py
+<pre><code class="language-bash">python3 scripts/view.py
 </code></pre>
 <details class="source">
 <summary>
@@ -253,31 +269,42 @@ The script also prompts the user about the result of the QC after each window of
 <ul>
 <li><a href="#freesurfer_wrapper">freesurfer_wrapper</a><ul>
 <li><a href="#requirements">Requirements</a></li>
+<li><a href="#files-and-folders-overview">Files and folders overview</a></li>
 <li><a href="#preparation">Preparation</a></li>
-<li><a href="#overview-run">Overview run</a><ul>
-<li><a href="#recon">recon</a></li>
-<li><a href="#segment_hip_amg">segment_hip_amg</a></li>
-<li><a href="#edit">edit</a></li>
+<li><a href="#workflow-overview">Workflow overview</a><ul>
+<li><a href="#recon-all-cross-processing">recon-all [CROSS] processing</a><ul>
+<li><a href="#input-file">Input file</a></li>
+<li><a href="#run-recon-all-cross">Run recon-all [CROSS]</a></li>
+</ul>
+</li>
+<li><a href="#recon-all-base-processing">recon-all [BASE] processing</a><ul>
+<li><a href="#input-file_1">Input file</a></li>
+<li><a href="#run-recon-all-base">Run recon-all [BASE]</a></li>
+</ul>
+</li>
+<li><a href="#recon-all-long-processing">recon-all [LONG] processing</a><ul>
+<li><a href="#input-file_2">Input file</a></li>
+<li><a href="#run-recon-all-long">Run recon-all [LONG]</a></li>
+</ul>
+</li>
+<li><a href="#segmentation-of-hippocampal-subfields-and-nuclei-of-the-amygdala-cross-processing">Segmentation of hippocampal subfields and nuclei of the amygdala [CROSS] processing</a><ul>
+<li><a href="#input-file_3">Input file</a></li>
+<li><a href="#run-segment_ha-cross">Run segment_HA [CROSS]</a></li>
+</ul>
+</li>
+<li><a href="#segmentation-of-hippocampal-subfields-and-nuclei-of-the-amygdala-long-processing">Segmentation of hippocampal subfields and nuclei of the amygdala [LONG] processing</a><ul>
+<li><a href="#input-file_4">Input file</a></li>
+<li><a href="#run-segment_ha-long">Run segment_HA [LONG]</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#tissue-ratio-correction">Tissue ratio correction</a><ul>
+<li><a href="#run-edit">Run edit</a></li>
 <li><a href="#recon_edit">recon_edit</a></li>
 </ul>
 </li>
-<li><a href="#how-to-run-recon">How to run recon</a><ul>
-<li><a href="#create-the-input-file">Create the input file</a></li>
-<li><a href="#run-recon">Run recon</a></li>
-</ul>
-</li>
-<li><a href="#how-to-run-segment_hip_amg">How to run segment_hip_amg</a></li>
-<li><a href="#how-to-run-edit">How to run edit</a><ul>
-<li><a href="#create-the-input-file_1">Create the input file</a></li>
-<li><a href="#run-edit">Run edit</a></li>
-</ul>
-</li>
-<li><a href="#how-to-run-recon_edit">How to run recon_edit</a><ul>
-<li><a href="#create-the-input-file_2">Create the input file</a></li>
-<li><a href="#run-recon_edit">Run recon_edit</a></li>
-</ul>
-</li>
-<li><a href="#how-to-check-for-completed-runs-and-hard-errors">How to check for completed runs and hard errors</a><ul>
+<li><a href="#how-to-check-for-completed-runs-and-hard-recon-all-errors">How to check for completed runs and hard recon-all errors</a><ul>
 <li><a href="#done">Done</a></li>
 <li><a href="#error">Error</a></li>
 </ul>
