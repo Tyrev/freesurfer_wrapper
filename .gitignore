@@ -1,7 +1,6 @@
 __pycache__
 *.pyc
 license.txt
-ADNI/
-*.dcm
 .vscode
-recon_input.txt
+recon*_input.txt
+tmpdir/
