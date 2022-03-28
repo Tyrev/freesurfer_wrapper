@@ -107,7 +107,7 @@ GNU @strong{parcat} is part of GNU @strong{parallel}. Report bugs to
 @node AUTHOR
 @chapter AUTHOR
 
-Copyright (C) 2016-2021 Ole Tange, http://ole.tange.dk and Free
+Copyright (C) 2016-2022 Ole Tange, http://ole.tange.dk and Free
 Software Foundation, Inc.
 
 @node LICENSE

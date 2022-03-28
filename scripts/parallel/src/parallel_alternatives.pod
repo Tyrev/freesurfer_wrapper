@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-# SPDX-FileCopyrightText: 2021 Ole Tange, http://ole.tange.dk and Free Software and Foundation, Inc.
+# SPDX-FileCopyrightText: 2021-2022 Ole Tange, http://ole.tange.dk and Free Software and Foundation, Inc.
 # SPDX-License-Identifier: GFDL-1.3-or-later
 # SPDX-License-Identifier: CC-BY-SA-4.0
 
@@ -13,11 +13,13 @@ parallel_alternatives - Alternatives to GNU B<parallel>
 
 =head1 DIFFERENCES BETWEEN GNU Parallel AND ALTERNATIVES
 
-There are a lot programs with some of the functionality of GNU
-B<parallel>. GNU B<parallel> strives to include the best of the
-functionality without sacrificing ease of use.
+There are a lot programs that share functionality with GNU
+B<parallel>. Some of these are specialized tools, and while GNU
+B<parallel> can emulate many of them, a specialized tool can be better
+at a given task. GNU B<parallel> strives to include the best of the
+general functionality without sacrificing ease of use.
 
-B<parallel> has existed since 2002 and as GNU B<parallel> since
+B<parallel> has existed since 2002-01-06 and as GNU B<parallel> since
 2010. A lot of the alternatives have not had the vitality to survive
 that long, but have come and gone during that time.
 
@@ -292,6 +294,9 @@ contain space, " or ').
 
   ls | xargs -d "\n" -P8 -I {} bash -c "wc {} >{}.wc"
   ls | xargs -d "\n" -P8 -I {} bash -c "echo {}; ls {}|wc"
+
+A more extreme example can be found on:
+https://unix.stackexchange.com/q/405552/
 
 https://www.gnu.org/software/findutils/
 
@@ -3620,7 +3625,7 @@ Copyright (C) 2007-10-18 Ole Tange, http://ole.tange.dk
 
 Copyright (C) 2008-2010 Ole Tange, http://ole.tange.dk
 
-Copyright (C) 2010-2021 Ole Tange, http://ole.tange.dk and Free
+Copyright (C) 2010-2022 Ole Tange, http://ole.tange.dk and Free
 Software Foundation, Inc.
 
 Parts of the manual concerning B<xargs> compatibility is inspired by

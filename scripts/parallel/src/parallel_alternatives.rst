@@ -12,18 +12,11 @@ DIFFERENCES BETWEEN GNU Parallel AND ALTERNATIVES
 *************************************************
 
 
-There are a lot programs with some of the functionality of GNU
-\ **parallel**\ . GNU \ **parallel**\  strives to include the best of the
-functionality without sacrificing ease of use.
+There are a lot programs that share functionality with GNU \ **parallel**\ . Some of these are specialized tools, and while GNU \ **parallel**\  can emulate many of them, a specialized tool can be better at a given task. GNU \ **parallel**\  strives to include the best of the general functionality without sacrificing ease of use.
 
-\ **parallel**\  has existed since 2002 and as GNU \ **parallel**\  since
-2010. A lot of the alternatives have not had the vitality to survive
-that long, but have come and gone during that time.
+\ **parallel**\  has existed since 2002-01-06 and as GNU \ **parallel**\  since 2010. A lot of the alternatives have not had the vitality to survive that long, but have come and gone during that time.
 
-GNU \ **parallel**\  is actively maintained with a new release every month
-since 2010. Most other alternatives are fleeting interests of the
-developers with irregular releases and only maintained for a few
-years.
+GNU \ **parallel**\  is actively maintained with a new release every month since 2010. Most other alternatives are fleeting interests of the developers with irregular releases and only maintained for a few years.
 
 SUMMARY LEGEND
 ==============
@@ -236,7 +229,7 @@ Legend
 
 
 
-- = no
+- \- = no
 
 
 
@@ -248,9 +241,7 @@ Legend
 
 
 
-As every new version of the programs are not tested the table may be
-outdated. Please file a bug report if you find errors (See REPORTING
-BUGS).
+As every new version of the programs are not tested the table may be outdated. Please file a bug report if you find errors (See REPORTING BUGS).
 
 parallel:
 
@@ -292,11 +283,11 @@ Summary (see legend above):
 
 
 
-- M2 M3 - - -
+- \- M2 M3 - - -
 
 
 
-- O2 O3 - O5 O6
+- \- O2 O3 - O5 O6
 
 
 
@@ -304,18 +295,17 @@ Summary (see legend above):
 
 
 
-- - - - - x - - -
+- \- - - - - x - - -
 
 
 
-- -
+- \- -
 
 
 
 \ **xargs**\  offers some of the same possibilities as GNU \ **parallel**\ .
 
-\ **xargs**\  deals badly with special characters (such as space, \, ' and
-"). To see the problem try this:
+\ **xargs**\  deals badly with special characters (such as space, \, ' and "). To see the problem try this:
 
 
 .. code-block:: perl
@@ -329,26 +319,15 @@ Summary (see legend above):
    echo 'c:\windows\system32\clfs.sys' | xargs ls -l
 
 
-You can specify \ **-0**\ , but many input generators are not optimized for
-using \ **NUL**\  as separator but are optimized for \ **newline**\  as
-separator. E.g. \ **awk**\ , \ **ls**\ , \ **echo**\ , \ **tar -v**\ , \ **head**\  (requires
-using \ **-z**\ ), \ **tail**\  (requires using \ **-z**\ ), \ **sed**\  (requires using
-\ **-z**\ ), \ **perl**\  (\ **-0**\  and \0 instead of \n), \ **locate**\  (requires
-using \ **-0**\ ), \ **find**\  (requires using \ **-print0**\ ), \ **grep**\  (requires
-using \ **-z**\  or \ **-Z**\ ), \ **sort**\  (requires using \ **-z**\ ).
+You can specify \ **-0**\ , but many input generators are not optimized for using \ **NUL**\  as separator but are optimized for \ **newline**\  as separator. E.g. \ **awk**\ , \ **ls**\ , \ **echo**\ , \ **tar -v**\ , \ **head**\  (requires using \ **-z**\ ), \ **tail**\  (requires using \ **-z**\ ), \ **sed**\  (requires using \ **-z**\ ), \ **perl**\  (\ **-0**\  and \0 instead of \n), \ **locate**\  (requires using \ **-0**\ ), \ **find**\  (requires using \ **-print0**\ ), \ **grep**\  (requires using \ **-z**\  or \ **-Z**\ ), \ **sort**\  (requires using \ **-z**\ ).
 
 GNU \ **parallel**\ 's newline separation can be emulated with:
 
 \ **cat | xargs -d "\n" -n1 \ \*command\*\ **\ 
 
-\ **xargs**\  can run a given number of jobs in parallel, but has no
-support for running number-of-cpu-cores jobs in parallel.
+\ **xargs**\  can run a given number of jobs in parallel, but has no support for running number-of-cpu-cores jobs in parallel.
 
-\ **xargs**\  has no support for grouping the output, therefore output may
-run together, e.g. the first half of a line is from one process and
-the last half of the line is from another process. The example
-\ **Parallel grep**\  cannot be done reliably with \ **xargs**\  because of
-this. To see this in action try:
+\ **xargs**\  has no support for grouping the output, therefore output may run together, e.g. the first half of a line is from one process and the last half of the line is from another process. The example \ **Parallel grep**\  cannot be done reliably with \ **xargs**\  because of this. To see this in action try:
 
 
 .. code-block:: perl
@@ -383,20 +362,15 @@ Or try this:
    seq 8 | xargs -n1 -P8 -I {} bash -c 'slow_seq {}'
 
 
-\ **xargs**\  has no support for keeping the order of the output, therefore
-if running jobs in parallel using \ **xargs**\  the output of the second
-job cannot be postponed till the first job is done.
+\ **xargs**\  has no support for keeping the order of the output, therefore if running jobs in parallel using \ **xargs**\  the output of the second job cannot be postponed till the first job is done.
 
 \ **xargs**\  has no support for running jobs on remote computers.
 
-\ **xargs**\  has no support for context replace, so you will have to create the
-arguments.
+\ **xargs**\  has no support for context replace, so you will have to create the arguments.
 
-If you use a replace string in \ **xargs**\  (\ **-I**\ ) you can not force
-\ **xargs**\  to use more than one argument.
+If you use a replace string in \ **xargs**\  (\ **-I**\ ) you can not force \ **xargs**\  to use more than one argument.
 
-Quoting in \ **xargs**\  works like \ **-q**\  in GNU \ **parallel**\ . This means
-composed commands and redirection require using \ **bash -c**\ .
+Quoting in \ **xargs**\  works like \ **-q**\  in GNU \ **parallel**\ . This means composed commands and redirection require using \ **bash -c**\ .
 
 
 .. code-block:: perl
@@ -405,8 +379,7 @@ composed commands and redirection require using \ **bash -c**\ .
    ls | parallel "echo {}; ls {}|wc"
 
 
-becomes (assuming you have 8 cores and that none of the filenames
-contain space, " or ').
+becomes (assuming you have 8 cores and that none of the filenames contain space, " or ').
 
 
 .. code-block:: perl
@@ -414,6 +387,8 @@ contain space, " or ').
    ls | xargs -d "\n" -P8 -I {} bash -c "wc {} >{}.wc"
    ls | xargs -d "\n" -P8 -I {} bash -c "echo {}; ls {}|wc"
 
+
+A more extreme example can be found on: https://unix.stackexchange.com/q/405552/
 
 https://www.gnu.org/software/findutils/
 
@@ -425,23 +400,23 @@ DIFFERENCES BETWEEN find -exec AND GNU Parallel
 Summary (see legend above):
 
 
--  -  -  x  -  x  -
+- \-  -  -  x  -  x  -
 
 
 
--  M2 M3 -  -  -  -
+- \-  M2 M3 -  -  -  -
 
 
 
--  O2 O3 O4 O5 O6
+- \-  O2 O3 O4 O5 O6
 
 
 
--  -  -  -  -  -  -
+- \-  -  -  -  -  -  -
 
 
 
--  -  -  -  -  -  -  -  -
+- \-  -  -  -  -  -  -  -  -
 
 
 
@@ -451,9 +426,7 @@ Summary (see legend above):
 
 \ **find -exec**\  offers some of the same possibilities as GNU \ **parallel**\ .
 
-\ **find -exec**\  only works on files. Processing other input (such as
-hosts or URLs) will require creating these inputs as files. \ **find
--exec**\  has no support for running commands in parallel.
+\ **find -exec**\  only works on files. Processing other input (such as hosts or URLs) will require creating these inputs as files. \ **find -exec**\  has no support for running commands in parallel.
 
 https://www.gnu.org/software/findutils/ (Last checked: 2019-01)
 
@@ -465,11 +438,11 @@ DIFFERENCES BETWEEN make -j AND GNU Parallel
 Summary (see legend above):
 
 
--  -  -  -  -  -  -
+- \-  -  -  -  -  -  -
 
 
 
--  -  -  -  -  -
+- \-  -  -  -  -  -
 
 
 
@@ -481,23 +454,19 @@ Summary (see legend above):
 
 
 
--  -  -  -  -  -  -  -  -
+- \-  -  -  -  -  -  -  -  -
 
 
 
--  -
+- \-  -
 
 
 
-\ **make -j**\  can run jobs in parallel, but requires a crafted Makefile
-to do this. That results in extra quoting to get filenames containing
-newlines to work correctly.
+\ **make -j**\  can run jobs in parallel, but requires a crafted Makefile to do this. That results in extra quoting to get filenames containing newlines to work correctly.
 
-\ **make -j**\  computes a dependency graph before running jobs. Jobs run
-by GNU \ **parallel**\  does not depend on each other.
+\ **make -j**\  computes a dependency graph before running jobs. Jobs run by GNU \ **parallel**\  does not depend on each other.
 
-(Very early versions of GNU \ **parallel**\  were coincidentally implemented
-using \ **make -j**\ ).
+(Very early versions of GNU \ **parallel**\  were coincidentally implemented using \ **make -j**\ ).
 
 https://www.gnu.org/software/make/ (Last checked: 2019-01)
 
@@ -529,41 +498,25 @@ Summary (see legend above):
 
 
 
-- -
+- \- -
 
 
 
 \ **ppss**\  is also a tool for running jobs in parallel.
 
-The output of \ **ppss**\  is status information and thus not useful for
-using as input for another command. The output from the jobs are put
-into files.
+The output of \ **ppss**\  is status information and thus not useful for using as input for another command. The output from the jobs are put into files.
 
-The argument replace string ($ITEM) cannot be changed. Arguments must
-be quoted - thus arguments containing special characters (space '"&!\*)
-may cause problems. More than one argument is not supported. Filenames
-containing newlines are not processed correctly. When reading input
-from a file null cannot be used as a terminator. \ **ppss**\  needs to read
-the whole input file before starting any jobs.
+The argument replace string ($ITEM) cannot be changed. Arguments must be quoted - thus arguments containing special characters (space '"&!\*) may cause problems. More than one argument is not supported. Filenames containing newlines are not processed correctly. When reading input from a file null cannot be used as a terminator. \ **ppss**\  needs to read the whole input file before starting any jobs.
 
-Output and status information is stored in ppss_dir and thus requires
-cleanup when completed. If the dir is not removed before running
-\ **ppss**\  again it may cause nothing to happen as \ **ppss**\  thinks the
-task is already done. GNU \ **parallel**\  will normally not need cleaning
-up if running locally and will only need cleaning up if stopped
-abnormally and running remote (\ **--cleanup**\  may not complete if
-stopped abnormally). The example \ **Parallel grep**\  would require extra
-postprocessing if written using \ **ppss**\ .
+Output and status information is stored in ppss_dir and thus requires cleanup when completed. If the dir is not removed before running \ **ppss**\  again it may cause nothing to happen as \ **ppss**\  thinks the task is already done. GNU \ **parallel**\  will normally not need cleaning up if running locally and will only need cleaning up if stopped abnormally and running remote (\ **--cleanup**\  may not complete if stopped abnormally). The example \ **Parallel grep**\  would require extra postprocessing if written using \ **ppss**\ .
 
-For remote systems PPSS requires 3 steps: config, deploy, and
-start. GNU \ **parallel**\  only requires one step.
+For remote systems PPSS requires 3 steps: config, deploy, and start. GNU \ **parallel**\  only requires one step.
 
 EXAMPLES FROM ppss MANUAL
 -------------------------
 
 
-Here are the examples from \ **ppss**\ 's manual page with the equivalent
-using GNU \ **parallel**\ :
+Here are the examples from \ **ppss**\ 's manual page with the equivalent using GNU \ **parallel**\ :
 
 
 .. code-block:: perl
@@ -652,8 +605,7 @@ EXAMPLES FROM pexec MANUAL
 --------------------------
 
 
-Here are the examples from \ **pexec**\ 's info page with the equivalent
-using GNU \ **parallel**\ :
+Here are the examples from \ **pexec**\ 's info page with the equivalent using GNU \ **parallel**\ :
 
 
 .. code-block:: perl
@@ -716,18 +668,15 @@ DIFFERENCES BETWEEN xjobs AND GNU Parallel
 ==========================================
 
 
-\ **xjobs**\  is also a tool for running jobs in parallel. It only supports
-running jobs on your local computer.
+\ **xjobs**\  is also a tool for running jobs in parallel. It only supports running jobs on your local computer.
 
-\ **xjobs**\  deals badly with special characters just like \ **xargs**\ . See
-the section \ **DIFFERENCES BETWEEN xargs AND GNU Parallel**\ .
+\ **xjobs**\  deals badly with special characters just like \ **xargs**\ . See the section \ **DIFFERENCES BETWEEN xargs AND GNU Parallel**\ .
 
 EXAMPLES FROM xjobs MANUAL
 --------------------------
 
 
-Here are the examples from \ **xjobs**\ 's man page with the equivalent
-using GNU \ **parallel**\ :
+Here are the examples from \ **xjobs**\ 's man page with the equivalent using GNU \ **parallel**\ :
 
 
 .. code-block:: perl
@@ -771,23 +720,17 @@ DIFFERENCES BETWEEN prll AND GNU Parallel
 =========================================
 
 
-\ **prll**\  is also a tool for running jobs in parallel. It does not
-support running jobs on remote computers.
+\ **prll**\  is also a tool for running jobs in parallel. It does not support running jobs on remote computers.
 
-\ **prll**\  encourages using BASH aliases and BASH functions instead of
-scripts. GNU \ **parallel**\  supports scripts directly, functions if they
-are exported using \ **export -f**\ , and aliases if using \ **env_parallel**\ .
+\ **prll**\  encourages using BASH aliases and BASH functions instead of scripts. GNU \ **parallel**\  supports scripts directly, functions if they are exported using \ **export -f**\ , and aliases if using \ **env_parallel**\ .
 
-\ **prll**\  generates a lot of status information on stderr (standard
-error) which makes it harder to use the stderr (standard error) output
-of the job directly as input for another program.
+\ **prll**\  generates a lot of status information on stderr (standard error) which makes it harder to use the stderr (standard error) output of the job directly as input for another program.
 
 EXAMPLES FROM prll's MANUAL
 ---------------------------
 
 
-Here is the example from \ **prll**\ 's man page with the equivalent
-using GNU \ **parallel**\ :
+Here is the example from \ **prll**\ 's man page with the equivalent using GNU \ **parallel**\ :
 
 
 .. code-block:: perl
@@ -807,12 +750,9 @@ DIFFERENCES BETWEEN dxargs AND GNU Parallel
 
 \ **dxargs**\  is also a tool for running jobs in parallel.
 
-\ **dxargs**\  does not deal well with more simultaneous jobs than SSHD's
-MaxStartups. \ **dxargs**\  is only built for remote run jobs, but does not
-support transferring of files.
+\ **dxargs**\  does not deal well with more simultaneous jobs than SSHD's MaxStartups. \ **dxargs**\  is only built for remote run jobs, but does not support transferring of files.
 
-https://web.archive.org/web/20120518070250/http://www.
-semicomplete.com/blog/geekery/distributed-xargs.html (Last checked: 2019-01)
+https://web.archive.org/web/20120518070250/http://www. semicomplete.com/blog/geekery/distributed-xargs.html (Last checked: 2019-01)
 
 
 DIFFERENCES BETWEEN mdm/middleman AND GNU Parallel
@@ -825,9 +765,7 @@ EXAMPLES FROM middleman's WEBSITE
 ---------------------------------
 
 
-Here are the shellscripts of
-https://web.archive.org/web/20110728064735/http://mdm.
-berlios.de/usage.html ported to GNU \ **parallel**\ :
+Here are the shellscripts of https://web.archive.org/web/20110728064735/http://mdm. berlios.de/usage.html ported to GNU \ **parallel**\ :
 
 
 .. code-block:: perl
@@ -851,8 +789,7 @@ EXAMPLES FROM xapply's MANUAL
 -----------------------------
 
 
-Here are the examples from \ **xapply**\ 's man page with the equivalent
-using GNU \ **parallel**\ :
+Here are the examples from \ **xapply**\ 's man page with the equivalent using GNU \ **parallel**\ :
 
 
 .. code-block:: perl
@@ -917,17 +854,13 @@ DIFFERENCES BETWEEN AIX apply AND GNU Parallel
 ==============================================
 
 
-\ **apply**\  can build command lines based on a template and arguments -
-very much like GNU \ **parallel**\ . \ **apply**\  does not run jobs in
-parallel. \ **apply**\  does not use an argument separator (like \ **:::**\ );
-instead the template must be the first argument.
+\ **apply**\  can build command lines based on a template and arguments - very much like GNU \ **parallel**\ . \ **apply**\  does not run jobs in parallel. \ **apply**\  does not use an argument separator (like \ **:::**\ ); instead the template must be the first argument.
 
 EXAMPLES FROM IBM's KNOWLEDGE CENTER
 ------------------------------------
 
 
-Here are the examples from IBM's Knowledge Center and the
-corresponding command using GNU \ **parallel**\ :
+Here are the examples from IBM's Knowledge Center and the corresponding command using GNU \ **parallel**\ :
 
 To obtain results similar to those of the \ **ls**\  command, enter:
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -976,8 +909,7 @@ To link all files in the current directory to the directory /usr/joe, enter:
    4$ parallel ln {} /usr/joe ::: *
 
 
-https://www-01.ibm.com/support/knowledgecenter/
-ssw_aix_71/com.ibm.aix.cmds1/apply.htm (Last checked: 2019-01)
+https://www-01.ibm.com/support/knowledgecenter/ ssw_aix_71/com.ibm.aix.cmds1/apply.htm (Last checked: 2019-01)
 
 
 
@@ -988,18 +920,15 @@ DIFFERENCES BETWEEN paexec AND GNU Parallel
 
 \ **paexec**\  can run jobs in parallel on both the local and remote computers.
 
-\ **paexec**\  requires commands to print a blank line as the last
-output. This means you will have to write a wrapper for most programs.
+\ **paexec**\  requires commands to print a blank line as the last output. This means you will have to write a wrapper for most programs.
 
-\ **paexec**\  has a job dependency facility so a job can depend on another
-job to be executed successfully. Sort of a poor-man's \ **make**\ .
+\ **paexec**\  has a job dependency facility so a job can depend on another job to be executed successfully. Sort of a poor-man's \ **make**\ .
 
 EXAMPLES FROM paexec's EXAMPLE CATALOG
 --------------------------------------
 
 
-Here are the examples from \ **paexec**\ 's example catalog with the equivalent
-using GNU \ **parallel**\ :
+Here are the examples from \ **paexec**\ 's example catalog with the equivalent using GNU \ **parallel**\ :
 
 1_div_X_run
 ^^^^^^^^^^^
@@ -1082,7 +1011,7 @@ Summary (see legend above):
 
 
 
-- O2 O3 - O5 - - N/A N/A O10
+- \- O2 O3 - O5 - - N/A N/A O10
 
 
 
@@ -1090,11 +1019,11 @@ Summary (see legend above):
 
 
 
-- - - - - - - - -
+- \- - - - - - - - -
 
 
 
-- -
+- \- -
 
 
 
@@ -1136,19 +1065,13 @@ But tiny changes make it reject the input with special characters:
    ls | map 'echo % does not work "%"'
 
 
-This means that many UTF-8 characters will be rejected. This is by
-design. From the web page: "As such, programs that \ *quietly handle
-them, with no warnings at all,*\  are doing their users a disservice."
+This means that many UTF-8 characters will be rejected. This is by design. From the web page: "As such, programs that \ *quietly handle them, with no warnings at all,*\  are doing their users a disservice."
 
-\ **map**\  delays each job by 0.01 s. This can be emulated by using
-\ **parallel --delay 0.01**\ .
+\ **map**\  delays each job by 0.01 s. This can be emulated by using \ **parallel --delay 0.01**\ .
 
-\ **map**\  prints '+' on stderr when a job starts, and '-' when a job
-finishes. This cannot be disabled. \ **parallel**\  has \ **--bar**\  if you
-need to see progress.
+\ **map**\  prints '+' on stderr when a job starts, and '-' when a job finishes. This cannot be disabled. \ **parallel**\  has \ **--bar**\  if you need to see progress.
 
-\ **map**\ 's replacement strings (% %D %B %E) can be simulated in GNU
-\ **parallel**\  by putting this in \ **~/.parallel/config**\ :
+\ **map**\ 's replacement strings (% %D %B %E) can be simulated in GNU \ **parallel**\  by putting this in \ **~/.parallel/config**\ :
 
 
 .. code-block:: perl
@@ -1159,9 +1082,7 @@ need to see progress.
    --rpl '%E s:.*\.::'
 
 
-\ **map**\  does not have an argument separator on the command line, but
-uses the first argument as command. This makes quoting harder which again
-may affect readability. Compare:
+\ **map**\  does not have an argument separator on the command line, but uses the first argument as command. This makes quoting harder which again may affect readability. Compare:
 
 
 .. code-block:: perl
@@ -1171,8 +1092,7 @@ may affect readability. Compare:
    parallel -q perl -ne '/^\S+\s+\S+$/ and print $ARGV,"\n"' ::: *
 
 
-\ **map**\  can do multiple arguments with context replace, but not without
-context replace:
+\ **map**\  can do multiple arguments with context replace, but not without context replace:
 
 
 .. code-block:: perl
@@ -1202,8 +1122,7 @@ EXAMPLES FROM map's WEBSITE
 ---------------------------
 
 
-Here are the examples from \ **map**\ 's web page with the equivalent using
-GNU \ **parallel**\ :
+Here are the examples from \ **map**\ 's web page with the equivalent using GNU \ **parallel**\ :
 
 
 .. code-block:: perl
@@ -1253,15 +1172,11 @@ DIFFERENCES BETWEEN ladon AND GNU Parallel
 
 \ **ladon**\  can run multiple jobs on files in parallel.
 
-\ **ladon**\  only works on files and the only way to specify files is
-using a quoted glob string (such as \\*.jpg). It is not possible to
-list the files manually.
+\ **ladon**\  only works on files and the only way to specify files is using a quoted glob string (such as \*.jpg). It is not possible to list the files manually.
 
-As replacement strings it uses FULLPATH DIRNAME BASENAME EXT RELDIR
-RELPATH
+As replacement strings it uses FULLPATH DIRNAME BASENAME EXT RELDIR RELPATH
 
-These can be simulated using GNU \ **parallel**\  by putting this in
-\ **~/.parallel/config**\ :
+These can be simulated using GNU \ **parallel**\  by putting this in \ **~/.parallel/config**\ :
 
 
 .. code-block:: perl
@@ -1276,8 +1191,7 @@ These can be simulated using GNU \ **parallel**\  by putting this in
           s:\Q$c/\E::;'
 
 
-\ **ladon**\  deals badly with filenames containing " and newline, and it
-fails for output larger than 200k:
+\ **ladon**\  deals badly with filenames containing " and newline, and it fails for output larger than 200k:
 
 
 .. code-block:: perl
@@ -1289,8 +1203,7 @@ EXAMPLES FROM ladon MANUAL
 --------------------------
 
 
-It is assumed that the '--rpl's above are put in \ **~/.parallel/config**\ 
-and that it is run under a shell that supports '\*\*' globbing (such as \ **zsh**\ ):
+It is assumed that the '--rpl's above are put in \ **~/.parallel/config**\  and that it is run under a shell that supports '\*\*' globbing (such as \ **zsh**\ ):
 
 
 .. code-block:: perl
@@ -1326,24 +1239,15 @@ DIFFERENCES BETWEEN jobflow AND GNU Parallel
 
 \ **jobflow**\  can run multiple jobs in parallel.
 
-Just like \ **xargs**\  output from \ **jobflow**\  jobs running in parallel mix
-together by default. \ **jobflow**\  can buffer into files (placed in
-/run/shm), but these are not cleaned up if \ **jobflow**\  dies
-unexpectedly (e.g. by Ctrl-C). If the total output is big (in the
-order of RAM+swap) it can cause the system to slow to a crawl and
-eventually run out of memory.
+Just like \ **xargs**\  output from \ **jobflow**\  jobs running in parallel mix together by default. \ **jobflow**\  can buffer into files (placed in /run/shm), but these are not cleaned up if \ **jobflow**\  dies unexpectedly (e.g. by Ctrl-C). If the total output is big (in the order of RAM+swap) it can cause the system to slow to a crawl and eventually run out of memory.
 
-\ **jobflow**\  gives no error if the command is unknown, and like \ **xargs**\ 
-redirection and composed commands require wrapping with \ **bash -c**\ .
+\ **jobflow**\  gives no error if the command is unknown, and like \ **xargs**\  redirection and composed commands require wrapping with \ **bash -c**\ .
 
-Input lines can at most be 4096 bytes. You can at most have 16 {}'s in
-the command template. More than that either crashes the program or
-simple does not execute the command.
+Input lines can at most be 4096 bytes. You can at most have 16 {}'s in the command template. More than that either crashes the program or simple does not execute the command.
 
 \ **jobflow**\  has no equivalent for \ **--pipe**\ , or \ **--sshlogin**\ .
 
-\ **jobflow**\  makes it possible to set resource limits on the running
-jobs. This can be emulated by GNU \ **parallel**\  using \ **bash**\ 's \ **ulimit**\ :
+\ **jobflow**\  makes it possible to set resource limits on the running jobs. This can be emulated by GNU \ **parallel**\  using \ **bash**\ 's \ **ulimit**\ :
 
 
 .. code-block:: perl
@@ -1389,14 +1293,11 @@ DIFFERENCES BETWEEN gargs AND GNU Parallel
 
 \ **gargs**\  can run multiple jobs in parallel.
 
-Older versions cache output in memory. This causes it to be extremely
-slow when the output is larger than the physical RAM, and can cause
-the system to run out of memory.
+Older versions cache output in memory. This causes it to be extremely slow when the output is larger than the physical RAM, and can cause the system to run out of memory.
 
 See more details on this in \ **man parallel_design**\ .
 
-Newer versions cache output in files, but leave files in $TMPDIR if it
-is killed.
+Newer versions cache output in files, but leave files in $TMPDIR if it is killed.
 
 Output to stderr (standard error) is changed if the command fails.
 
@@ -1426,13 +1327,9 @@ DIFFERENCES BETWEEN orgalorg AND GNU Parallel
 =============================================
 
 
-\ **orgalorg**\  can run the same job on multiple machines. This is related
-to \ **--onall**\  and \ **--nonall**\ .
+\ **orgalorg**\  can run the same job on multiple machines. This is related to \ **--onall**\  and \ **--nonall**\ .
 
-\ **orgalorg**\  supports entering the SSH password - provided it is the
-same for all servers. GNU \ **parallel**\  advocates using \ **ssh-agent**\ 
-instead, but it is possible to emulate \ **orgalorg**\ 's behavior by
-setting SSHPASS and by using \ **--ssh "sshpass ssh"**\ .
+\ **orgalorg**\  supports entering the SSH password - provided it is the same for all servers. GNU \ **parallel**\  advocates using \ **ssh-agent**\  instead, but it is possible to emulate \ **orgalorg**\ 's behavior by setting SSHPASS and by using \ **--ssh "sshpass ssh"**\ .
 
 To make the emulation easier, make a simple alias:
 
@@ -1475,8 +1372,7 @@ If the above is set up you can then do:
      --workdir /tmp md5sum /tmp/bigfile
 
 
-\ **orgalorg**\  has a progress indicator for the transferring of a
-file. GNU \ **parallel**\  does not.
+\ **orgalorg**\  has a progress indicator for the transferring of a file. GNU \ **parallel**\  does not.
 
 https://github.com/reconquest/orgalorg
 
@@ -1485,9 +1381,7 @@ DIFFERENCES BETWEEN Rust parallel AND GNU Parallel
 ==================================================
 
 
-Rust parallel focuses on speed. It is almost as fast as \ **xargs**\ , but
-not as fast as \ **parallel-bash**\ . It implements a few features from GNU
-\ **parallel**\ , but lacks many functions. All these fail:
+Rust parallel focuses on speed. It is almost as fast as \ **xargs**\ , but not as fast as \ **parallel-bash**\ . It implements a few features from GNU \ **parallel**\ , but lacks many functions. All these fail:
 
 
 .. code-block:: perl
@@ -1522,17 +1416,11 @@ These do something different from GNU \ **parallel**\
    tail -f /var/log/syslog | parallel echo
 
 
-Most of the examples from the book GNU Parallel 2018 do not work, thus
-Rust parallel is not close to being a compatible replacement.
+Most of the examples from the book GNU Parallel 2018 do not work, thus Rust parallel is not close to being a compatible replacement.
 
 Rust parallel has no remote facilities.
 
-It uses /tmp/parallel for tmp files and does not clean up if
-terminated abruptly. If another user on the system uses Rust parallel,
-then /tmp/parallel will have the wrong permissions and Rust parallel
-will fail. A malicious user can setup the right permissions and
-symlink the output file to one of the user's files and next time the
-user uses Rust parallel it will overwrite this file.
+It uses /tmp/parallel for tmp files and does not clean up if terminated abruptly. If another user on the system uses Rust parallel, then /tmp/parallel will have the wrong permissions and Rust parallel will fail. A malicious user can setup the right permissions and symlink the output file to one of the user's files and next time the user uses Rust parallel it will overwrite this file.
 
 
 .. code-block:: perl
@@ -1546,8 +1434,7 @@ user uses Rust parallel it will overwrite this file.
    victim$ cat ~victim/.important-file
 
 
-If /tmp/parallel runs full during the run, Rust parallel does not
-report this, but finishes with success - thereby risking data loss.
+If /tmp/parallel runs full during the run, Rust parallel does not report this, but finishes with success - thereby risking data loss.
 
 https://github.com/mmstick/parallel
 
@@ -1556,16 +1443,11 @@ DIFFERENCES BETWEEN Rush AND GNU Parallel
 =========================================
 
 
-\ **rush**\  (https://github.com/shenwei356/rush) is written in Go and
-based on \ **gargs**\ .
+\ **rush**\  (https://github.com/shenwei356/rush) is written in Go and based on \ **gargs**\ .
 
-Just like GNU \ **parallel**\  \ **rush**\  buffers in temporary files. But
-opposite GNU \ **parallel**\  \ **rush**\  does not clean up, if the process
-dies abnormally.
+Just like GNU \ **parallel**\  \ **rush**\  buffers in temporary files. But opposite GNU \ **parallel**\  \ **rush**\  does not clean up, if the process dies abnormally.
 
-\ **rush**\  has some string manipulations that can be emulated by putting
-this into ~/.parallel/config (/ is used instead of %, and % is used
-instead of ^ as that is closer to bash's ${var%postfix}):
+\ **rush**\  has some string manipulations that can be emulated by putting this into ~/.parallel/config (/ is used instead of %, and % is used instead of ^ as that is closer to bash's ${var%postfix}):
 
 
 .. code-block:: perl
@@ -1581,8 +1463,7 @@ EXAMPLES FROM rush's WEBSITE
 ----------------------------
 
 
-Here are the examples from \ **rush**\ 's website with the equivalent
-command in GNU \ **parallel**\ .
+Here are the examples from \ **rush**\ 's website with the equivalent command in GNU \ **parallel**\ .
 
 \ **1. Simple run, quoting is not necessary**\ 
 
@@ -1642,8 +1523,7 @@ Use \ **-u**\  to see it is really run twice:
    5$ seq 1 | parallel -u --retries 2 'python unexisted_script.py'
 
 
-\ **6. Dirname (\`{/}\`) and basename (\`{%}\`) and remove custom
-suffix (\`{^suffix}\`)**\ 
+\ **6. Dirname (\`{/}\`) and basename (\`{%}\`) and remove custom suffix (\`{^suffix}\`)**\ 
 
 
 .. code-block:: perl
@@ -1843,10 +1723,7 @@ Contrary to \ **rush**\  GNU \ **parallel**\  works with complex values:
        ^C
 
 
-\ **16. Continue/resume jobs (\`-c\`). When some jobs failed (by
-execution failure, timeout, or canceling by user with \`Ctrl + C\`),
-please switch flag \`-c/--continue\` on and run again, so that \`rush\`
-can save successful commands and ignore them in \ \*NEXT\*\  run.**\ 
+\ **16. Continue/resume jobs (\`-c\`). When some jobs failed (by execution failure, timeout, or canceling by user with \`Ctrl + C\`), please switch flag \`-c/--continue\` on and run again, so that \`rush\` can save successful commands and ignore them in \ \*NEXT\*\  run.**\ 
 
 
 .. code-block:: perl
@@ -1882,13 +1759,7 @@ Multi-line jobs:
            echo finish {}'
 
 
-\ **17. A comprehensive example: downloading 1K+ pages given by
-three URL list files using \`phantomjs save_page.js\` (some page
-contents are dynamically generated by Javascript, so \`wget\` does not
-work). Here I set max jobs number (\`-j\`) as \`20\`, each job has a max
-running time (\`-t\`) of \`60\` seconds and \`3\` retry changes
-(\`-r\`). Continue flag \`-c\` is also switched on, so we can continue
-unfinished jobs. Luckily, it's accomplished in one run :)**\ 
+\ **17. A comprehensive example: downloading 1K+ pages given by three URL list files using \`phantomjs save_page.js\` (some page contents are dynamically generated by Javascript, so \`wget\` does not work). Here I set max jobs number (\`-j\`) as \`20\`, each job has a max running time (\`-t\`) of \`60\` seconds and \`3\` retry changes (\`-r\`). Continue flag \`-c\` is also switched on, so we can continue unfinished jobs. Luckily, it's accomplished in one run :)**\ 
 
 
 .. code-block:: perl
@@ -1916,8 +1787,7 @@ GNU \ **parallel**\  can append to an existing joblog with '+':
        done
 
 
-\ **18. A bioinformatics example: mapping with \`bwa\`, and
-processing result with \`samtools\`:**\ 
+\ **18. A bioinformatics example: mapping with \`bwa\`, and processing result with \`samtools\`:**\ 
 
 
 .. code-block:: perl
@@ -2002,8 +1872,7 @@ Other \ **rush**\  features
 
 * Exit on first error(s) (-e)
  
- This is called \ **--halt now,fail=1**\  (or shorter: \ **--halt 2**\ ) when
- used with GNU \ **parallel**\ .
+ This is called \ **--halt now,fail=1**\  (or shorter: \ **--halt 2**\ ) when used with GNU \ **parallel**\ .
  
 
 
@@ -2063,8 +1932,7 @@ Other \ **rush**\  features
      parallel echo '{= s:.*/::;s/\..*// =}' ::: dir/foo.bar.gz
   
   
-  And if you need it often, you define a \ **--rpl**\  in
-  \ **$HOME/.parallel/config**\ :
+  And if you need it often, you define a \ **--rpl**\  in \ **$HOME/.parallel/config**\ :
   
   
   .. code-block:: perl
@@ -2104,8 +1972,7 @@ Other \ **rush**\  features
       parallel --plus 'p={%suffix}; echo ${p}_new_suffix'
  
  
- Opposite \ **rush**\  GNU \ **parallel**\  works fine if the input contains
- double space, ' and ":
+ Opposite \ **rush**\  GNU \ **parallel**\  works fine if the input contains double space, ' and ":
  
  
  .. code-block:: perl
@@ -2118,9 +1985,7 @@ Other \ **rush**\  features
 
 * Commands of multi-lines
  
- While you \ *can*\  use multi-lined commands in GNU \ **parallel**\ , to
- improve readability GNU \ **parallel**\  discourages the use of multi-line
- commands. In most cases it can be written as a function:
+ While you \ *can*\  use multi-lined commands in GNU \ **parallel**\ , to improve readability GNU \ **parallel**\  discourages the use of multi-line commands. In most cases it can be written as a function:
  
  
  .. code-block:: perl
@@ -2166,16 +2031,9 @@ DIFFERENCES BETWEEN ClusterSSH AND GNU Parallel
 
 ClusterSSH solves a different problem than GNU \ **parallel**\ .
 
-ClusterSSH opens a terminal window for each computer and using a
-master window you can run the same command on all the computers. This
-is typically used for administrating several computers that are almost
-identical.
+ClusterSSH opens a terminal window for each computer and using a master window you can run the same command on all the computers. This is typically used for administrating several computers that are almost identical.
 
-GNU \ **parallel**\  runs the same (or different) commands with different
-arguments in parallel possibly using remote computers to help
-computing. If more than one computer is listed in \ **-S**\  GNU \ **parallel**\  may
-only use one of these (e.g. if there are 8 jobs to be run and one
-computer has 8 cores).
+GNU \ **parallel**\  runs the same (or different) commands with different arguments in parallel possibly using remote computers to help computing. If more than one computer is listed in \ **-S**\  GNU \ **parallel**\  may only use one of these (e.g. if there are 8 jobs to be run and one computer has 8 cores).
 
 GNU \ **parallel**\  can be used as a poor-man's version of ClusterSSH:
 
@@ -2188,15 +2046,11 @@ DIFFERENCES BETWEEN coshell AND GNU Parallel
 ============================================
 
 
-\ **coshell**\  only accepts full commands on standard input. Any quoting
-needs to be done by the user.
+\ **coshell**\  only accepts full commands on standard input. Any quoting needs to be done by the user.
 
-Commands are run in \ **sh**\  so any \ **bash**\ /\ **tcsh**\ /\ **zsh**\  specific
-syntax will not work.
+Commands are run in \ **sh**\  so any \ **bash**\ /\ **tcsh**\ /\ **zsh**\  specific syntax will not work.
 
-Output can be buffered by using \ **-d**\ . Output is buffered in memory,
-so big output can cause swapping and therefore be terrible slow or
-even cause out of memory.
+Output can be buffered by using \ **-d**\ . Output is buffered in memory, so big output can cause swapping and therefore be terrible slow or even cause out of memory.
 
 https://github.com/gdm85/coshell (Last checked: 2019-01)
 
@@ -2229,12 +2083,9 @@ DIFFERENCES BETWEEN pyargs AND GNU Parallel
 ===========================================
 
 
-\ **pyargs**\  deals badly with input containing spaces. It buffers stdout,
-but not stderr. It buffers in RAM. {} does not work as replacement
-string. It does not support running functions.
+\ **pyargs**\  deals badly with input containing spaces. It buffers stdout, but not stderr. It buffers in RAM. {} does not work as replacement string. It does not support running functions.
 
-\ **pyargs**\  does not support composed commands if run with \ **--lines**\ ,
-and fails on \ **pyargs traceroute gnu.org fsf.org**\ .
+\ **pyargs**\  does not support composed commands if run with \ **--lines**\ , and fails on \ **pyargs traceroute gnu.org fsf.org**\ .
 
 Examples
 --------
@@ -2292,16 +2143,11 @@ The output is prepended with the job number, and may be incomplete:
    7165
 
 
-When pretty printing it caches output in memory. Output mixes by using
-test MIX below whether or not output is cached.
+When pretty printing it caches output in memory. Output mixes by using test MIX below whether or not output is cached.
 
-There seems to be no way of making a template command and have
-\ **concurrently**\  fill that with different args. The full commands must
-be given on the command line.
+There seems to be no way of making a template command and have \ **concurrently**\  fill that with different args. The full commands must be given on the command line.
 
-There is also no way of controlling how many jobs should be run in
-parallel at a time - i.e. "number of jobslots". Instead all jobs are
-simply started in parallel.
+There is also no way of controlling how many jobs should be run in parallel at a time - i.e. "number of jobslots". Instead all jobs are simply started in parallel.
 
 https://github.com/kimmobrunfeldt/concurrently (Last checked: 2019-01)
 
@@ -2318,9 +2164,7 @@ DIFFERENCES BETWEEN map(soveran) AND GNU Parallel
    ... | map t 'sleep $t && say done &'
 
 
-But this fails if more jobs are run in parallel than the number of
-available processes. Since there is no support for parallelization in
-\ **map**\  itself, the output also mixes:
+But this fails if more jobs are run in parallel than the number of available processes. Since there is no support for parallelization in \ **map**\  itself, the output also mixes:
 
 
 .. code-block:: perl
@@ -2328,24 +2172,22 @@ available processes. Since there is no support for parallelization in
    seq 10 | map i 'echo start-$i && sleep 0.$i && echo end-$i &'
 
 
-The major difference is that GNU \ **parallel**\  is built for parallelization
-and \ **map**\  is not. So GNU \ **parallel**\  has lots of ways of dealing with the
-issues that parallelization raises:
+The major difference is that GNU \ **parallel**\  is built for parallelization and \ **map**\  is not. So GNU \ **parallel**\  has lots of ways of dealing with the issues that parallelization raises:
 
 
-- \*
+- 
  
  Keep the number of processes manageable
  
 
 
-- \*
+- 
  
  Make sure output does not mix
  
 
 
-- \*
+- 
  
  Make Ctrl-C kill all running processes
  
@@ -2416,8 +2258,7 @@ EXAMPLES FROM loop's WEBSITE
 ----------------------------
 
 
-Some of the examples from https://github.com/Miserlou/Loop/ can be
-emulated with GNU \ **parallel**\ :
+Some of the examples from https://github.com/Miserlou/Loop/ can be emulated with GNU \ **parallel**\ :
 
 
 .. code-block:: perl
@@ -2591,8 +2432,7 @@ DIFFERENCES BETWEEN lorikeet AND GNU Parallel
 =============================================
 
 
-\ **lorikeet**\  can run jobs in parallel. It does this based on a
-dependency graph described in a file, so this is similar to \ **make**\ .
+\ **lorikeet**\  can run jobs in parallel. It does this based on a dependency graph described in a file, so this is similar to \ **make**\ .
 
 https://github.com/cetra3/lorikeet (Last checked: 2018-10)
 
@@ -2601,9 +2441,7 @@ DIFFERENCES BETWEEN spp AND GNU Parallel
 ========================================
 
 
-\ **spp**\  can run jobs in parallel. \ **spp**\  does not use a command
-template to generate the jobs, but requires jobs to be in a
-file. Output from the jobs mix.
+\ **spp**\  can run jobs in parallel. \ **spp**\  does not use a command template to generate the jobs, but requires jobs to be in a file. Output from the jobs mix.
 
 https://github.com/john01dav/spp (Last checked: 2019-01)
 
@@ -2612,9 +2450,7 @@ DIFFERENCES BETWEEN paral AND GNU Parallel
 ==========================================
 
 
-\ **paral**\  prints a lot of status information and stores the output from
-the commands run into files. This means it cannot be used the middle
-of a pipe like this
+\ **paral**\  prints a lot of status information and stores the output from the commands run into files. This means it cannot be used the middle of a pipe like this
 
 
 .. code-block:: perl
@@ -2622,16 +2458,11 @@ of a pipe like this
    paral "echo this" "echo does not" "echo work" | wc
 
 
-Instead it puts the output into files named like
-\ **out_#_\ \*command\*\ .out.log**\ . To get a very similar behaviour with GNU
-\ **parallel**\  use \ **--results
-'out_{#}_{=s/[^\sa-z_0-9]//g;s/\s+/_/g=}.log' --eta**\ 
+Instead it puts the output into files named like \ **out_#_\ \*command\*\ .out.log**\ . To get a very similar behaviour with GNU \ **parallel**\  use \ **--results 'out_{#}_{=s/[^\sa-z_0-9]//g;s/\s+/_/g=}.log' --eta**\ 
 
-\ **paral**\  only takes arguments on the command line and each argument
-should be a full command. Thus it does not use command templates.
+\ **paral**\  only takes arguments on the command line and each argument should be a full command. Thus it does not use command templates.
 
-This limits how many jobs it can run in total, because they all need
-to fit on a single command line.
+This limits how many jobs it can run in total, because they all need to fit on a single command line.
 
 \ **paral**\  has no support for running jobs remotely.
 
@@ -2639,10 +2470,7 @@ EXAMPLES FROM README.markdown
 -----------------------------
 
 
-The examples from \ **README.markdown**\  and the corresponding command run
-with GNU \ **parallel**\  (\ **--results
-'out_{#}_{=s/[^\sa-z_0-9]//g;s/\s+/_/g=}.log' --eta**\  is omitted from
-the GNU \ **parallel**\  command):
+The examples from \ **README.markdown**\  and the corresponding command run with GNU \ **parallel**\  (\ **--results 'out_{#}_{=s/[^\sa-z_0-9]//g;s/\s+/_/g=}.log' --eta**\  is omitted from the GNU \ **parallel**\  command):
 
 
 .. code-block:: perl
@@ -2694,8 +2522,7 @@ DIFFERENCES BETWEEN concurr AND GNU Parallel
 ============================================
 
 
-\ **concurr**\  is built to run jobs in parallel using a client/server
-model.
+\ **concurr**\  is built to run jobs in parallel using a client/server model.
 
 EXAMPLES FROM README.md
 -----------------------
@@ -2719,8 +2546,7 @@ The examples from \ **README.md**\ :
    4$ cat file | parallel 'echo {}'
 
 
-\ **concurr**\  deals badly empty input files and with output larger than
-64 KB.
+\ **concurr**\  deals badly empty input files and with output larger than 64 KB.
 
 https://github.com/mmstick/concurr (Last checked: 2019-01)
 
@@ -2730,13 +2556,9 @@ DIFFERENCES BETWEEN lesser-parallel AND GNU Parallel
 ====================================================
 
 
-\ **lesser-parallel**\  is the inspiration for \ **parallel --embed**\ . Both
-\ **lesser-parallel**\  and \ **parallel --embed**\  define bash functions that
-can be included as part of a bash script to run jobs in parallel.
+\ **lesser-parallel**\  is the inspiration for \ **parallel --embed**\ . Both \ **lesser-parallel**\  and \ **parallel --embed**\  define bash functions that can be included as part of a bash script to run jobs in parallel.
 
-\ **lesser-parallel**\  implements a few of the replacement strings, but
-hardly any options, whereas \ **parallel --embed**\  gives you the full
-GNU \ **parallel**\  experience.
+\ **lesser-parallel**\  implements a few of the replacement strings, but hardly any options, whereas \ **parallel --embed**\  gives you the full GNU \ **parallel**\  experience.
 
 https://github.com/kou1okada/lesser-parallel (Last checked: 2019-01)
 
@@ -2747,8 +2569,7 @@ DIFFERENCES BETWEEN npm-parallel AND GNU Parallel
 
 \ **npm-parallel**\  can run npm tasks in parallel.
 
-There are no examples and very little documentation, so it is hard to
-compare to GNU \ **parallel**\ .
+There are no examples and very little documentation, so it is hard to compare to GNU \ **parallel**\ .
 
 https://github.com/spion/npm-parallel (Last checked: 2019-01)
 
@@ -2757,8 +2578,7 @@ DIFFERENCES BETWEEN machma AND GNU Parallel
 ===========================================
 
 
-\ **machma**\  runs tasks in parallel. It gives time stamped
-output. It buffers in RAM.
+\ **machma**\  runs tasks in parallel. It gives time stamped output. It buffers in RAM.
 
 EXAMPLES FROM README.md
 -----------------------
@@ -2815,7 +2635,7 @@ DIFFERENCES BETWEEN interlace AND GNU Parallel
 Summary (see legend above):
 
 
-- I2 I3 I4 - - -
+- \- I2 I3 I4 - - -
 
 
 
@@ -2823,7 +2643,7 @@ Summary (see legend above):
 
 
 
-- O2 O3 - - - - x x
+- \- O2 O3 - - - - x x
 
 
 
@@ -2831,11 +2651,11 @@ Summary (see legend above):
 
 
 
-- - - - - - - - -
+- \- - - - - - - - -
 
 
 
-- -
+- \- -
 
 
 
@@ -2843,15 +2663,13 @@ Summary (see legend above):
 
 \ **interface**\  does not buffer output, so output from different jobs mixes.
 
-The overhead for each target is O(n\*n), so with 1000 targets it
-becomes very slow with an overhead in the order of 500ms/target.
+The overhead for each target is O(n\*n), so with 1000 targets it becomes very slow with an overhead in the order of 500ms/target.
 
 EXAMPLES FROM interlace's WEBSITE
 ---------------------------------
 
 
-Using \ **prips**\  most of the examples from
-https://github.com/codingo/Interlace can be run with GNU \ **parallel**\ :
+Using \ **prips**\  most of the examples from https://github.com/codingo/Interlace can be run with GNU \ **parallel**\ :
 
 Blocker
 
@@ -3041,15 +2859,11 @@ DIFFERENCES BETWEEN k-bx par AND GNU Parallel
 =============================================
 
 
-\ **par**\  requires Haskell to work. This limits the number of platforms
-this can work on.
+\ **par**\  requires Haskell to work. This limits the number of platforms this can work on.
 
-\ **par**\  does line buffering in memory. The memory usage is 3x the
-longest line (compared to 1x for \ **parallel --lb**\ ). Commands must be
-given as arguments. There is no template.
+\ **par**\  does line buffering in memory. The memory usage is 3x the longest line (compared to 1x for \ **parallel --lb**\ ). Commands must be given as arguments. There is no template.
 
-These are the examples from https://github.com/k-bx/par with the
-corresponding GNU \ **parallel**\  command.
+These are the examples from https://github.com/k-bx/par with the corresponding GNU \ **parallel**\  command.
 
 
 .. code-block:: perl
@@ -3096,10 +2910,7 @@ Instead you have to wrap that in a shell:
    parallelshell 'sh -c "echo foo;echo bar"' 'sh -c "echo baz;echo quuz"'
 
 
-It buffers output in RAM. All commands must be given on the command
-line and all commands are started in parallel at the same time. This
-will cause the system to freeze if there are so many jobs that there
-is not enough memory to run them all at the same time.
+It buffers output in RAM. All commands must be given on the command line and all commands are started in parallel at the same time. This will cause the system to freeze if there are so many jobs that there is not enough memory to run them all at the same time.
 
 https://github.com/keithamus/parallelshell (Last checked: 2019-02)
 
@@ -3127,10 +2938,7 @@ Instead you have to wrap that in a shell:
    sx 'sh -c "echo foo;echo bar"' 'sh -c "echo baz;echo quuz"'
 
 
-It buffers output in RAM. All commands must be given on the command
-line and all commands are started in parallel at the same time. This
-will cause the system to freeze if there are so many jobs that there
-is not enough memory to run them all at the same time.
+It buffers output in RAM. All commands must be given on the command line and all commands are started in parallel at the same time. This will cause the system to freeze if there are so many jobs that there is not enough memory to run them all at the same time.
 
 https://github.com/royriojas/shell-executor (Last checked: 2019-02)
 
@@ -3139,18 +2947,13 @@ DIFFERENCES BETWEEN non-GNU par AND GNU Parallel
 ================================================
 
 
-\ **par**\  buffers in memory to avoid mixing of jobs. It takes 1s per 1
-million output lines.
+\ **par**\  buffers in memory to avoid mixing of jobs. It takes 1s per 1 million output lines.
 
-\ **par**\  needs to have all commands before starting the first job. The
-jobs are read from stdin (standard input) so any quoting will have to
-be done by the user.
+\ **par**\  needs to have all commands before starting the first job. The jobs are read from stdin (standard input) so any quoting will have to be done by the user.
 
-Stdout (standard output) is prepended with o:. Stderr (standard error)
-is sendt to stdout (standard output) and prepended with e:.
+Stdout (standard output) is prepended with o:. Stderr (standard error) is sendt to stdout (standard output) and prepended with e:.
 
-For short jobs with little output \ **par**\  is 20% faster than GNU
-\ **parallel**\  and 60% slower than \ **xargs**\ .
+For short jobs with little output \ **par**\  is 20% faster than GNU \ **parallel**\  and 60% slower than \ **xargs**\ .
 
 https://github.com/UnixJunkie/PAR
 
@@ -3161,8 +2964,7 @@ DIFFERENCES BETWEEN fd AND GNU Parallel
 =======================================
 
 
-\ **fd**\  does not support composed commands, so commands must be wrapped
-in \ **sh -c**\ .
+\ **fd**\  does not support composed commands, so commands must be wrapped in \ **sh -c**\ .
 
 It buffers output in RAM.
 
@@ -3175,13 +2977,9 @@ DIFFERENCES BETWEEN lateral AND GNU Parallel
 ============================================
 
 
-\ **lateral**\  is very similar to \ **sem**\ : It takes a single command and
-runs it in the background. The design means that output from parallel
-running jobs may mix. If it dies unexpectly it leaves a socket in
-~/.lateral/socket.PID.
+\ **lateral**\  is very similar to \ **sem**\ : It takes a single command and runs it in the background. The design means that output from parallel running jobs may mix. If it dies unexpectly it leaves a socket in ~/.lateral/socket.PID.
 
-\ **lateral**\  deals badly with too long command lines. This makes the
-\ **lateral**\  server crash:
+\ **lateral**\  deals badly with too long command lines. This makes the \ **lateral**\  server crash:
 
 
 .. code-block:: perl
@@ -3189,8 +2987,7 @@ running jobs may mix. If it dies unexpectly it leaves a socket in
    lateral run echo `seq 100000| head -c 1000k`
 
 
-Any options will be read by \ **lateral**\  so this does not work
-(\ **lateral**\  interprets the \ **-l**\ ):
+Any options will be read by \ **lateral**\  so this does not work (\ **lateral**\  interprets the \ **-l**\ ):
 
 
 .. code-block:: perl
@@ -3228,8 +3025,7 @@ Running \ **emacs**\  in the terminal causes the parent shell to die:
    lateral run ./mycmd
 
 
-Here are the examples from https://github.com/akramer/lateral with the
-corresponding GNU \ **sem**\  and GNU \ **parallel**\  commands:
+Here are the examples from https://github.com/akramer/lateral with the corresponding GNU \ **sem**\  and GNU \ **parallel**\  commands:
 
 
 .. code-block:: perl
@@ -3287,8 +3083,7 @@ DIFFERENCES BETWEEN with-this AND GNU Parallel
 ==============================================
 
 
-The examples from https://github.com/amritb/with-this.git and the
-corresponding GNU \ **parallel**\  command:
+The examples from https://github.com/amritb/with-this.git and the corresponding GNU \ **parallel**\  command:
 
 
 .. code-block:: perl
@@ -3311,13 +3106,9 @@ corresponding GNU \ **parallel**\  command:
    parallel -N0 echo 123 ::: {1..10}
 
 
-Stderr is merged with stdout. \ **with-this**\  buffers in RAM. It uses 3x
-the output size, so you cannot have output larger than 1/3rd the
-amount of RAM. The input values cannot contain spaces. Composed
-commands do not work.
+Stderr is merged with stdout. \ **with-this**\  buffers in RAM. It uses 3x the output size, so you cannot have output larger than 1/3rd the amount of RAM. The input values cannot contain spaces. Composed commands do not work.
 
-\ **with-this**\  gives some additional information, so the output has to
-be cleaned before piping it to the next command.
+\ **with-this**\  gives some additional information, so the output has to be cleaned before piping it to the next command.
 
 https://github.com/amritb/with-this.git (Last checked: 2019-03)
 
@@ -3329,15 +3120,15 @@ DIFFERENCES BETWEEN Tollef's parallel (moreutils) AND GNU Parallel
 Summary (see legend above):
 
 
-- - - I4 - - I7
+- \- - - I4 - - I7
 
 
 
-- - M3 - - M6
+- \- - M3 - - M6
 
 
 
-- O2 O3 - O5 O6 - x x
+- \- O2 O3 - O5 O6 - x x
 
 
 
@@ -3345,11 +3136,11 @@ Summary (see legend above):
 
 
 
-- x x x x x x x x
+- \- x x x x x x x x
 
 
 
-- -
+- \- -
 
 
 
@@ -3361,7 +3152,7 @@ EXAMPLES FROM Tollef's parallel MANUAL
 
 \ **GNU**\  parallel "echo hi; sleep 2; echo bye" ::: 1 2 3
 
-\ **Tollef**\  parallel -j 3 ufraw -o processed -- \*.NEF
+\ **Tollef**\  parallel -j 3 ufraw -o processed -- .NEF
 
 \ **GNU**\  parallel -j 3 ufraw -o processed ::: \*.NEF
 
@@ -3384,11 +3175,11 @@ Summary (see legend above):
 
 
 
-- - M3 M4 - -
+- \- - M3 M4 - -
 
 
 
-- O2 O3 - O5 O6 - O8 -
+- \- O2 O3 - O5 O6 - O8 -
 
 
 
@@ -3396,19 +3187,17 @@ Summary (see legend above):
 
 
 
-- - - - - - - - -
+- \- - - - - - - - -
 
 
 
-- -
+- \- -
 
 
 
 \ **rargs**\  has elegant ways of doing named regexp capture and field ranges.
 
-With GNU \ **parallel**\  you can use \ **--rpl**\  to get a similar
-functionality as regexp capture gives, and use \ **join**\  and \ **@arg**\  to
-get the field ranges. But the syntax is longer. This:
+With GNU \ **parallel**\  you can use \ **--rpl**\  to get a similar functionality as regexp capture gives, and use \ **join**\  and \ **@arg**\  to get the field ranges. But the syntax is longer. This:
 
 
 .. code-block:: perl
@@ -3426,8 +3215,7 @@ would make it possible to use:
 
 for field 3..6.
 
-For full support of {n..m:s} including negative numbers use a dynamic
-replacement string like this:
+For full support of {n..m:s} including negative numbers use a dynamic replacement string like this:
 
 
 .. code-block:: perl
@@ -3498,16 +3286,15 @@ Summary (see legend above):
 
 
 
-- - - - - - - - -
+- \- - - - - - - - -
 
 
 
-- -
+- \- -
 
 
 
-Newline separates arguments, but newline at the end of file is treated
-as an empty argument. So this runs 2 jobs:
+Newline separates arguments, but newline at the end of file is treated as an empty argument. So this runs 2 jobs:
 
 
 .. code-block:: perl
@@ -3515,9 +3302,7 @@ as an empty argument. So this runs 2 jobs:
    echo two_jobs | threader -run 'echo "$THREADID"'
 
 
-\ **threader**\  ignores stderr, so any output to stderr is
-lost. \ **threader**\  buffers in RAM, so output bigger than the machine's
-virtual memory will cause the machine to crash.
+\ **threader**\  ignores stderr, so any output to stderr is lost. \ **threader**\  buffers in RAM, so output bigger than the machine's virtual memory will cause the machine to crash.
 
 https://github.com/voodooEntity/threader (Last checked: 2020-04)
 
@@ -3545,20 +3330,17 @@ Summary (see legend above):
 
 
 
-- - - - - - - - -
+- \- - - - - - - - -
 
 
 
-- -
+- \- -
 
 
 
-(M3): You can add a prefix and a postfix to the input, so it means you can
-only insert the argument on the command line once.
+(M3): You can add a prefix and a postfix to the input, so it means you can only insert the argument on the command line once.
 
-\ **runp**\  runs 10 jobs in parallel by default.  \ **runp**\  blocks if output
-of a command is > 64 Kbytes.  Quoting of input is needed.  It adds
-output to stderr (this can be prevented with -q)
+\ **runp**\  runs 10 jobs in parallel by default.  \ **runp**\  blocks if output of a command is > 64 Kbytes.  Quoting of input is needed.  It adds output to stderr (this can be prevented with -q)
 
 Examples as GNU Parallel
 ------------------------
@@ -3726,7 +3508,7 @@ DIFFERENCES BETWEEN papply AND GNU Parallel
 Summary (see legend above):
 
 
-- - - I4 - - -
+- \- - - I4 - - -
 
 
 
@@ -3734,7 +3516,7 @@ Summary (see legend above):
 
 
 
-- - O3 - O5 - - N/A N/A O10
+- \- - O3 - O5 - - N/A N/A O10
 
 
 
@@ -3742,11 +3524,11 @@ Summary (see legend above):
 
 
 
-- - - - - - - - -
+- \- - - - - - - - -
 
 
 
-- -
+- \- -
 
 
 
@@ -3759,8 +3541,7 @@ Summary (see legend above):
    "echo foo; false" did not succeed
 
 
-\ **papply**\ 's replacement strings (%F %d %f %n %e %z) can be simulated in GNU
-\ **parallel**\  by putting this in \ **~/.parallel/config**\ :
+\ **papply**\ 's replacement strings (%F %d %f %n %e %z) can be simulated in GNU \ **parallel**\  by putting this in \ **~/.parallel/config**\ :
 
 
 .. code-block:: perl
@@ -3773,11 +3554,9 @@ Summary (see legend above):
    --rpl '%z $_=""'
 
 
-\ **papply**\  buffers in RAM, and uses twice the amount of output. So
-output of 5 GB takes 10 GB RAM.
+\ **papply**\  buffers in RAM, and uses twice the amount of output. So output of 5 GB takes 10 GB RAM.
 
-The buffering is very CPU intensive: Buffering a line of 5 GB takes 40
-seconds (compared to 10 seconds with GNU \ **parallel**\ ).
+The buffering is very CPU intensive: Buffering a line of 5 GB takes 40 seconds (compared to 10 seconds with GNU \ **parallel**\ ).
 
 Examples as GNU Parallel
 ------------------------
@@ -3806,15 +3585,15 @@ DIFFERENCES BETWEEN async AND GNU Parallel
 Summary (see legend above):
 
 
-- - - I4 - - I7
+- \- - - I4 - - I7
 
 
 
-- - - - - M6
+- \- - - - - M6
 
 
 
-- O2 O3 - O5 O6 - N/A N/A O10
+- \- O2 O3 - O5 O6 - N/A N/A O10
 
 
 
@@ -3822,7 +3601,7 @@ Summary (see legend above):
 
 
 
-- - - - - - - - -
+- \- - - - - - - - -
 
 
 
@@ -3830,11 +3609,9 @@ Summary (see legend above):
 
 
 
-\ **async**\  is very similary to GNU \ **parallel**\ 's \ **--semaphore**\  mode
-(aka \ **sem**\ ). \ **async**\  requires the user to start a server process.
+\ **async**\  is very similary to GNU \ **parallel**\ 's \ **--semaphore**\  mode (aka \ **sem**\ ). \ **async**\  requires the user to start a server process.
 
-The input is quoted like \ **-q**\  so you need \ **bash -c "...;..."**\  to run
-composed commands.
+The input is quoted like \ **-q**\  so you need \ **bash -c "...;..."**\  to run composed commands.
 
 Examples as GNU Parallel
 ------------------------
@@ -3926,21 +3703,17 @@ Summary (see legend above):
 
 
 
-- - - - - - - - -
+- \- - - - - - - - -
 
 
 
-- -
+- \- -
 
 
 
-\ **pardi**\  is very similar to \ **parallel --pipe --cat**\ : It reads blocks
-of data and not arguments. So it cannot insert an argument in the
-command line. It puts the block into a temporary file, and this file
-name (%IN) can be put in the command line. You can only use %IN once.
+\ **pardi**\  is very similar to \ **parallel --pipe --cat**\ : It reads blocks of data and not arguments. So it cannot insert an argument in the command line. It puts the block into a temporary file, and this file name (%IN) can be put in the command line. You can only use %IN once.
 
-It can also run full command lines in parallel (like: \ **cat file |
-parallel**\ ).
+It can also run full command lines in parallel (like: \ **cat file | parallel**\ ).
 
 EXAMPLES FROM pardi test.sh
 ---------------------------
@@ -3996,11 +3769,11 @@ DIFFERENCES BETWEEN bthread AND GNU Parallel
 Summary (see legend above):
 
 
-- - - I4 -  - -
+- \- - - I4 -  - -
 
 
 
-- - - - - M6
+- \- - - - - M6
 
 
 
@@ -4012,19 +3785,17 @@ Summary (see legend above):
 
 
 
-- - - - - - - - -
+- \- - - - - - - - -
 
 
 
-- -
+- \- -
 
 
 
-\ **bthread**\  takes around 1 sec per MB of output. The maximal output
-line length is 1073741759.
+\ **bthread**\  takes around 1 sec per MB of output. The maximal output line length is 1073741759.
 
-You cannot quote space in the command, so you cannot run composed
-commands like \ **sh -c "echo a; echo b"**\ .
+You cannot quote space in the command, so you cannot run composed commands like \ **sh -c "echo a; echo b"**\ .
 
 https://gitlab.com/netikras/bthread (Last checked: 2021-01)
 
@@ -4044,7 +3815,7 @@ Summary (see legend above):
 
 
 
-- O2 O3 - - O6 - x x O10
+- \- O2 O3 - - O6 - x x O10
 
 
 
@@ -4052,11 +3823,11 @@ Summary (see legend above):
 
 
 
-- - - - - - - - -
+- \- - - - - - - - -
 
 
 
-- -
+- \- -
 
 
 
@@ -4106,8 +3877,7 @@ EXAMPLES FROM simple_gpu_scheduler MANUAL
       seq 3 | parallel echo true >> gpu.queue
 
 
-https://github.com/ExpectationMax/simple_gpu_scheduler (Last checked:
-2021-01)
+https://github.com/ExpectationMax/simple_gpu_scheduler (Last checked: 2021-01)
 
 
 
@@ -4115,12 +3885,9 @@ DIFFERENCES BETWEEN parasweep AND GNU Parallel
 ==============================================
 
 
-\ **parasweep**\  is a Python module for facilitating parallel parameter
-sweeps.
+\ **parasweep**\  is a Python module for facilitating parallel parameter sweeps.
 
-A \ **parasweep**\  job will normally take a text file as input. The text
-file contains arguments for the job. Some of these arguments will be
-fixed and some of them will be changed by \ **parasweep**\ .
+A \ **parasweep**\  job will normally take a text file as input. The text file contains arguments for the job. Some of these arguments will be fixed and some of them will be changed by \ **parasweep**\ .
 
 It does this by having a template file such as template.txt:
 
@@ -4136,24 +3903,15 @@ It does this by having a template file such as template.txt:
    RandomVal: {r}
 
 
-and from this template it generates the file to be used by the job by
-replacing the replacement strings.
+and from this template it generates the file to be used by the job by replacing the replacement strings.
 
-Being a Python module \ **parasweep**\  integrates tighter with Python than
-GNU \ **parallel**\ . You get the parameters directly in a Python data
-structure. With GNU \ **parallel**\  you can use the JSON or CSV output
-format to get something similar, but you would have to read the
-output.
+Being a Python module \ **parasweep**\  integrates tighter with Python than GNU \ **parallel**\ . You get the parameters directly in a Python data structure. With GNU \ **parallel**\  you can use the JSON or CSV output format to get something similar, but you would have to read the output.
 
-\ **parasweep**\  has a filtering method to ignore parameter combinations
-you do not need.
+\ **parasweep**\  has a filtering method to ignore parameter combinations you do not need.
 
-Instead of calling the jobs directly, \ **parasweep**\  can use Python's
-Distributed Resource Management Application API to make jobs run with
-different cluster software.
+Instead of calling the jobs directly, \ **parasweep**\  can use Python's Distributed Resource Management Application API to make jobs run with different cluster software.
 
-GNU \ **parallel**\  \ **--tmpl**\  supports templates with replacement
-strings. Such as:
+GNU \ **parallel**\  \ **--tmpl**\  supports templates with replacement strings. Such as:
 
 
 .. code-block:: perl
@@ -4198,11 +3956,11 @@ Summary (see legend above):
 
 
 
-- - M3 - - M6
+- \- - M3 - - M6
 
 
 
-- O2 O3 - O5 O6 - O8 x O10
+- \- O2 O3 - O5 O6 - O8 x O10
 
 
 
@@ -4210,23 +3968,17 @@ Summary (see legend above):
 
 
 
-- - - - - - - - -
+- \- - - - - - - - -
 
 
 
-- -
+- \- -
 
 
 
-\ **parallel-bash**\  is written in pure bash. It is really fast (overhead
-of ~0.05 ms/job compared to GNU \ **parallel**\ 's ~3 ms/job). So if your
-jobs are extremely short lived, and you can live with the quite
-limited command, this may be useful.
+\ **parallel-bash**\  is written in pure bash. It is really fast (overhead of ~0.05 ms/job compared to GNU \ **parallel**\ 's ~3 ms/job). So if your jobs are extremely short lived, and you can live with the quite limited command, this may be useful.
 
-It works by making a queue for each process. Then the jobs are
-distributed to the queues in a round robin fashion. Finally the queues
-are started in parallel. This works fine, if you are lucky, but if
-not, all the long jobs may end up in the same queue, so you may see:
+It works by making a queue for each process. Then the jobs are distributed to the queues in a round robin fashion. Finally the queues are started in parallel. This works fine, if you are lucky, but if not, all the long jobs may end up in the same queue, so you may see:
 
 
 .. code-block:: perl
@@ -4239,12 +3991,9 @@ not, all the long jobs may end up in the same queue, so you may see:
    (12 seconds)
 
 
-Because it uses bash lists, the total number of jobs is limited to
-167000..265000 depending on your environment. You get a segmentation
-fault, when you reach the limit.
+Because it uses bash lists, the total number of jobs is limited to 167000..265000 depending on your environment. You get a segmentation fault, when you reach the limit.
 
-Ctrl-C does not stop spawning new jobs. Ctrl-Z does not suspend
-running jobs.
+Ctrl-C does not stop spawning new jobs. Ctrl-Z does not suspend running jobs.
 
 EXAMPLES FROM parallel-bash
 ---------------------------
@@ -4270,8 +4019,7 @@ EXAMPLES FROM parallel-bash
    4$ something | parallel -j 5 echo {} {}
 
 
-https://reposhub.com/python/command-line-tools/Akianonymus-parallel-bash.html
-(Last checked: 2021-06)
+https://reposhub.com/python/command-line-tools/Akianonymus-parallel-bash.html (Last checked: 2021-06)
 
 
 
@@ -4279,24 +4027,15 @@ DIFFERENCES BETWEEN bash-concurrent AND GNU Parallel
 ====================================================
 
 
-\ **bash-concurrent**\  is more an alternative to \ **make**\  than to GNU
-\ **parallel**\ . Its input is very similar to a Makefile, where jobs
-depend on other jobs.
+\ **bash-concurrent**\  is more an alternative to \ **make**\  than to GNU \ **parallel**\ . Its input is very similar to a Makefile, where jobs depend on other jobs.
 
-It has a nice progress indicator where you can see which jobs
-completed successfully, which jobs are currently running, which jobs
-failed, and which jobs were skipped due to a depending job failed.
-The indicator does not deal well with resizing the window.
+It has a nice progress indicator where you can see which jobs completed successfully, which jobs are currently running, which jobs failed, and which jobs were skipped due to a depending job failed. The indicator does not deal well with resizing the window.
 
-Output is cached in tempfiles on disk, but is only shown if there is
-an error, so it is not meant to be part of a UNIX pipeline. If
-\ **bash-concurrent**\  crashes these tempfiles are not removed.
+Output is cached in tempfiles on disk, but is only shown if there is an error, so it is not meant to be part of a UNIX pipeline. If \ **bash-concurrent**\  crashes these tempfiles are not removed.
 
-It uses an O(n\*n) algorithm, so if you have 1000 independent jobs it
-takes 22 seconds to start it.
+It uses an O(n\*n) algorithm, so if you have 1000 independent jobs it takes 22 seconds to start it.
 
-https://github.com/themattrix/bash-concurrent
-(Last checked: 2021-02)
+https://github.com/themattrix/bash-concurrent (Last checked: 2021-02)
 
 
 DIFFERENCES BETWEEN spawntool AND GNU Parallel
@@ -4314,7 +4053,7 @@ Summary (see legend above):
 
 
 
-- O2 O3 - O5 O6 - x x O10
+- \- O2 O3 - O5 O6 - x x O10
 
 
 
@@ -4322,19 +4061,17 @@ Summary (see legend above):
 
 
 
-- - - - - - - - -
+- \- - - - - - - - -
 
 
 
-- -
+- \- -
 
 
 
-\ **spawn**\  reads a full command line from stdin which it executes in
-parallel.
+\ **spawn**\  reads a full command line from stdin which it executes in parallel.
 
-http://code.google.com/p/spawntool/
-(Last checked: 2021-07)
+http://code.google.com/p/spawntool/ (Last checked: 2021-07)
 
 
 DIFFERENCES BETWEEN go-pssh AND GNU Parallel
@@ -4344,7 +4081,7 @@ DIFFERENCES BETWEEN go-pssh AND GNU Parallel
 Summary (see legend above):
 
 
-- - - - - - -
+- \- - - - - - -
 
 
 
@@ -4364,17 +4101,15 @@ Summary (see legend above):
 
 
 
-- -
+- \- -
 
 
 
-\ **go-pssh**\  does \ **ssh**\  in parallel to multiple machines. It runs the
-same command on multiple machines similar to \ **--nonall**\ .
+\ **go-pssh**\  does \ **ssh**\  in parallel to multiple machines. It runs the same command on multiple machines similar to \ **--nonall**\ .
 
 The hostnames must be given as IP-addresses (not as hostnames).
 
-Output is sent to stdout (standard output) if command is successful,
-and to stderr (standard error) if the command fails.
+Output is sent to stdout (standard output) if command is successful, and to stderr (standard error) if the command fails.
 
 EXAMPLES FROM go-pssh
 ---------------------
@@ -4403,8 +4138,7 @@ EXAMPLES FROM go-pssh
         --ssh 'sshpass -p <password> ssh -p <port> -l <user>' true
 
 
-https://github.com/xuchenCN/go-pssh
-(Last checked: 2021-07)
+https://github.com/xuchenCN/go-pssh (Last checked: 2021-07)
 
 
 
@@ -4419,11 +4153,11 @@ Summary (see legend above):
 
 
 
-- - M3 - - M6
+- \- - M3 - - M6
 
 
 
-- O2 O3 - O5 - - x x - O10
+- \- O2 O3 - O5 - - x x - O10
 
 
 
@@ -4431,16 +4165,15 @@ Summary (see legend above):
 
 
 
-- - - - - - - - -
+- \- - - - - - - - -
 
 
 
-- -
+- \- -
 
 
 
-\ **go-parallel**\  uses Go templates for replacement strings. Quite
-similar to the \ *{= perl expr =}*\  replacement string.
+\ **go-parallel**\  uses Go templates for replacement strings. Quite similar to the \ *{= perl expr =}*\  replacement string.
 
 EXAMPLES FROM go-parallel
 -------------------------
@@ -4462,8 +4195,7 @@ EXAMPLES FROM go-parallel
    3$ parallel -a ./files.txt echo mkdir -p {} {/.}
 
 
-https://github.com/mylanconnolly/parallel
-(Last checked: 2021-07)
+https://github.com/mylanconnolly/parallel (Last checked: 2021-07)
 
 
 
@@ -4506,18 +4238,13 @@ TESTING OTHER TOOLS
 *******************
 
 
-There are certain issues that are very common on parallelizing
-tools. Here are a few stress tests. Be warned: If the tool is badly
-coded it may overload your machine.
+There are certain issues that are very common on parallelizing tools. Here are a few stress tests. Be warned: If the tool is badly coded it may overload your machine.
 
 MIX: Output mixes
 =================
 
 
-Output from 2 jobs should not mix. If the output is not used, this
-does not matter; but if the output \ *is*\  used then it is important
-that you do not get half a line from one job followed by half a line
-from another job.
+Output from 2 jobs should not mix. If the output is not used, this does not matter; but if the output \ *is*\  used then it is important that you do not get half a line from one job followed by half a line from another job.
 
 If the tool does not buffer, output will most likely mix now and then.
 
@@ -4591,9 +4318,7 @@ RAM: Output limited by RAM
 ==========================
 
 
-Some tools cache output in RAM. This makes them extremely slow if the
-output is bigger than physical memory and crash if the output is
-bigger than the virtual memory.
+Some tools cache output in RAM. This makes them extremely slow if the output is bigger than physical memory and crash if the output is bigger than the virtual memory.
 
 
 .. code-block:: perl
@@ -4620,9 +4345,7 @@ DISKFULL: Incomplete data if /tmp runs full
 ===========================================
 
 
-If caching is done on disk, the disk can run full during the run. Not
-all programs discover this. GNU Parallel discovers it, if it stays
-full for at least 2 seconds.
+If caching is done on disk, the disk can run full during the run. Not all programs discover this. GNU Parallel discovers it, if it stays full for at least 2 seconds.
 
 
 .. code-block:: perl
@@ -4661,8 +4384,7 @@ CLEANUP: Leaving tmp files at unexpected death
 ==============================================
 
 
-Some tools do not clean up tmp files if they are killed. If the tool
-buffers on disk, they may not clean up, if they are killed.
+Some tools do not clean up tmp files if they are killed. If the tool buffers on disk, they may not clean up, if they are killed.
 
 
 .. code-block:: perl
@@ -4739,8 +4461,7 @@ INPUTSIZE: Length of input should not be limited
 ================================================
 
 
-Some tools limit the length of the input lines artificially with no good
-reason. GNU \ **parallel**\  does not:
+Some tools limit the length of the input lines artificially with no good reason. GNU \ **parallel**\  does not:
 
 
 .. code-block:: perl
@@ -4814,21 +4535,17 @@ AUTHOR
 
 When using GNU \ **parallel**\  for a publication please cite:
 
-O. Tange (2011): GNU Parallel - The Command-Line Power Tool, ;login:
-The USENIX Magazine, February 2011:42-47.
+O. Tange (2011): GNU Parallel - The Command-Line Power Tool, ;login: The USENIX Magazine, February 2011:42-47.
 
-This helps funding further development; and it won't cost you a cent.
-If you pay 10000 EUR you should feel free to use GNU Parallel without citing.
+This helps funding further development; and it won't cost you a cent. If you pay 10000 EUR you should feel free to use GNU Parallel without citing.
 
 Copyright (C) 2007-10-18 Ole Tange, http://ole.tange.dk
 
 Copyright (C) 2008-2010 Ole Tange, http://ole.tange.dk
 
-Copyright (C) 2010-2021 Ole Tange, http://ole.tange.dk and Free
-Software Foundation, Inc.
+Copyright (C) 2010-2022 Ole Tange, http://ole.tange.dk and Free Software Foundation, Inc.
 
-Parts of the manual concerning \ **xargs**\  compatibility is inspired by
-the manual of \ **xargs**\  from GNU findutils 4.4.2.
+Parts of the manual concerning \ **xargs**\  compatibility is inspired by the manual of \ **xargs**\  from GNU findutils 4.4.2.
 
 
 *******
@@ -4836,29 +4553,17 @@ LICENSE
 *******
 
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 3 of the License, or
-at your option any later version.
+This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or at your option any later version.
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <https://www.gnu.org/licenses/>.
+You should have received a copy of the GNU General Public License along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 Documentation license I
 =======================
 
 
-Permission is granted to copy, distribute and/or modify this
-documentation under the terms of the GNU Free Documentation License,
-Version 1.3 or any later version published by the Free Software
-Foundation; with no Invariant Sections, with no Front-Cover Texts, and
-with no Back-Cover Texts.  A copy of the license is included in the
-file LICENSES/GFDL-1.3-or-later.txt.
+Permission is granted to copy, distribute and/or modify this documentation under the terms of the GNU Free Documentation License, Version 1.3 or any later version published by the Free Software Foundation; with no Invariant Sections, with no Front-Cover Texts, and with no Back-Cover Texts.  A copy of the license is included in the file LICENSES/GFDL-1.3-or-later.txt.
 
 
 Documentation license II
@@ -4885,17 +4590,13 @@ Under the following conditions:
 
 - \ **Attribution**\ 
  
- You must attribute the work in the manner specified by the author or
- licensor (but not in any way that suggests that they endorse you or
- your use of the work).
+ You must attribute the work in the manner specified by the author or licensor (but not in any way that suggests that they endorse you or your use of the work).
  
 
 
 - \ **Share Alike**\ 
  
- If you alter, transform, or build upon this work, you may distribute
- the resulting work only under the same, similar or a compatible
- license.
+ If you alter, transform, or build upon this work, you may distribute the resulting work only under the same, similar or a compatible license.
  
 
 
@@ -4904,15 +4605,13 @@ With the understanding that:
 
 - \ **Waiver**\ 
  
- Any of the above conditions can be waived if you get permission from
- the copyright holder.
+ Any of the above conditions can be waived if you get permission from the copyright holder.
  
 
 
 - \ **Public Domain**\ 
  
- Where the work or any of its elements is in the public domain under
- applicable law, that status is in no way affected by the license.
+ Where the work or any of its elements is in the public domain under applicable law, that status is in no way affected by the license.
  
 
 
@@ -4921,23 +4620,21 @@ With the understanding that:
  In no way are any of the following rights affected by the license:
  
  
- - \*
+ - 
   
-  Your fair dealing or fair use rights, or other applicable
-  copyright exceptions and limitations;
+  Your fair dealing or fair use rights, or other applicable copyright exceptions and limitations;
   
  
  
- - \*
+ - 
   
   The author's moral rights;
   
  
  
- - \*
+ - 
   
-  Rights other persons may have either in the work itself or in
-  how the work is used, such as publicity or privacy rights.
+  Rights other persons may have either in the work itself or in how the work is used, such as publicity or privacy rights.
   
  
  
@@ -4946,13 +4643,11 @@ With the understanding that:
 
 - \ **Notice**\ 
  
- For any reuse or distribution, you must make clear to others the
- license terms of this work.
+ For any reuse or distribution, you must make clear to others the license terms of this work.
  
 
 
-A copy of the full license is included in the file as
-LICENCES/CC-BY-SA-4.0.txt
+A copy of the full license is included in the file as LICENCES/CC-BY-SA-4.0.txt
 
 
 
@@ -4961,9 +4656,7 @@ DEPENDENCIES
 ************
 
 
-GNU \ **parallel**\  uses Perl, and the Perl modules Getopt::Long,
-IPC::Open3, Symbol, IO::File, POSIX, and File::Temp. For remote usage
-it also uses rsync with ssh.
+GNU \ **parallel**\  uses Perl, and the Perl modules Getopt::Long, IPC::Open3, Symbol, IO::File, POSIX, and File::Temp. For remote usage it also uses rsync with ssh.
 
 
 ********
@@ -4971,6 +4664,5 @@ SEE ALSO
 ********
 
 
-\ **find**\ (1), \ **xargs**\ (1), \ **make**\ (1), \ **pexec**\ (1), \ **ppss**\ (1),
-\ **xjobs**\ (1), \ **prll**\ (1), \ **dxargs**\ (1), \ **mdm**\ (1)
+\ **find**\ (1), \ **xargs**\ (1), \ **make**\ (1), \ **pexec**\ (1), \ **ppss**\ (1), \ **xjobs**\ (1), \ **prll**\ (1), \ **dxargs**\ (1), \ **mdm**\ (1)
 

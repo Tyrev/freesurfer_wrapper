@@ -38,6 +38,7 @@
       <li><a href="#Shell-shock">Shell shock</a></li>
       <li><a href="#The-remote-system-wrapper">The remote system wrapper</a>
         <ul>
+          <li><a href="#Make-quoting-unnecessary-by-hex-encoding-everything">Make quoting unnecessary by hex encoding everything</a></li>
           <li><a href="#Ctrl-C-and-standard-error-stderr">Ctrl-C and standard error (stderr)</a></li>
           <li><a href="#nice">--nice</a></li>
           <li><a href="#Setting-PARALLEL_TMP">Setting $PARALLEL_TMP</a></li>
@@ -85,12 +86,9 @@
   <li><a href="#Historical-decisions">Historical decisions</a>
     <ul>
       <li><a href="#tollef">--tollef</a></li>
-      <li><a href="#Transferring-of-variables-and-functions1">Transferring of variables and functions</a></li>
     </ul>
   </li>
 </ul>
-
-<p>options as wrapper scripts</p>
 
 <h1 id="Design-of-GNU-Parallel">Design of GNU Parallel</h1>
 
@@ -547,6 +545,24 @@
 
 <p>The remote system wrapper does some initialization before starting the command on the remote system.</p>
 
+<h3 id="Make-quoting-unnecessary-by-hex-encoding-everything">Make quoting unnecessary by hex encoding everything</h3>
+
+<p>When you run <b>ssh server foo</b> then <b>foo</b> has to be quoted once:</p>
+
+<pre><code>  ssh server &quot;echo foo; echo bar&quot;</code></pre>
+
+<p>If you run <b>ssh server1 ssh server2 foo</b> then <b>foo</b> has to be quoted twice:</p>
+
+<pre><code>  ssh server1 ssh server2 \&#39;&quot;echo foo; echo bar&quot;\&#39;</code></pre>
+
+<p>GNU <b>parallel</b> avoids this by packing everyting into hex values and running a command that does not need quoting:</p>
+
+<pre><code>  perl -X -e GNU_Parallel_worker,eval+pack+q/H10000000/,join+q//,@ARGV</code></pre>
+
+<p>This command reads hex from the command line and converts that to bytes that are then eval&#39;ed as a Perl expression.</p>
+
+<p>The string <b>GNU_Parallel_worker</b> is not needed. It is simply there to let the user know, that this process is GNU <b>parallel</b> working.</p>
+
 <h3 id="Ctrl-C-and-standard-error-stderr">Ctrl-C and standard error (stderr)</h3>
 
 <p>If the user presses Ctrl-C the user expects jobs to stop. This works out of the box if the jobs are run locally. Unfortunately it is not so simple if the jobs are run remotely.</p>
@@ -574,30 +590,61 @@
 <p>The wrapper looks like this:</p>
 
 <pre><code>  $shell = $PARALLEL_SHELL || $SHELL;
-  $tmpdir = $TMPDIR;
+  $tmpdir = $TMPDIR || $PARALLEL_REMOTE_TMPDIR;
   $nice = $opt::nice;
+  $termseq = $opt::termseq;
+
+  # Check that $tmpdir is writable
+  -w $tmpdir ||
+      die(&quot;$tmpdir is not writable.&quot;.
+        &quot; Set PARALLEL_REMOTE_TMPDIR&quot;);
   # Set $PARALLEL_TMP to a non-existent file name in $TMPDIR
   do {
       $ENV{PARALLEL_TMP} = $tmpdir.&quot;/par&quot;.
         join&quot;&quot;, map { (0..9,&quot;a&quot;..&quot;z&quot;,&quot;A&quot;..&quot;Z&quot;)[rand(62)] } (1..5);
   } while(-e $ENV{PARALLEL_TMP});
+  # Set $script to a non-existent file name in $TMPDIR
+  do {
+      $script = $tmpdir.&quot;/par&quot;.
+        join&quot;&quot;, map { (0..9,&quot;a&quot;..&quot;z&quot;,&quot;A&quot;..&quot;Z&quot;)[rand(62)] } (1..5);
+  } while(-e $script);
+  # Create a script from the hex code
+  # that removes itself and runs the commands
+  open($fh,&quot;&gt;&quot;,$script) || die;
+  # &#39; needed due to rc-shell
+  print($fh(&quot;rm \&#39;$script\&#39;\n&quot;,$bashfunc.$cmd));
+  close $fh;
+  my $parent = getppid;
+  my $done = 0;
   $SIG{CHLD} = sub { $done = 1; };
   $pid = fork;
   unless($pid) {
       # Make own process group to be able to kill HUP it later
-      setpgrp;
+      eval { setpgrp };
+      # Set nice value
       eval { setpriority(0,0,$nice) };
-      exec $shell, &quot;-c&quot;, ($bashfunc.&quot;@ARGV&quot;);
-      die &quot;exec: $!\n&quot;;
+      # Run the script
+      exec($shell,$script);
+      die(&quot;exec failed: $!&quot;);
   }
-  do {
-      # Parent is not init (ppid=1), so sshd is alive
+  while((not $done) and (getppid == $parent)) {
+      # Parent pid is not changed, so sshd is alive
       # Exponential sleep up to 1 sec
       $s = $s &lt; 1 ? 0.001 + $s * 1.03 : $s;
       select(undef, undef, undef, $s);
-  } until ($done || getppid == 1);
-  # Kill HUP the process group if job not done
-  kill(SIGHUP, -${pid}) unless $done;
+  }
+  if(not $done) {
+      # sshd is dead: User pressed Ctrl-C
+      # Kill as per --termseq
+      my @term_seq = split/,/,$termseq;
+      if(not @term_seq) {
+        @term_seq = (&quot;TERM&quot;,200,&quot;TERM&quot;,100,&quot;TERM&quot;,50,&quot;KILL&quot;,25);
+      }
+      while(@term_seq &amp;&amp; kill(0,-$pid)) {
+        kill(shift @term_seq, -$pid);
+        select(undef, undef, undef, (shift @term_seq)/1000);
+      }
+  }
   wait;
   exit ($?&amp;127 ? 128+($?&amp;127) : 1+$?&gt;&gt;8)</code></pre>
 
@@ -707,7 +754,7 @@
 <pre><code>  parallel &quot;grep -E &#39;ls | wc &gt;&gt; c&#39; {} | wc &gt;&gt; c&quot; ::: foo
   parallel &quot;LANG=C grep -E &#39;ls | wc &gt;&gt; c&#39; {}&quot; ::: foo</code></pre>
 
-<p>It is impossible to tell how <b>| wc </b>&gt;&gt;<b> c</b> should be interpreted without parsing the string (is the <b>|</b> a pipe in shell or an alternation in a <b>grep</b> regexp? Is <b>LANG=C</b> a command in <b>csh</b> or setting a variable in <b>bash</b>? Is <b></b>&gt;&gt; redirection or part of a regexp?).</p>
+<p>It is impossible to tell how <b>| wc &gt;&gt; c</b> should be interpreted without parsing the string (is the <b>|</b> a pipe in shell or an alternation in a <b>grep</b> regexp? Is <b>LANG=C</b> a command in <b>csh</b> or setting a variable in <b>bash</b>? Is <b>&gt;&gt;</b> redirection or part of a regexp?).</p>
 
 <p>On top of this, wrapper scripts will often require a shell to be spawned.</p>
 
@@ -1015,12 +1062,6 @@
 <p>But several distributions chose to make <b>--tollef</b> global (by putting it into /etc/parallel/config) without making the users aware of this, and that caused much confusion when people tried out the examples from GNU <b>parallel</b>&#39;s man page and these did not work. The users became frustrated because the distribution did not make it clear to them that it has made <b>--tollef</b> global.</p>
 
 <p>So to lessen the frustration and the resulting support, <b>--tollef</b> was obsoleted 20130222 and removed one year later.</p>
-
-<h2 id="Transferring-of-variables-and-functions1">Transferring of variables and functions</h2>
-
-<p>Until 20150122 variables and functions were transferred by looking at $SHELL to see whether the shell was a <b>*csh</b> shell. If so the variables would be set using <b>setenv</b>. Otherwise they would be set using <b>=</b>. This caused the content of the variable to be repeated:</p>
-
-<p>echo $SHELL | grep &quot;/t\{0,1\}csh&quot; &gt; /dev/null &amp;&amp; setenv VAR foo || export VAR=foo</p>
 
 
 </body>

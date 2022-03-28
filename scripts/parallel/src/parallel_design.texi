@@ -8,8 +8,6 @@
 @node Top
 @top Design of GNU Parallel
 
-options as wrapper scripts
-
 @menu
 * Design of GNU Parallel::
 * Ideas for new design::
@@ -282,7 +280,7 @@ version is >= 3.1.0 then @strong{--protocol 30} is added to force newer
 @node Compression
 @section Compression
 
-GNU @strong{parallel} buffers output in temporary files. @strong{--compress}
+GNU @strong{parallel} buffers output in temporary files.  @strong{--compress}
 compresses the buffered data.  This is a bit tricky because there
 should be no files to clean up if GNU @strong{parallel} is killed by a power
 outage.
@@ -689,11 +687,12 @@ unlinked as soon as they are opened.
 
 The shell shock bug in @strong{bash} did not affect GNU @strong{parallel}, but the
 solutions did. @strong{bash} first introduced functions in variables named:
-@emph{BASH_FUNC_myfunc()} and later changed that to @emph{BASH_FUNC_myfunc%%}. When
-transferring functions GNU @strong{parallel} reads off the function and changes
-that into a function definition, which is copied to the remote system and
-executed before the actual command is executed. Therefore GNU @strong{parallel}
-needs to know how to read the function.
+@emph{BASH_FUNC_myfunc()} and later changed that to
+@emph{BASH_FUNC_myfunc%%}. When transferring functions GNU @strong{parallel}
+reads off the function and changes that into a function definition,
+which is copied to the remote system and executed before the actual
+command is executed. Therefore GNU @strong{parallel} needs to know how to
+read the function.
 
 From version 20150122 GNU @strong{parallel} tries both the ()-version and
 the %%-version, and the function definition works on both pre- and
@@ -706,11 +705,41 @@ The remote system wrapper does some initialization before starting the
 command on the remote system.
 
 @menu
+* Make quoting unnecessary by hex encoding everything::
 * Ctrl-C and standard error (stderr)::
 * --nice::
 * Setting $PARALLEL_TMP::
 * The wrapper::
 @end menu
+
+@node Make quoting unnecessary by hex encoding everything
+@subsection Make quoting unnecessary by hex encoding everything
+
+When you run @strong{ssh server foo} then @strong{foo} has to be quoted once:
+
+@verbatim
+  ssh server "echo foo; echo bar"
+@end verbatim
+
+If you run @strong{ssh server1 ssh server2 foo} then @strong{foo} has to be quoted
+twice:
+
+@verbatim
+  ssh server1 ssh server2 \'"echo foo; echo bar"\'
+@end verbatim
+
+GNU @strong{parallel} avoids this by packing everyting into hex values and
+running a command that does not need quoting:
+
+@verbatim
+  perl -X -e GNU_Parallel_worker,eval+pack+q/H10000000/,join+q//,@ARGV
+@end verbatim
+
+This command reads hex from the command line and converts that to
+bytes that are then eval'ed as a Perl expression.
+
+The string @strong{GNU_Parallel_worker} is not needed. It is simply there to
+let the user know, that this process is GNU @strong{parallel} working.
 
 @node Ctrl-C and standard error (stderr)
 @subsection Ctrl-C and standard error (stderr)
@@ -762,30 +791,61 @@ The wrapper looks like this:
 
 @verbatim
   $shell = $PARALLEL_SHELL || $SHELL;
-  $tmpdir = $TMPDIR;
+  $tmpdir = $TMPDIR || $PARALLEL_REMOTE_TMPDIR;
   $nice = $opt::nice;
+  $termseq = $opt::termseq;
+
+  # Check that $tmpdir is writable
+  -w $tmpdir ||
+      die("$tmpdir is not writable.".
+        " Set PARALLEL_REMOTE_TMPDIR");
   # Set $PARALLEL_TMP to a non-existent file name in $TMPDIR
   do {
       $ENV{PARALLEL_TMP} = $tmpdir."/par".
         join"", map { (0..9,"a".."z","A".."Z")[rand(62)] } (1..5);
   } while(-e $ENV{PARALLEL_TMP});
+  # Set $script to a non-existent file name in $TMPDIR
+  do {
+      $script = $tmpdir."/par".
+        join"", map { (0..9,"a".."z","A".."Z")[rand(62)] } (1..5);
+  } while(-e $script);
+  # Create a script from the hex code
+  # that removes itself and runs the commands
+  open($fh,">",$script) || die;
+  # ' needed due to rc-shell
+  print($fh("rm \'$script\'\n",$bashfunc.$cmd));
+  close $fh;
+  my $parent = getppid;
+  my $done = 0;
   $SIG{CHLD} = sub { $done = 1; };
   $pid = fork;
   unless($pid) {
       # Make own process group to be able to kill HUP it later
-      setpgrp;
+      eval { setpgrp };
+      # Set nice value
       eval { setpriority(0,0,$nice) };
-      exec $shell, "-c", ($bashfunc."@ARGV");
-      die "exec: $!\n";
+      # Run the script
+      exec($shell,$script);
+      die("exec failed: $!");
   }
-  do {
-      # Parent is not init (ppid=1), so sshd is alive
+  while((not $done) and (getppid == $parent)) {
+      # Parent pid is not changed, so sshd is alive
       # Exponential sleep up to 1 sec
       $s = $s < 1 ? 0.001 + $s * 1.03 : $s;
       select(undef, undef, undef, $s);
-  } until ($done || getppid == 1);
-  # Kill HUP the process group if job not done
-  kill(SIGHUP, -${pid}) unless $done;
+  }
+  if(not $done) {
+      # sshd is dead: User pressed Ctrl-C
+      # Kill as per --termseq
+      my @term_seq = split/,/,$termseq;
+      if(not @term_seq) {
+        @term_seq = ("TERM",200,"TERM",100,"TERM",50,"KILL",25);
+      }
+      while(@term_seq && kill(0,-$pid)) {
+        kill(shift @term_seq, -$pid);
+        select(undef, undef, undef, (shift @term_seq)/1000);
+      }
+  }
   wait;
   exit ($?&127 ? 128+($?&127) : 1+$?>>8)
 @end verbatim
@@ -813,9 +873,9 @@ into one single word, which often is longer than 1024 chars.
 
 When the line to run is > 1000 chars, GNU @strong{parallel} therefore
 encodes the line to run. The encoding @strong{bzip2}s the line to run,
-converts this to base64, splits the base64 into 1000 char blocks (so @strong{csh}
-does not fail), and prepends it with this Perl script that decodes,
-decompresses and @strong{eval}s the line.
+converts this to base64, splits the base64 into 1000 char blocks (so
+@strong{csh} does not fail), and prepends it with this Perl script that
+decodes, decompresses and @strong{eval}s the line.
 
 @verbatim
     @GNU_Parallel=("use","IPC::Open3;","use","MIME::Base64");
@@ -938,11 +998,11 @@ be spawned:
   parallel "LANG=C grep -E 'ls | wc >> c' {}" ::: foo
 @end verbatim
 
-It is impossible to tell how @strong{| wc }>>@strong{ c} should be interpreted
-without parsing the string (is the @strong{|} a pipe in shell or an
-alternation in a @strong{grep} regexp?  Is @strong{LANG=C} a command in @strong{csh} or
-setting a variable in @strong{bash}? Is @strong{}>> redirection or part of a
-regexp?).
+It is impossible to tell how @strong{| wc >> c} should be
+interpreted without parsing the string (is the @strong{|} a pipe in shell or
+an alternation in a @strong{grep} regexp?  Is @strong{LANG=C} a command in @strong{csh}
+or setting a variable in @strong{bash}? Is @strong{>>} redirection or part
+of a regexp?).
 
 On top of this, wrapper scripts will often require a shell to be
 spawned.
@@ -1047,7 +1107,7 @@ N+1 records.
 
 With @strong{--pipepart} GNU @strong{parallel} can compute the @strong{--block-size}
 automatically. A @strong{--block-size} of @strong{-1} will use a block size so
-that each jobslot will receive approximately 1 block. @strong{--block -2}
+that each jobslot will receive approximately 1 block.  @strong{--block -2}
 will pass 2 blocks to each jobslot and @strong{-@emph{n}} will pass @emph{n} blocks
 to each jobslot.
 
@@ -1237,12 +1297,12 @@ the whole output of a single job and save it as csv/tsv or SQL.
 @node Argument separators ::: :::: :::+ ::::+
 @section Argument separators ::: :::: :::+ ::::+
 
-The argument separator @strong{:::} was chosen because I have never seen @strong{:::}
-used in any command. The natural choice @strong{--} would be a bad idea since
-it is not unlikely that the template command will contain @strong{--}. I have
-seen @strong{::} used in programming languanges to separate classes, and I
-did not want the user to be confused that the separator had anything
-to do with classes.
+The argument separator @strong{:::} was chosen because I have never seen
+@strong{:::} used in any command. The natural choice @strong{--} would be a bad
+idea since it is not unlikely that the template command will contain
+@strong{--}. I have seen @strong{::} used in programming languanges to separate
+classes, and I did not want the user to be confused that the separator
+had anything to do with classes.
 
 @strong{:::} also makes a visual separation, which is good if there are
 multiple @strong{:::}.
@@ -1473,7 +1533,6 @@ but not the current version. They are kept here as historical record.
 
 @menu
 * --tollef::
-* Transferring of variables and functions 1::
 @end menu
 
 @node --tollef
@@ -1497,16 +1556,5 @@ it has made @strong{--tollef} global.
 
 So to lessen the frustration and the resulting support, @strong{--tollef}
 was obsoleted 20130222 and removed one year later.
-
-@node Transferring of variables and functions 1
-@section Transferring of variables and functions
-
-Until 20150122 variables and functions were transferred by looking at
-$SHELL to see whether the shell was a @strong{*csh} shell. If so the
-variables would be set using @strong{setenv}. Otherwise they would be set
-using @strong{=}. This caused the content of the variable to be repeated:
-
-echo $SHELL | grep "/t\@{0,1\@}csh" > /dev/null && setenv VAR foo ||
-export VAR=foo
 
 @bye

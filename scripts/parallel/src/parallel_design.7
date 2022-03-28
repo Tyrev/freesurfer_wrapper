@@ -133,12 +133,11 @@
 .\" ========================================================================
 .\"
 .IX Title "PARALLEL_DESIGN 7"
-.TH PARALLEL_DESIGN 7 "2021-03-21" "20210222" "parallel"
+.TH PARALLEL_DESIGN 7 "2022-03-16" "20220222" "parallel"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
 .nh
-options as wrapper scripts
 .SH "Design of GNU Parallel"
 .IX Header "Design of GNU Parallel"
 This document describes design decisions made in the development of
@@ -331,7 +330,7 @@ version is >= 3.1.0 then \fB\-\-protocol 30\fR is added to force newer
 \&\fBrsync\fRs to talk to version 2.5.7.
 .SS "Compression"
 .IX Subsection "Compression"
-\&\s-1GNU\s0 \fBparallel\fR buffers output in temporary files. \fB\-\-compress\fR
+\&\s-1GNU\s0 \fBparallel\fR buffers output in temporary files.  \fB\-\-compress\fR
 compresses the buffered data.  This is a bit tricky because there
 should be no files to clean up if \s-1GNU\s0 \fBparallel\fR is killed by a power
 outage.
@@ -680,11 +679,12 @@ unlinked as soon as they are opened.
 .IX Subsection "Shell shock"
 The shell shock bug in \fBbash\fR did not affect \s-1GNU\s0 \fBparallel\fR, but the
 solutions did. \fBbash\fR first introduced functions in variables named:
-\&\fI\f(BIBASH_FUNC_myfunc()\fI\fR and later changed that to \fIBASH_FUNC_myfunc%%\fR. When
-transferring functions \s-1GNU\s0 \fBparallel\fR reads off the function and changes
-that into a function definition, which is copied to the remote system and
-executed before the actual command is executed. Therefore \s-1GNU\s0 \fBparallel\fR
-needs to know how to read the function.
+\&\fI\f(BIBASH_FUNC_myfunc()\fI\fR and later changed that to
+\&\fIBASH_FUNC_myfunc%%\fR. When transferring functions \s-1GNU\s0 \fBparallel\fR
+reads off the function and changes that into a function definition,
+which is copied to the remote system and executed before the actual
+command is executed. Therefore \s-1GNU\s0 \fBparallel\fR needs to know how to
+read the function.
 .PP
 From version 20150122 \s-1GNU\s0 \fBparallel\fR tries both the ()\-version and
 the %%\-version, and the function definition works on both pre\- and
@@ -693,6 +693,35 @@ post-shell shock versions of \fBbash\fR.
 .IX Subsection "The remote system wrapper"
 The remote system wrapper does some initialization before starting the
 command on the remote system.
+.PP
+\fIMake quoting unnecessary by hex encoding everything\fR
+.IX Subsection "Make quoting unnecessary by hex encoding everything"
+.PP
+When you run \fBssh server foo\fR then \fBfoo\fR has to be quoted once:
+.PP
+.Vb 1
+\&  ssh server "echo foo; echo bar"
+.Ve
+.PP
+If you run \fBssh server1 ssh server2 foo\fR then \fBfoo\fR has to be quoted
+twice:
+.PP
+.Vb 1
+\&  ssh server1 ssh server2 \e\*(Aq"echo foo; echo bar"\e\*(Aq
+.Ve
+.PP
+\&\s-1GNU\s0 \fBparallel\fR avoids this by packing everyting into hex values and
+running a command that does not need quoting:
+.PP
+.Vb 1
+\&  perl \-X \-e GNU_Parallel_worker,eval+pack+q/H10000000/,join+q//,@ARGV
+.Ve
+.PP
+This command reads hex from the command line and converts that to
+bytes that are then eval'ed as a Perl expression.
+.PP
+The string \fBGNU_Parallel_worker\fR is not needed. It is simply there to
+let the user know, that this process is \s-1GNU\s0 \fBparallel\fR working.
 .PP
 \fICtrl-C and standard error (stderr)\fR
 .IX Subsection "Ctrl-C and standard error (stderr)"
@@ -742,32 +771,63 @@ remote system.
 .PP
 The wrapper looks like this:
 .PP
-.Vb 10
+.Vb 4
 \&  $shell = $PARALLEL_SHELL || $SHELL;
-\&  $tmpdir = $TMPDIR;
+\&  $tmpdir = $TMPDIR || $PARALLEL_REMOTE_TMPDIR;
 \&  $nice = $opt::nice;
+\&  $termseq = $opt::termseq;
+\&
+\&  # Check that $tmpdir is writable
+\&  \-w $tmpdir ||
+\&      die("$tmpdir is not writable.".
+\&        " Set PARALLEL_REMOTE_TMPDIR");
 \&  # Set $PARALLEL_TMP to a non\-existent file name in $TMPDIR
 \&  do {
 \&      $ENV{PARALLEL_TMP} = $tmpdir."/par".
 \&        join"", map { (0..9,"a".."z","A".."Z")[rand(62)] } (1..5);
 \&  } while(\-e $ENV{PARALLEL_TMP});
+\&  # Set $script to a non\-existent file name in $TMPDIR
+\&  do {
+\&      $script = $tmpdir."/par".
+\&        join"", map { (0..9,"a".."z","A".."Z")[rand(62)] } (1..5);
+\&  } while(\-e $script);
+\&  # Create a script from the hex code
+\&  # that removes itself and runs the commands
+\&  open($fh,">",$script) || die;
+\&  # \*(Aq needed due to rc\-shell
+\&  print($fh("rm \e\*(Aq$script\e\*(Aq\en",$bashfunc.$cmd));
+\&  close $fh;
+\&  my $parent = getppid;
+\&  my $done = 0;
 \&  $SIG{CHLD} = sub { $done = 1; };
 \&  $pid = fork;
 \&  unless($pid) {
 \&      # Make own process group to be able to kill HUP it later
-\&      setpgrp;
+\&      eval { setpgrp };
+\&      # Set nice value
 \&      eval { setpriority(0,0,$nice) };
-\&      exec $shell, "\-c", ($bashfunc."@ARGV");
-\&      die "exec: $!\en";
+\&      # Run the script
+\&      exec($shell,$script);
+\&      die("exec failed: $!");
 \&  }
-\&  do {
-\&      # Parent is not init (ppid=1), so sshd is alive
+\&  while((not $done) and (getppid == $parent)) {
+\&      # Parent pid is not changed, so sshd is alive
 \&      # Exponential sleep up to 1 sec
 \&      $s = $s < 1 ? 0.001 + $s * 1.03 : $s;
 \&      select(undef, undef, undef, $s);
-\&  } until ($done || getppid == 1);
-\&  # Kill HUP the process group if job not done
-\&  kill(SIGHUP, \-${pid}) unless $done;
+\&  }
+\&  if(not $done) {
+\&      # sshd is dead: User pressed Ctrl\-C
+\&      # Kill as per \-\-termseq
+\&      my @term_seq = split/,/,$termseq;
+\&      if(not @term_seq) {
+\&        @term_seq = ("TERM",200,"TERM",100,"TERM",50,"KILL",25);
+\&      }
+\&      while(@term_seq && kill(0,\-$pid)) {
+\&        kill(shift @term_seq, \-$pid);
+\&        select(undef, undef, undef, (shift @term_seq)/1000);
+\&      }
+\&  }
 \&  wait;
 \&  exit ($?&127 ? 128+($?&127) : 1+$?>>8)
 .Ve
@@ -791,9 +851,9 @@ into one single word, which often is longer than 1024 chars.
 .PP
 When the line to run is > 1000 chars, \s-1GNU\s0 \fBparallel\fR therefore
 encodes the line to run. The encoding \fBbzip2\fRs the line to run,
-converts this to base64, splits the base64 into 1000 char blocks (so \fBcsh\fR
-does not fail), and prepends it with this Perl script that decodes,
-decompresses and \fBeval\fRs the line.
+converts this to base64, splits the base64 into 1000 char blocks (so
+\&\fBcsh\fR does not fail), and prepends it with this Perl script that
+decodes, decompresses and \fBeval\fRs the line.
 .PP
 .Vb 2
 \&    @GNU_Parallel=("use","IPC::Open3;","use","MIME::Base64");
@@ -906,11 +966,11 @@ be spawned:
 \&  parallel "LANG=C grep \-E \*(Aqls | wc >> c\*(Aq {}" ::: foo
 .Ve
 .PP
-It is impossible to tell how \fB| wc \fR>>\fB c\fR should be interpreted
-without parsing the string (is the \fB|\fR a pipe in shell or an
-alternation in a \fBgrep\fR regexp?  Is \fBLANG=C\fR a command in \fBcsh\fR or
-setting a variable in \fBbash\fR? Is \fB\fR>> redirection or part of a
-regexp?).
+It is impossible to tell how \fB| wc >> c\fR should be
+interpreted without parsing the string (is the \fB|\fR a pipe in shell or
+an alternation in a \fBgrep\fR regexp?  Is \fBLANG=C\fR a command in \fBcsh\fR
+or setting a variable in \fBbash\fR? Is \fB>>\fR redirection or part
+of a regexp?).
 .PP
 On top of this, wrapper scripts will often require a shell to be
 spawned.
@@ -1007,7 +1067,7 @@ N+1 records.
 .IX Subsection "Automatic --block-size computation"
 With \fB\-\-pipepart\fR \s-1GNU\s0 \fBparallel\fR can compute the \fB\-\-block\-size\fR
 automatically. A \fB\-\-block\-size\fR of \fB\-1\fR will use a block size so
-that each jobslot will receive approximately 1 block. \fB\-\-block \-2\fR
+that each jobslot will receive approximately 1 block.  \fB\-\-block \-2\fR
 will pass 2 blocks to each jobslot and \fB\-\f(BIn\fB\fR will pass \fIn\fR blocks
 to each jobslot.
 .PP
@@ -1175,12 +1235,12 @@ Buffering the full output of a single job. This happens when using
 the whole output of a single job and save it as csv/tsv or \s-1SQL.\s0
 .SS "Argument separators ::: :::: :::+ ::::+"
 .IX Subsection "Argument separators ::: :::: :::+ ::::+"
-The argument separator \fB:::\fR was chosen because I have never seen \fB:::\fR
-used in any command. The natural choice \fB\-\-\fR would be a bad idea since
-it is not unlikely that the template command will contain \fB\-\-\fR. I have
-seen \fB::\fR used in programming languanges to separate classes, and I
-did not want the user to be confused that the separator had anything
-to do with classes.
+The argument separator \fB:::\fR was chosen because I have never seen
+\&\fB:::\fR used in any command. The natural choice \fB\-\-\fR would be a bad
+idea since it is not unlikely that the template command will contain
+\&\fB\-\-\fR. I have seen \fB::\fR used in programming languanges to separate
+classes, and I did not want the user to be confused that the separator
+had anything to do with classes.
 .PP
 \&\fB:::\fR also makes a visual separation, which is good if there are
 multiple \fB:::\fR.
@@ -1393,12 +1453,3 @@ it has made \fB\-\-tollef\fR global.
 .PP
 So to lessen the frustration and the resulting support, \fB\-\-tollef\fR
 was obsoleted 20130222 and removed one year later.
-.SS "Transferring of variables and functions"
-.IX Subsection "Transferring of variables and functions"
-Until 20150122 variables and functions were transferred by looking at
-\&\f(CW$SHELL\fR to see whether the shell was a \fB*csh\fR shell. If so the
-variables would be set using \fBsetenv\fR. Otherwise they would be set
-using \fB=\fR. This caused the content of the variable to be repeated:
-.PP
-echo \f(CW$SHELL\fR | grep \*(L"/t\e{0,1\e}csh\*(R" > /dev/null && setenv \s-1VAR\s0 foo ||
-export VAR=foo

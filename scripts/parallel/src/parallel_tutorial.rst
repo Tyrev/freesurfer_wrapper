@@ -4,36 +4,23 @@ GNU Parallel Tutorial
 *********************
 
 
-This tutorial shows off much of GNU \ **parallel**\ 's functionality. The
-tutorial is meant to learn the options in and syntax of GNU
-\ **parallel**\ .  The tutorial is \ **not**\  to show realistic examples from the
-real world.
+This tutorial shows off much of GNU \ **parallel**\ 's functionality. The tutorial is meant to learn the options in and syntax of GNU \ **parallel**\ .  The tutorial is \ **not**\  to show realistic examples from the real world.
 
 Reader's guide
 ==============
 
 
-If you prefer reading a book buy \ **GNU Parallel 2018**\  at
-https://www.lulu.com/shop/ole-tange/gnu-parallel-2018/paperback/product-23558902.html
-or download it at: https://doi.org/10.5281/zenodo.1146014
+If you prefer reading a book buy \ **GNU Parallel 2018**\  at https://www.lulu.com/shop/ole-tange/gnu-parallel-2018/paperback/product-23558902.html or download it at: https://doi.org/10.5281/zenodo.1146014
 
-Otherwise start by watching the intro videos for a quick introduction:
-https://www.youtube.com/playlist?list=PL284C9FF2488BC6D1
+Otherwise start by watching the intro videos for a quick introduction: https://www.youtube.com/playlist?list=PL284C9FF2488BC6D1
 
-Then browse through the \ **EXAMPLE**\ s after the list of \ **OPTIONS**\  in
-\ **man parallel**\  (Use \ **LESS=+/EXAMPLE: man parallel**\ ). That will give
-you an idea of what GNU \ **parallel**\  is capable of.
+Then browse through the \ **EXAMPLE**\ s after the list of \ **OPTIONS**\  in \ **man parallel**\  (Use \ **LESS=+/EXAMPLE: man parallel**\ ). That will give you an idea of what GNU \ **parallel**\  is capable of.
 
-If you want to dive even deeper: spend a couple of hours walking
-through the tutorial (\ **man parallel_tutorial**\ ). Your command line
-will love you for it.
+If you want to dive even deeper: spend a couple of hours walking through the tutorial (\ **man parallel_tutorial**\ ). Your command line will love you for it.
 
-Finally you may want to look at the rest of the manual (\ **man
-parallel**\ ) if you have special needs not already covered.
+Finally you may want to look at the rest of the manual (\ **man parallel**\ ) if you have special needs not already covered.
 
-If you want to know the design decisions behind GNU \ **parallel**\ , try:
-\ **man parallel_design**\ . This is also a good intro if you intend to
-change GNU \ **parallel**\ .
+If you want to know the design decisions behind GNU \ **parallel**\ , try: \ **man parallel_design**\ . This is also a good intro if you intend to change GNU \ **parallel**\ .
 
 
 
@@ -47,8 +34,7 @@ To run this tutorial you must have the following:
 
 - parallel >= version 20160822
  
- Install the newest version using your package manager (recommended for
- security reasons), the way described in README, or with this command:
+ Install the newest version using your package manager (recommended for security reasons), the way described in README, or with this command:
  
  
  .. code-block:: perl
@@ -65,8 +51,7 @@ To run this tutorial you must have the following:
     $ bash install.sh
  
  
- This will also install the newest version of the tutorial which you
- can see by running this:
+ This will also install the newest version of the tutorial which you can see by running this:
  
  
  .. code-block:: perl
@@ -229,8 +214,7 @@ To run this tutorial you must have the following:
     ssh $SERVER2 echo works
  
  
- It can be setup by running 'ssh-keygen -t dsa; ssh-copy-id $SERVER1'
- and using an empty passphrase, or you can use \ **ssh-agent**\ .
+ It can be setup by running 'ssh-keygen -t dsa; ssh-copy-id $SERVER1' and using an empty passphrase, or you can use \ **ssh-agent**\ .
  
 
 
@@ -240,8 +224,7 @@ Input sources
 *************
 
 
-GNU \ **parallel**\  reads input from input sources. These can be files, the
-command line, and stdin (standard input or a pipe).
+GNU \ **parallel**\  reads input from input sources. These can be files, the command line, and stdin (standard input or a pipe).
 
 A single input source
 =====================
@@ -255,8 +238,7 @@ Input can be read from the command line:
    parallel echo ::: A B C
 
 
-Output (the order may be different because the jobs are run in
-parallel):
+Output (the order may be different because the jobs are run in parallel):
 
 
 .. code-block:: perl
@@ -291,9 +273,7 @@ Multiple input sources
 ======================
 
 
-GNU \ **parallel**\  can take multiple input sources given on the command
-line. GNU \ **parallel**\  then generates all combinations of the input
-sources:
+GNU \ **parallel**\  can take multiple input sources given on the command line. GNU \ **parallel**\  then generates all combinations of the input sources:
 
 
 .. code-block:: perl
@@ -361,8 +341,7 @@ Linking arguments from input sources
 ------------------------------------
 
 
-With \ **--link**\  you can link the input sources and get one argument
-from each input source:
+With \ **--link**\  you can link the input sources and get one argument from each input source:
 
 
 .. code-block:: perl
@@ -400,9 +379,7 @@ Output (the order may be different):
    E F
 
 
-For more flexible linking you can use \ **:::+**\  and \ **::::+**\ . They work
-like \ **:::**\  and \ **::::**\  except they link the previous input source to
-this input source.
+For more flexible linking you can use \ **:::+**\  and \ **::::+**\ . They work like \ **:::**\  and \ **::::**\  except they link the previous input source to this input source.
 
 This will link ABC to GHI:
 
@@ -452,8 +429,7 @@ Output (the order may be different):
    C I F
 
 
-If one of the input sources is too short when using \ **:::+**\  or
-\ **::::+**\ , the rest will be ignored:
+If one of the input sources is too short when using \ **:::+**\  or \ **::::+**\ , the rest will be ignored:
 
 
 .. code-block:: perl
@@ -476,8 +452,7 @@ Changing the argument separator.
 ================================
 
 
-GNU \ **parallel**\  can use other separators than \ **:::**\  or \ **::::**\ . This is
-typically useful if \ **:::**\  or \ **::::**\  is used in the command to run:
+GNU \ **parallel**\  can use other separators than \ **:::**\  or \ **::::**\ . This is typically useful if \ **:::**\  or \ **::::**\  is used in the command to run:
 
 
 .. code-block:: perl
@@ -516,8 +491,7 @@ Changing the argument delimiter
 ===============================
 
 
-GNU \ **parallel**\  will normally treat a full line as a single argument: It
-uses \ **\n**\  as argument delimiter. This can be changed with \ **-d**\ :
+GNU \ **parallel**\  will normally treat a full line as a single argument: It uses \ **\n**\  as argument delimiter. This can be changed with \ **-d**\ :
 
 
 .. code-block:: perl
@@ -545,8 +519,7 @@ NUL can be given as \ **\0**\ :
 
 Output: Same as above.
 
-A shorthand for \ **-d '\0'**\  is \ **-0**\  (this will often be used to read files
-from \ **find ... -print0**\ ):
+A shorthand for \ **-d '\0'**\  is \ **-0**\  (this will often be used to read files from \ **find ... -print0**\ ):
 
 
 .. code-block:: perl
@@ -611,8 +584,7 @@ No command means arguments are commands
 =======================================
 
 
-If no command is given after parallel the arguments themselves are
-treated as commands:
+If no command is given after parallel the arguments themselves are treated as commands:
 
 
 .. code-block:: perl
@@ -630,8 +602,7 @@ Output (the order may be different):
    [/path/to/current/working/dir]
 
 
-The command can be a script, a binary or a Bash function if the function is
-exported using \ **export -f**\ :
+The command can be a script, a binary or a Bash function if the function is exported using \ **export -f**\ :
 
 
 .. code-block:: perl
@@ -663,8 +634,7 @@ The 7 predefined replacement strings
 ------------------------------------
 
 
-GNU \ **parallel**\  has several replacement strings. If no replacement
-strings are used the default is to append \ **{}**\ :
+GNU \ **parallel**\  has several replacement strings. If no replacement strings are used the default is to append \ **{}**\ :
 
 
 .. code-block:: perl
@@ -778,8 +748,7 @@ Output (the order may be different):
    3
 
 
-The replacement string \ **{%}**\  gives the job slot number (between 1 and
-number of jobs to run in parallel):
+The replacement string \ **{%}**\  gives the job slot number (between 1 and number of jobs to run in parallel):
 
 
 .. code-block:: perl
@@ -923,9 +892,7 @@ Perl expression replacement string
 ----------------------------------
 
 
-When predefined replacement strings are not flexible enough a perl
-expression can be used instead. One example is to remove two
-extensions: foo.tar.gz becomes foo
+When predefined replacement strings are not flexible enough a perl expression can be used instead. One example is to remove two extensions: foo.tar.gz becomes foo
 
 
 .. code-block:: perl
@@ -941,8 +908,7 @@ Output:
    foo
 
 
-In \ **{= =}**\  you can access all of GNU \ **parallel**\ 's internal functions
-and variables. A few are worth mentioning.
+In \ **{= =}**\  you can access all of GNU \ **parallel**\ 's internal functions and variables. A few are worth mentioning.
 
 \ **total_jobs()**\  returns the total number of jobs:
 
@@ -1049,8 +1015,7 @@ To define a shorthand replacement string use \ **--rpl**\ :
 
 Output: Same as above.
 
-If the shorthand starts with \ **{**\  it can be used as a positional
-replacement string, too:
+If the shorthand starts with \ **{**\  it can be used as a positional replacement string, too:
 
 
 .. code-block:: perl
@@ -1061,14 +1026,9 @@ replacement string, too:
 
 Output: Same as above.
 
-If the shorthand contains matching parenthesis the replacement string
-becomes a dynamic replacement string and the string in the parenthesis
-can be accessed as $$1. If there are multiple matching parenthesis,
-the matched strings can be accessed using $$2, $$3 and so on.
+If the shorthand contains matching parenthesis the replacement string becomes a dynamic replacement string and the string in the parenthesis can be accessed as $$1. If there are multiple matching parenthesis, the matched strings can be accessed using $$2, $$3 and so on.
 
-You can think of this as giving arguments to the replacement
-string. Here we give the argument \ **.tar.gz**\  to the replacement string
-\ **{%\ \*string\*\ }**\  which removes \ *string*\ :
+You can think of this as giving arguments to the replacement string. Here we give the argument \ **.tar.gz**\  to the replacement string \ **{%\ \*string\*\ }**\  which removes \ *string*\ :
 
 
 .. code-block:: perl
@@ -1084,9 +1044,7 @@ Output:
    foo.zip
 
 
-Here we give the two arguments \ **tar.gz**\  and \ **zip**\  to the replacement
-string \ **{/\ \*string1\*\ /\ \*string2\*\ }**\  which replaces \ *string1*\  with
-\ *string2*\ :
+Here we give the two arguments \ **tar.gz**\  and \ **zip**\  to the replacement string \ **{/\ \*string1\*\ /\ \*string2\*\ }**\  which replaces \ *string1*\  with \ *string2*\ :
 
 
 .. code-block:: perl
@@ -1123,8 +1081,7 @@ Positional replacement strings
 ------------------------------
 
 
-With multiple input sources the argument from the individual input
-sources can be accessed with \ **{**\ number\ **}**\ :
+With multiple input sources the argument from the individual input sources can be accessed with \ **{**\ number\ **}**\ :
 
 
 .. code-block:: perl
@@ -1160,8 +1117,7 @@ Output (the order may be different):
    /=E.F //=D /.=E .=D/E
 
 
-If a position is negative, it will refer to the input source counted
-from behind:
+If a position is negative, it will refer to the input source counted from behind:
 
 
 .. code-block:: perl
@@ -1190,8 +1146,7 @@ Positional perl expression replacement string
 ---------------------------------------------
 
 
-To use a perl expression as a positional replacement string simply
-prepend the perl expression with number and space:
+To use a perl expression as a positional replacement string simply prepend the perl expression with number and space:
 
 
 .. code-block:: perl
@@ -1208,8 +1163,7 @@ Output:
    foo bar
 
 
-If a shorthand defined using \ **--rpl**\  starts with \ **{**\  it can be used as
-a positional replacement string, too:
+If a shorthand defined using \ **--rpl**\  starts with \ **{**\  it can be used as a positional replacement string, too:
 
 
 .. code-block:: perl
@@ -1225,8 +1179,7 @@ Input from columns
 ------------------
 
 
-The columns in a file can be bound to positional replacement strings
-using \ **--colsep**\ . Here the columns are separated by TAB (\t):
+The columns in a file can be bound to positional replacement strings using \ **--colsep**\ . Here the columns are separated by TAB (\t):
 
 
 .. code-block:: perl
@@ -1249,9 +1202,7 @@ Header defined replacement strings
 ----------------------------------
 
 
-With \ **--header**\  GNU \ **parallel**\  will use the first value of the input
-source as the name of the replacement string. Only the non-modified
-version \ **{}**\  is supported:
+With \ **--header**\  GNU \ **parallel**\  will use the first value of the input source as the name of the replacement string. Only the non-modified version \ **{}**\  is supported:
 
 
 .. code-block:: perl
@@ -1293,10 +1244,7 @@ More pre-defined replacement strings with --plus
 ------------------------------------------------
 
 
-\ **--plus**\  adds the replacement strings \ **{+/} {+.} {+..} {+...} {..}  {...}
-{/..} {/...} {##}**\ . The idea being that \ **{+foo}**\  matches the opposite of \ **{foo}**\ 
-and \ **{}**\  = \ **{+/}**\ /\ **{/}**\  = \ **{.}**\ .\ **{+.}**\  = \ **{+/}**\ /\ **{/.}**\ .\ **{+.}**\  = \ **{..}**\ .\ **{+..}**\  =
-\ **{+/}**\ /\ **{/..}**\ .\ **{+..}**\  = \ **{...}**\ .\ **{+...}**\  = \ **{+/}**\ /\ **{/...}**\ .\ **{+...}**\ .
+\ **--plus**\  adds the replacement strings \ **{+/} {+.} {+..} {+...} {..}  {...} {/..} {/...} {##}**\ . The idea being that \ **{+foo}**\  matches the opposite of \ **{foo}**\  and \ **{}**\  = \ **{+/}**\ /\ **{/}**\  = \ **{.}**\ .\ **{+.}**\  = \ **{+/}**\ /\ **{/.}**\ .\ **{+.}**\  = \ **{..}**\ .\ **{+..}**\  = \ **{+/}**\ /\ **{/..}**\ .\ **{+..}**\  = \ **{...}**\ .\ **{+...}**\  = \ **{+/}**\ /\ **{/...}**\ .\ **{+...}**\ .
 
 
 .. code-block:: perl
@@ -1385,29 +1333,25 @@ Dynamic replacement strings with --plus
 
 - \ **{^\ \*string\*\ }**\ 
  
- If the argument starts with \ *string*\ , upper case it. \ *string*\  must
- be a single letter.
+ If the argument starts with \ *string*\ , upper case it. \ *string*\  must be a single letter.
  
 
 
 - \ **{^^\ \*string\*\ }**\ 
  
- If the argument contains \ *string*\ , upper case it. \ *string*\  must be a
- single letter.
+ If the argument contains \ *string*\ , upper case it. \ *string*\  must be a single letter.
  
 
 
 - \ **{,\ \*string\*\ }**\ 
  
- If the argument starts with \ *string*\ , lower case it. \ *string*\  must
- be a single letter.
+ If the argument starts with \ *string*\ , lower case it. \ *string*\  must be a single letter.
  
 
 
 - \ **{,,\ \*string\*\ }**\ 
  
- If the argument contains \ *string*\ , lower case it. \ *string*\  must be a
- single letter.
+ If the argument contains \ *string*\ , lower case it. \ *string*\  must be a single letter.
  
 
 
@@ -1489,8 +1433,7 @@ More than one argument
 ======================
 
 
-With \ **--xargs**\  GNU \ **parallel**\  will fit as many arguments as possible on a
-single line:
+With \ **--xargs**\  GNU \ **parallel**\  will fit as many arguments as possible on a single line:
 
 
 .. code-block:: perl
@@ -1508,8 +1451,7 @@ Output (if you run this under Bash on GNU/Linux):
 
 The 30000 arguments fitted on 2 lines.
 
-The maximal length of a single line can be set with \ **-s**\ . With a maximal
-line length of 10000 chars 17 commands will be run:
+The maximal length of a single line can be set with \ **-s**\ . With a maximal line length of 10000 chars 17 commands will be run:
 
 
 .. code-block:: perl
@@ -1525,17 +1467,11 @@ Output:
    17
 
 
-For better parallelism GNU \ **parallel**\  can distribute the arguments
-between all the parallel jobs when end of file is met.
+For better parallelism GNU \ **parallel**\  can distribute the arguments between all the parallel jobs when end of file is met.
 
-Below GNU \ **parallel**\  reads the last argument when generating the second
-job. When GNU \ **parallel**\  reads the last argument, it spreads all the
-arguments for the second job over 4 jobs instead, as 4 parallel jobs
-are requested.
+Below GNU \ **parallel**\  reads the last argument when generating the second job. When GNU \ **parallel**\  reads the last argument, it spreads all the arguments for the second job over 4 jobs instead, as 4 parallel jobs are requested.
 
-The first job will be the same as the \ **--xargs**\  example above, but the
-second job will be split into 4 evenly sized jobs, resulting in a
-total of 5 jobs:
+The first job will be the same as the \ **--xargs**\  example above, but the second job will be split into 4 evenly sized jobs, resulting in a total of 5 jobs:
 
 
 .. code-block:: perl
@@ -1551,8 +1487,7 @@ Output (if you run this under Bash on GNU/Linux):
    5
 
 
-This is even more visible when running 4 jobs with 10 arguments. The
-10 arguments are being spread over 4 jobs:
+This is even more visible when running 4 jobs with 10 arguments. The 10 arguments are being spread over 4 jobs:
 
 
 .. code-block:: perl
@@ -1836,8 +1771,7 @@ Respecting the shell
 ====================
 
 
-This tutorial uses Bash as the shell. GNU \ **parallel**\  respects which
-shell you are using, so in \ **zsh**\  you can do:
+This tutorial uses Bash as the shell. GNU \ **parallel**\  respects which shell you are using, so in \ **zsh**\  you can do:
 
 
 .. code-block:: perl
@@ -1871,8 +1805,7 @@ Output:
    [somedir] is a dir
 
 
-This also becomes useful if you use GNU \ **parallel**\  in a shell script:
-GNU \ **parallel**\  will use the same shell as the shell script.
+This also becomes useful if you use GNU \ **parallel**\  in a shell script: GNU \ **parallel**\  will use the same shell as the shell script.
 
 
 
@@ -2006,9 +1939,7 @@ Output:
    4-end
 
 
-\ **--ungroup**\  is fast, but can cause half a line from one job to be mixed
-with half a line of another job. That has happened in the second line,
-where the line '4-middle' is mixed with '2-start'.
+\ **--ungroup**\  is fast, but can cause half a line from one job to be mixed with half a line of another job. That has happened in the second line, where the line '4-middle' is mixed with '2-start'.
 
 To avoid this use \ **--linebuffer**\ :
 
@@ -2082,8 +2013,7 @@ Output will be similar to this:
    /tmp/W0AT_Rph2o.par
 
 
-By default GNU \ **parallel**\  will cache the output in files in \ **/tmp**\ . This
-can be changed by setting \ **$TMPDIR**\  or \ **--tmpdir**\ :
+By default GNU \ **parallel**\  will cache the output in files in \ **/tmp**\ . This can be changed by setting \ **$TMPDIR**\  or \ **--tmpdir**\ :
 
 
 .. code-block:: perl
@@ -2129,8 +2059,7 @@ Output:
    C
 
 
-These files were also generated containing the standard output
-(stdout), standard error (stderr), and the sequence number (seq):
+These files were also generated containing the standard output (stdout), standard error (stderr), and the sequence number (seq):
 
 
 .. code-block:: perl
@@ -2146,9 +2075,7 @@ These files were also generated containing the standard output
    outdir/1/C/stdout
 
 
-\ **--header :**\  will take the first value as name and use that in the
-directory structure. This is useful if you are using multiple input
-sources:
+\ **--header :**\  will take the first value as name and use that in the directory structure. This is useful if you are using multiple input sources:
 
 
 .. code-block:: perl
@@ -2196,8 +2123,7 @@ The number of concurrent jobs is given with \ **--jobs**\ /\ **-j**\ :
    /usr/bin/time parallel -N0 -j64 sleep 1 :::: num128
 
 
-With 64 jobs in parallel the 128 \ **sleep**\ s will take 2-8 seconds to run -
-depending on how fast your machine is.
+With 64 jobs in parallel the 128 \ **sleep**\ s will take 2-8 seconds to run - depending on how fast your machine is.
 
 By default \ **--jobs**\  is the same as the number of CPU cores. So this:
 
@@ -2237,12 +2163,9 @@ which should take 1-7 seconds depending on how fast your machine is.
    wait
 
 
-The first second only 50% of the CPU cores will run a job. Then \ **0**\  is
-put into \ **my_jobs**\  and then the rest of the jobs will be started in
-parallel.
+The first second only 50% of the CPU cores will run a job. Then \ **0**\  is put into \ **my_jobs**\  and then the rest of the jobs will be started in parallel.
 
-Instead of basing the percentage on the number of CPU cores
-GNU \ **parallel**\  can base it on the number of CPUs:
+Instead of basing the percentage on the number of CPU cores GNU \ **parallel**\  can base it on the number of CPUs:
 
 
 .. code-block:: perl
@@ -2255,9 +2178,7 @@ Shuffle job order
 =================
 
 
-If you have many jobs (e.g. by multiple combinations of input
-sources), it can be handy to shuffle the jobs, so you get different
-values run. Use \ **--shuf**\  for that:
+If you have many jobs (e.g. by multiple combinations of input sources), it can be handy to shuffle the jobs, so you get different values run. Use \ **--shuf**\  for that:
 
 
 .. code-block:: perl
@@ -2298,8 +2219,7 @@ Output:
    3
 
 
-GNU \ **parallel**\  can be used to put arguments on the command line for an
-interactive command such as \ **emacs**\  to edit one file at a time:
+GNU \ **parallel**\  can be used to put arguments on the command line for an interactive command such as \ **emacs**\  to edit one file at a time:
 
 
 .. code-block:: perl
@@ -2336,18 +2256,14 @@ This will tell you to run something similar to:
    tmux -S /tmp/tmsrPrO0 attach
 
 
-Using normal \ **tmux**\  keystrokes (CTRL-b n or CTRL-b p) you can cycle
-between windows of the running jobs. When a job is finished it will
-pause for 10 seconds before closing the window.
+Using normal \ **tmux**\  keystrokes (CTRL-b n or CTRL-b p) you can cycle between windows of the running jobs. When a job is finished it will pause for 10 seconds before closing the window.
 
 
 Timing
 ======
 
 
-Some jobs do heavy I/O when they start. To avoid a thundering herd GNU
-\ **parallel**\  can delay starting new jobs. \ **--delay**\  \ *X*\  will make
-sure there is at least \ *X*\  seconds between each start:
+Some jobs do heavy I/O when they start. To avoid a thundering herd GNU \ **parallel**\  can delay starting new jobs. \ **--delay**\  \ *X*\  will make sure there is at least \ *X*\  seconds between each start:
 
 
 .. code-block:: perl
@@ -2368,9 +2284,7 @@ Output:
    Thu Aug 15 16:24:38 CEST 2013
 
 
-If jobs taking more than a certain amount of time are known to fail,
-they can be stopped with \ **--timeout**\ . The accuracy of \ **--timeout**\  is
-2 seconds:
+If jobs taking more than a certain amount of time are known to fail, they can be stopped with \ **--timeout**\ . The accuracy of \ **--timeout**\  is 2 seconds:
 
 
 .. code-block:: perl
@@ -2387,8 +2301,7 @@ Output:
    4
 
 
-GNU \ **parallel**\  can compute the median runtime for jobs and kill those
-that take more than 200% of the median runtime:
+GNU \ **parallel**\  can compute the median runtime for jobs and kill those that take more than 200% of the median runtime:
 
 
 .. code-block:: perl
@@ -2412,8 +2325,7 @@ Progress information
 ====================
 
 
-Based on the runtime of completed jobs GNU \ **parallel**\  can estimate the
-total runtime:
+Based on the runtime of completed jobs GNU \ **parallel**\  can estimate the total runtime:
 
 
 .. code-block:: perl
@@ -2494,14 +2406,9 @@ Output:
    4   :    1376577365.003 0.003   0    0       0       0      exit 0
 
 
-The log contains the job sequence, which host the job was run on, the
-start time and run time, how much data was transferred, the exit
-value, the signal that killed the job, and finally the command being
-run.
+The log contains the job sequence, which host the job was run on, the start time and run time, how much data was transferred, the exit value, the signal that killed the job, and finally the command being run.
 
-With a joblog GNU \ **parallel**\  can be stopped and later pickup where it
-left off. It it important that the input of the completed jobs is
-unchanged.
+With a joblog GNU \ **parallel**\  can be stopped and later pickup where it left off. It it important that the input of the completed jobs is unchanged.
 
 
 .. code-block:: perl
@@ -2560,13 +2467,9 @@ Output:
    3   :    1376580154.466 0.005   0    0       3       0      exit 3
 
 
-Note how seq 1 2 3 have been repeated because they had exit value
-different from 0.
+Note how seq 1 2 3 have been repeated because they had exit value different from 0.
 
-\ **--retry-failed**\  does almost the same as \ **--resume-failed**\ . Where
-\ **--resume-failed**\  reads the commands from the command line (and
-ignores the commands in the joblog), \ **--retry-failed**\  ignores the
-command line and reruns the commands mentioned in the joblog.
+\ **--retry-failed**\  does almost the same as \ **--resume-failed**\ . Where \ **--resume-failed**\  reads the commands from the command line (and ignores the commands in the joblog), \ **--retry-failed**\  ignores the command line and reruns the commands mentioned in the joblog.
 
 
 .. code-block:: perl
@@ -2606,19 +2509,14 @@ Unconditional termination
 
 By default GNU \ **parallel**\  will wait for all jobs to finish before exiting.
 
-If you send GNU \ **parallel**\  the \ **TERM**\  signal, GNU \ **parallel**\  will
-stop spawning new jobs and wait for the remaining jobs to finish. If
-you send GNU \ **parallel**\  the \ **TERM**\  signal again, GNU \ **parallel**\ 
-will kill all running jobs and exit.
+If you send GNU \ **parallel**\  the \ **TERM**\  signal, GNU \ **parallel**\  will stop spawning new jobs and wait for the remaining jobs to finish. If you send GNU \ **parallel**\  the \ **TERM**\  signal again, GNU \ **parallel**\  will kill all running jobs and exit.
 
 
 Termination dependent on job status
 -----------------------------------
 
 
-For certain jobs there is no need to continue if one of the jobs fails
-and has an exit code different from 0. GNU \ **parallel**\  will stop spawning new jobs
-with \ **--halt soon,fail=1**\ :
+For certain jobs there is no need to continue if one of the jobs fails and has an exit code different from 0. GNU \ **parallel**\  will stop spawning new jobs with \ **--halt soon,fail=1**\ :
 
 
 .. code-block:: perl
@@ -2660,8 +2558,7 @@ Output:
    echo 1; exit 1
 
 
-If \ **--halt**\  is given a percentage this percentage of the jobs must fail
-before GNU \ **parallel**\  stops spawning more jobs:
+If \ **--halt**\  is given a percentage this percentage of the jobs must fail before GNU \ **parallel**\  stops spawning more jobs:
 
 
 .. code-block:: perl
@@ -2688,8 +2585,7 @@ Output:
    echo 3; exit 3
 
 
-If you are looking for success instead of failures, you can use
-\ **success**\ . This will finish as soon as the first job succeeds:
+If you are looking for success instead of failures, you can use \ **success**\ . This will finish as soon as the first job succeeds:
 
 
 .. code-block:: perl
@@ -2710,8 +2606,7 @@ Output:
    echo 0; exit 0
 
 
-GNU \ **parallel**\  can retry the command with \ **--retries**\ . This is useful if a
-command fails for unknown reasons now and then.
+GNU \ **parallel**\  can retry the command with \ **--retries**\ . This is useful if a command fails for unknown reasons now and then.
 
 
 .. code-block:: perl
@@ -2746,11 +2641,7 @@ Termination signals (advanced)
 ------------------------------
 
 
-Using \ **--termseq**\  you can control which signals are sent when killing
-children. Normally children will be killed by sending them \ **SIGTERM**\ ,
-waiting 200 ms, then another \ **SIGTERM**\ , waiting 100 ms, then another
-\ **SIGTERM**\ , waiting 50 ms, then a \ **SIGKILL**\ , finally waiting 25 ms
-before giving up. It looks like this:
+Using \ **--termseq**\  you can control which signals are sent when killing children. Normally children will be killed by sending them \ **SIGTERM**\ , waiting 200 ms, then another \ **SIGTERM**\ , waiting 100 ms, then another \ **SIGTERM**\ , waiting 50 ms, then a \ **SIGKILL**\ , finally waiting 25 ms before giving up. It looks like this:
 
 
 .. code-block:: perl
@@ -2804,8 +2695,7 @@ Output:
    Got TERM
 
 
-The \ **SIGKILL**\  does not show because it cannot be caught, and thus the
-child dies.
+The \ **SIGKILL**\  does not show because it cannot be caught, and thus the child dies.
 
 
 
@@ -2813,8 +2703,7 @@ Limiting the resources
 ======================
 
 
-To avoid overloading systems GNU \ **parallel**\  can look at the system load
-before starting another job:
+To avoid overloading systems GNU \ **parallel**\  can look at the system load before starting another job:
 
 
 .. code-block:: perl
@@ -2848,11 +2737,7 @@ Output:
    the system is not swapping now
 
 
-Some jobs need a lot of memory, and should only be started when there
-is enough memory free. Using \ **--memfree**\  GNU \ **parallel**\  can check if
-there is enough memory free. Additionally, GNU \ **parallel**\  will kill
-off the youngest job if the memory free falls below 50% of the
-size. The killed job will put back on the queue and retried later.
+Some jobs need a lot of memory, and should only be started when there is enough memory free. Using \ **--memfree**\  GNU \ **parallel**\  can check if there is enough memory free. Additionally, GNU \ **parallel**\  will kill off the youngest job if the memory free falls below 50% of the size. The killed job will put back on the queue and retried later.
 
 
 .. code-block:: perl
@@ -2860,8 +2745,7 @@ size. The killed job will put back on the queue and retried later.
    parallel --memfree 1G echo will run if more than 1 GB is ::: free
 
 
-GNU \ **parallel**\  can run the jobs with a nice value. This will work both
-locally and remotely.
+GNU \ **parallel**\  can run the jobs with a nice value. This will work both locally and remotely.
 
 
 .. code-block:: perl
@@ -2884,8 +2768,7 @@ Remote execution
 ****************
 
 
-GNU \ **parallel**\  can run jobs on remote servers. It uses \ **ssh**\  to
-communicate with the remote machines.
+GNU \ **parallel**\  can run jobs on remote servers. It uses \ **ssh**\  to communicate with the remote machines.
 
 Sshlogin
 ========
@@ -3024,13 +2907,11 @@ They can also be read from a file (replace \ *user@*\  with the user on \ **$SER
 
 Output: Same as above.
 
-Every time a job finished, the \ **--sshloginfile**\  will be re-read, so
-it is possible to both add and remove hosts while running.
+Every time a job finished, the \ **--sshloginfile**\  will be re-read, so it is possible to both add and remove hosts while running.
 
 The special \ **--sshloginfile ..**\  reads from \ **~/.parallel/sshloginfile**\ .
 
-To force GNU \ **parallel**\  to treat a server having a given number of CPU
-cores prepend the number of core followed by \ **/**\  to the sshlogin:
+To force GNU \ **parallel**\  to treat a server having a given number of CPU cores prepend the number of core followed by \ **/**\  to the sshlogin:
 
 
 .. code-block:: perl
@@ -3046,9 +2927,7 @@ Output:
    force 4 cpus on server
 
 
-Servers can be put into groups by prepending \ *@groupname*\  to the
-server and the group can then be selected by appending \ *@groupname*\  to
-the argument if using \ **--hostgroup**\ :
+Servers can be put into groups by prepending \ *@groupname*\  to the server and the group can then be selected by appending \ *@groupname*\  to the argument if using \ **--hostgroup**\ :
 
 
 .. code-block:: perl
@@ -3066,9 +2945,7 @@ Output:
    run_on_grp2
 
 
-A host can be in multiple groups by separating the groups with \ **+**\ , and
-you can force GNU \ **parallel**\  to limit the groups on which the command
-can be run with \ **-S**\  \ *@groupname*\ :
+A host can be in multiple groups by separating the groups with \ **+**\ , and you can force GNU \ **parallel**\  to limit the groups on which the command can be run with \ **-S**\  \ *@groupname*\ :
 
 
 .. code-block:: perl
@@ -3091,8 +2968,7 @@ Transferring files
 ==================
 
 
-GNU \ **parallel**\  can transfer the files to be processed to the remote
-host. It does that using rsync.
+GNU \ **parallel**\  can transfer the files to be processed to the remote host. It does that using rsync.
 
 
 .. code-block:: perl
@@ -3109,8 +2985,7 @@ Output:
    This is input_file
 
 
-If the files are processed into another file, the resulting file can be
-transferred back:
+If the files are processed into another file, the resulting file can be transferred back:
 
 
 .. code-block:: perl
@@ -3148,9 +3023,7 @@ There is a shorthand for \ **--transferfile {} --return --cleanup**\  called \ *
 
 Output: Same as above.
 
-Some jobs need a common database for all jobs. GNU \ **parallel**\  can
-transfer that using \ **--basefile**\  which will transfer the file before the
-first job:
+Some jobs need a common database for all jobs. GNU \ **parallel**\  can transfer that using \ **--basefile**\  which will transfer the file before the first job:
 
 
 .. code-block:: perl
@@ -3176,22 +3049,13 @@ Working dir
 ===========
 
 
-The default working dir on the remote machines is the login dir. This
-can be changed with \ **--workdir**\  \ *mydir*\ .
+The default working dir on the remote machines is the login dir. This can be changed with \ **--workdir**\  \ *mydir*\ .
 
-Files transferred using \ **--transferfile**\  and \ **--return**\  will be relative
-to \ *mydir*\  on remote computers, and the command will be executed in
-the dir \ *mydir*\ .
+Files transferred using \ **--transferfile**\  and \ **--return**\  will be relative to \ *mydir*\  on remote computers, and the command will be executed in the dir \ *mydir*\ .
 
-The special \ *mydir*\  value \ **...**\  will create working dirs under
-\ **~/.parallel/tmp**\  on the remote computers. If \ **--cleanup**\  is given
-these dirs will be removed.
+The special \ *mydir*\  value \ **...**\  will create working dirs under \ **~/.parallel/tmp**\  on the remote computers. If \ **--cleanup**\  is given these dirs will be removed.
 
-The special \ *mydir*\  value \ **.**\  uses the current working dir.  If the
-current working dir is beneath your home dir, the value \ **.**\  is
-treated as the relative path to your home dir. This means that if your
-home dir is different on remote computers (e.g. if your login is
-different) the relative path will still be relative to your home dir.
+The special \ *mydir*\  value \ **.**\  uses the current working dir.  If the current working dir is beneath your home dir, the value \ **.**\  is treated as the relative path to your home dir. This means that if your home dir is different on remote computers (e.g. if your login is different) the relative path will still be relative to your home dir.
 
 
 .. code-block:: perl
@@ -3216,9 +3080,7 @@ Avoid overloading sshd
 ======================
 
 
-If many jobs are started on the same server, \ **sshd**\  can be
-overloaded. GNU \ **parallel**\  can insert a delay between each job run on
-the same server:
+If many jobs are started on the same server, \ **sshd**\  can be overloaded. GNU \ **parallel**\  can insert a delay between each job run on the same server:
 
 
 .. code-block:: perl
@@ -3236,8 +3098,7 @@ Output (the order may be different):
    3
 
 
-\ **sshd**\  will be less overloaded if using \ **--controlmaster**\ , which will
-multiplex ssh connections:
+\ **sshd**\  will be less overloaded if using \ **--controlmaster**\ , which will multiplex ssh connections:
 
 
 .. code-block:: perl
@@ -3252,8 +3113,7 @@ Ignore hosts that are down
 ==========================
 
 
-In clusters with many hosts a few of them are often down. GNU \ **parallel**\ 
-can ignore those hosts. In this case the host 173.194.32.46 is down:
+In clusters with many hosts a few of them are often down. GNU \ **parallel**\  can ignore those hosts. In this case the host 173.194.32.46 is down:
 
 
 .. code-block:: perl
@@ -3293,8 +3153,7 @@ Output (the order may be different):
    bar
 
 
-Often you will just want to run a single command on all hosts with out
-arguments. \ **--nonall**\  is a no argument \ **--onall**\ :
+Often you will just want to run a single command on all hosts with out arguments. \ **--nonall**\  is a no argument \ **--onall**\ :
 
 
 .. code-block:: perl
@@ -3335,8 +3194,7 @@ Transferring environment variables and functions
 ================================================
 
 
-\ **env_parallel**\  is a shell function that transfers all aliases,
-functions, variables, and arrays. You active it by running:
+\ **env_parallel**\  is a shell function that transfers all aliases, functions, variables, and arrays. You active it by running:
 
 
 .. code-block:: perl
@@ -3346,8 +3204,7 @@ functions, variables, and arrays. You active it by running:
 
 Replace \ **bash**\  with the shell you use.
 
-Now you can use \ **env_parallel**\  instead of \ **parallel**\  and still have
-your environment:
+Now you can use \ **env_parallel**\  instead of \ **parallel**\  and still have your environment:
 
 
 .. code-block:: perl
@@ -3365,11 +3222,9 @@ Output:
    Joe's var is green
 
 
-The disadvantage is that if your environment is huge \ **env_parallel**\ 
-will fail.
+The disadvantage is that if your environment is huge \ **env_parallel**\  will fail.
 
-When \ **env_parallel**\  fails, you can still use \ **--env**\  to tell GNU
-\ **parallel**\  to transfer an environment variable to the remote system.
+When \ **env_parallel**\  fails, you can still use \ **--env**\  to tell GNU \ **parallel**\  to transfer an environment variable to the remote system.
 
 
 .. code-block:: perl
@@ -3408,9 +3263,7 @@ Output:
    in my_func baz
 
 
-GNU \ **parallel**\  can copy all user defined variables and functions to
-the remote system. It just needs to record which ones to ignore in
-\ **~/.parallel/ignored_vars**\ . Do that by running this once:
+GNU \ **parallel**\  can copy all user defined variables and functions to the remote system. It just needs to record which ones to ignore in \ **~/.parallel/ignored_vars**\ . Do that by running this once:
 
 
 .. code-block:: perl
@@ -3427,8 +3280,7 @@ Output:
    [list of variables to ignore - including $PATH and $HOME]
 
 
-Now all other variables and functions defined will be copied when
-using \ **--env _**\ .
+Now all other variables and functions defined will be copied when using \ **--env _**\ .
 
 
 .. code-block:: perl
@@ -3453,8 +3305,7 @@ Output:
    in my_func2 foo bar
 
 
-If you use \ **env_parallel**\  the variables, functions, and aliases do
-not even need to be exported to be copied:
+If you use \ **env_parallel**\  the variables, functions, and aliases do not even need to be exported to be copied:
 
 
 .. code-block:: perl
@@ -3481,12 +3332,9 @@ Showing what is actually run
 ============================
 
 
-\ **--verbose**\  will show the command that would be run on the local
-machine.
+\ **--verbose**\  will show the command that would be run on the local machine.
 
-When using \ **--cat**\ , \ **--pipepart**\ , or when a job is run on a remote
-machine, the command is wrapped with helper scripts. \ **-vv**\  shows all
-of this.
+When using \ **--cat**\ , \ **--pipepart**\ , or when a job is run on a remote machine, the command is wrapped with helper scripts. \ **-vv**\  shows all of this.
 
 
 .. code-block:: perl
@@ -3506,8 +3354,7 @@ Output:
      30000   30000  168894
 
 
-When the command gets more complex, the output is so hard to read,
-that it is only useful for debugging:
+When the command gets more complex, the output is so hard to read, that it is only useful for debugging:
 
 
 .. code-block:: perl
@@ -3568,10 +3415,7 @@ Saving output to shell variables (advanced)
 *******************************************
 
 
-GNU \ **parset**\  will set shell variables to the output of GNU
-\ **parallel**\ . GNU \ **parset**\  has one important limitation: It cannot be
-part of a pipe. In particular this means it cannot read anything from
-standard input (stdin) or pipe output to another program.
+GNU \ **parset**\  will set shell variables to the output of GNU \ **parallel**\ . GNU \ **parset**\  has one important limitation: It cannot be part of a pipe. In particular this means it cannot read anything from standard input (stdin) or pipe output to another program.
 
 To use GNU \ **parset**\  prepend command with destination variables:
 
@@ -3638,9 +3482,7 @@ Saving to an SQL base (advanced)
 ********************************
 
 
-GNU \ **parallel**\  can save into an SQL base. Point GNU \ **parallel**\  to a
-table and it will put the joblog there together with the variables and
-the output each in their own column.
+GNU \ **parallel**\  can save into an SQL base. Point GNU \ **parallel**\  to a table and it will put the joblog there together with the variables and the output each in their own column.
 
 CSV as SQL base
 ===============
@@ -3682,8 +3524,7 @@ Output will be similar to:
    ",
 
 
-A proper CSV reader (like LibreOffice or R's read.csv) will read this
-format correctly - even with fields containing newlines as above.
+A proper CSV reader (like LibreOffice or R's read.csv) will read this format correctly - even with fields containing newlines as above.
 
 If the output is big you may want to put it into files using \ **--results**\ :
 
@@ -3736,8 +3577,7 @@ Example:
    csv:///%2Ftmp/log.csv
 
 
-To refer to \ **/tmp/mydatabase**\  with \ **sqlite**\  or \ **csv**\  you need to
-encode the \ **/**\  as \ **%2F**\ .
+To refer to \ **/tmp/mydatabase**\  with \ **sqlite**\  or \ **csv**\  you need to encode the \ **/**\  as \ **%2F**\ .
 
 Run a job using \ **sqlite**\  on \ **mytable**\  in \ **/tmp/mydatabase**\ :
 
@@ -3774,23 +3614,18 @@ Output will be similar to:
    |
 
 
-The first columns are well known from \ **--joblog**\ . \ **V1**\  and \ **V2**\  are
-data from the input sources. \ **Stdout**\  and \ **Stderr**\  are standard
-output and standard error, respectively.
+The first columns are well known from \ **--joblog**\ . \ **V1**\  and \ **V2**\  are data from the input sources. \ **Stdout**\  and \ **Stderr**\  are standard output and standard error, respectively.
 
 
 Using multiple workers
 ======================
 
 
-Using an SQL base as storage costs overhead in the order of 1 second
-per job.
+Using an SQL base as storage costs overhead in the order of 1 second per job.
 
-One of the situations where it makes sense is if you have multiple
-workers.
+One of the situations where it makes sense is if you have multiple workers.
 
-You can then have a single master machine that submits jobs to the SQL
-base (but does not do any of the work):
+You can then have a single master machine that submits jobs to the SQL base (but does not do any of the work):
 
 
 .. code-block:: perl
@@ -3798,8 +3633,7 @@ base (but does not do any of the work):
    parallel --sqlmaster $DBURLTABLE echo ::: foo bar ::: baz quuz
 
 
-On the worker machines you run exactly the same command except you
-replace \ **--sqlmaster**\  with \ **--sqlworker**\ .
+On the worker machines you run exactly the same command except you replace \ **--sqlmaster**\  with \ **--sqlworker**\ .
 
 
 .. code-block:: perl
@@ -3807,8 +3641,7 @@ replace \ **--sqlmaster**\  with \ **--sqlworker**\ .
    parallel --sqlworker $DBURLTABLE echo ::: foo bar ::: baz quuz
 
 
-To run a master and a worker on the same machine use \ **--sqlandworker**\ 
-as shown earlier.
+To run a master and a worker on the same machine use \ **--sqlandworker**\  as shown earlier.
 
 
 
@@ -3817,10 +3650,7 @@ as shown earlier.
 ******
 
 
-The \ **--pipe**\  functionality puts GNU \ **parallel**\  in a different mode:
-Instead of treating the data on stdin (standard input) as arguments
-for a command to run, the data will be sent to stdin (standard input)
-of the command.
+The \ **--pipe**\  functionality puts GNU \ **parallel**\  in a different mode: Instead of treating the data on stdin (standard input) as arguments for a command to run, the data will be sent to stdin (standard input) of the command.
 
 The typical situation is:
 
@@ -3836,9 +3666,7 @@ Chunk size
 ==========
 
 
-By default GNU \ **parallel**\  will start an instance of command_B, read a
-chunk of 1 MB, and pass that to the instance. Then start another
-instance, read another chunk, and pass that to the second instance.
+By default GNU \ **parallel**\  will start an instance of command_B, read a chunk of 1 MB, and pass that to the instance. Then start another instance, read another chunk, and pass that to the second instance.
 
 
 .. code-block:: perl
@@ -3860,9 +3688,7 @@ Output (the order may be different):
     85349   85349  597444
 
 
-The size of the chunk is not exactly 1 MB because GNU \ **parallel**\  only
-passes full lines - never half a line, thus the blocksize is only
-1 MB on average. You can change the block size to 2 MB with \ **--block**\ :
+The size of the chunk is not exactly 1 MB because GNU \ **parallel**\  only passes full lines - never half a line, thus the blocksize is only 1 MB on average. You can change the block size to 2 MB with \ **--block**\ :
 
 
 .. code-block:: perl
@@ -3881,13 +3707,7 @@ Output (the order may be different):
     85349   85349  597444
 
 
-GNU \ **parallel**\  treats each line as a record. If the order of records
-is unimportant (e.g. you need all lines processed, but you do not care
-which is processed first), then you can use \ **--roundrobin**\ . Without
-\ **--roundrobin**\  GNU \ **parallel**\  will start a command per block; with
-\ **--roundrobin**\  only the requested number of jobs will be started
-(\ **--jobs**\ ). The records will then be distributed between the running
-jobs:
+GNU \ **parallel**\  treats each line as a record. If the order of records is unimportant (e.g. you need all lines processed, but you do not care which is processed first), then you can use \ **--roundrobin**\ . Without \ **--roundrobin**\  GNU \ **parallel**\  will start a command per block; with \ **--roundrobin**\  only the requested number of jobs will be started (\ **--jobs**\ ). The records will then be distributed between the running jobs:
 
 
 .. code-block:: perl
@@ -3906,16 +3726,14 @@ Output will be similar to:
    235145  235145 1646016
 
 
-One of the 4 instances got a single record, 2 instances got 2 full
-records each, and one instance got 1 full and 1 partial record.
+One of the 4 instances got a single record, 2 instances got 2 full records each, and one instance got 1 full and 1 partial record.
 
 
 Records
 =======
 
 
-GNU \ **parallel**\  sees the input as records. The default record is a single
-line.
+GNU \ **parallel**\  sees the input as records. The default record is a single line.
 
 Using \ **-N140000**\  GNU \ **parallel**\  will read 140000 records at a time:
 
@@ -3940,8 +3758,7 @@ Output (the order may be different):
     20000   20000  140001
 
 
-Note how that the last job could not get the full 140000 lines, but
-only 20000 lines.
+Note how that the last job could not get the full 140000 lines, but only 20000 lines.
 
 If a record is 75 lines \ **-L**\  can be used:
 
@@ -3966,22 +3783,16 @@ Output (the order may be different):
        25      25     176
 
 
-Note how GNU \ **parallel**\  still reads a block of around 1 MB; but
-instead of passing full lines to \ **wc**\  it passes full 75 lines at a
-time. This of course does not hold for the last job (which in this
-case got 25 lines).
+Note how GNU \ **parallel**\  still reads a block of around 1 MB; but instead of passing full lines to \ **wc**\  it passes full 75 lines at a time. This of course does not hold for the last job (which in this case got 25 lines).
 
 
 Fixed length records
 ====================
 
 
-Fixed length records can be processed by setting \ **--recend ''**\  and
-\ **--block \ \*recordsize\*\ **\ . A header of size \ *n*\  can be processed with
-\ **--header .{\ \*n\*\ }**\ .
+Fixed length records can be processed by setting \ **--recend ''**\  and \ **--block \ \*recordsize\*\ **\ . A header of size \ *n*\  can be processed with \ **--header .{\ \*n\*\ }**\ .
 
-Here is how to process a file with a 4-byte header and a 3-byte record
-size:
+Here is how to process a file with a 4-byte header and a 3-byte record size:
 
 
 .. code-block:: perl
@@ -4003,8 +3814,7 @@ Output:
    HHHHBBB
 
 
-It may be more efficient to increase \ **--block**\  to a multiplum of the
-record size.
+It may be more efficient to increase \ **--block**\  to a multiplum of the record size.
 
 
 Record separators
@@ -4013,12 +3823,9 @@ Record separators
 
 GNU \ **parallel**\  uses separators to determine where two records split.
 
-\ **--recstart**\  gives the string that starts a record; \ **--recend**\  gives the
-string that ends a record. The default is \ **--recend '\n'**\  (newline).
+\ **--recstart**\  gives the string that starts a record; \ **--recend**\  gives the string that ends a record. The default is \ **--recend '\n'**\  (newline).
 
-If both \ **--recend**\  and \ **--recstart**\  are given, then the record will only
-split if the recend string is immediately followed by the recstart
-string.
+If both \ **--recend**\  and \ **--recstart**\  are given, then the record will only split if the recend string is immediately followed by the recstart string.
 
 Here the \ **--recend**\  is set to \ **', '**\ :
 
@@ -4094,8 +3901,7 @@ Output:
 
 Note the difference between setting one string and setting both strings.
 
-With \ **--regexp**\  the \ **--recend**\  and \ **--recstart**\  will be treated as
-a regular expression:
+With \ **--regexp**\  the \ **--recend**\  and \ **--recstart**\  will be treated as a regular expression:
 
 
 .. code-block:: perl
@@ -4119,8 +3925,7 @@ Output:
    END
 
 
-GNU \ **parallel**\  can remove the record separators with
-\ **--remove-rec-sep**\ /\ **--rrs**\ :
+GNU \ **parallel**\  can remove the record separators with \ **--remove-rec-sep**\ /\ **--rrs**\ :
 
 
 .. code-block:: perl
@@ -4149,9 +3954,7 @@ Header
 ======
 
 
-If the input data has a header, the header can be repeated for each
-job by matching the header with \ **--header**\ . If headers start with
-\ **%**\  you can do this:
+If the input data has a header, the header can be repeated for each job by matching the header with \ **--header**\ . If headers start with \ **%**\  you can do this:
 
 
 .. code-block:: perl
@@ -4204,12 +4007,7 @@ Output: Same as above.
 ==========
 
 
-\ **--pipe**\  is not very efficient. It maxes out at around 500
-MB/s. \ **--pipepart**\  can easily deliver 5 GB/s. But there are a few
-limitations. The input has to be a normal file (not a pipe) given by
-\ **-a**\  or \ **::::**\  and \ **-L**\ /\ **-l**\ /\ **-N**\  do not work. \ **--recend**\  and
-\ **--recstart**\ , however, \ *do*\  work, and records can often be split on
-that alone.
+\ **--pipe**\  is not very efficient. It maxes out at around 500 MB/s. \ **--pipepart**\  can easily deliver 5 GB/s. But there are a few limitations. The input has to be a normal file (not a pipe) given by \ **-a**\  or \ **::::**\  and \ **-L**\ /\ **-l**\ /\ **-N**\  do not work. \ **--recend**\  and \ **--recstart**\ , however, \ *do*\  work, and records can often be split on that alone.
 
 
 .. code-block:: perl
@@ -4256,9 +4054,7 @@ UNIX shell scripts start with a shebang line like this:
    #!/bin/bash
 
 
-GNU \ **parallel**\  can do that, too. With \ **--shebang**\  the arguments can be
-listed in the file. The \ **parallel**\  command is the first line of the
-script:
+GNU \ **parallel**\  can do that, too. With \ **--shebang**\  the arguments can be listed in the file. The \ **parallel**\  command is the first line of the script:
 
 
 .. code-block:: perl
@@ -4294,8 +4090,7 @@ GNU \ **parallel**\  is often called as this:
    parallel command ::: foo bar
 
 
-If \ **command**\  is a script, \ **parallel**\  can be combined into a single
-file so this will run the script in parallel:
+If \ **command**\  is a script, \ **parallel**\  can be combined into a single file so this will run the script in parallel:
 
 
 .. code-block:: perl
@@ -4549,26 +4344,19 @@ Semaphore
 *********
 
 
-GNU \ **parallel**\  can work as a counting semaphore. This is slower and less
-efficient than its normal mode.
+GNU \ **parallel**\  can work as a counting semaphore. This is slower and less efficient than its normal mode.
 
-A counting semaphore is like a row of toilets. People needing a toilet
-can use any toilet, but if there are more people than toilets, they
-will have to wait for one of the toilets to become available.
+A counting semaphore is like a row of toilets. People needing a toilet can use any toilet, but if there are more people than toilets, they will have to wait for one of the toilets to become available.
 
 An alias for \ **parallel --semaphore**\  is \ **sem**\ .
 
-\ **sem**\  will follow a person to the toilets, wait until a toilet is
-available, leave the person in the toilet and exit.
+\ **sem**\  will follow a person to the toilets, wait until a toilet is available, leave the person in the toilet and exit.
 
-\ **sem --fg**\  will follow a person to the toilets, wait until a toilet is
-available, stay with the person in the toilet and exit when the person
-exits.
+\ **sem --fg**\  will follow a person to the toilets, wait until a toilet is available, stay with the person in the toilet and exit when the person exits.
 
 \ **sem --wait**\  will wait for all persons to leave the toilets.
 
-\ **sem**\  does not have a queue discipline, so the next person is chosen
-randomly.
+\ **sem**\  does not have a queue discipline, so the next person is chosen randomly.
 
 \ **-j**\  sets the number of toilets.
 
@@ -4576,9 +4364,7 @@ Mutex
 =====
 
 
-The default is to have only one toilet (this is called a mutex). The
-program is started in the background and \ **sem**\  exits immediately. Use
-\ **--wait**\  to wait for all \ **sem**\ s to finish:
+The default is to have only one toilet (this is called a mutex). The program is started in the background and \ **sem**\  exits immediately. Use \ **--wait**\  to wait for all \ **sem**\ s to finish:
 
 
 .. code-block:: perl
@@ -4601,8 +4387,7 @@ Output:
    The second finished
 
 
-The command can be run in the foreground with \ **--fg**\ , which will only
-exit when the command completes:
+The command can be run in the foreground with \ **--fg**\ , which will only exit when the command completes:
 
 
 .. code-block:: perl
@@ -4614,12 +4399,9 @@ exit when the command completes:
    sem --wait
 
 
-The difference between this and just running the command, is that a
-mutex is set, so if other \ **sem**\ s were running in the background only one
-would run at a time.
+The difference between this and just running the command, is that a mutex is set, so if other \ **sem**\ s were running in the background only one would run at a time.
 
-To control which semaphore is used, use
-\ **--semaphorename**\ /\ **--id**\ . Run this in one terminal:
+To control which semaphore is used, use \ **--semaphorename**\ /\ **--id**\ . Run this in one terminal:
 
 
 .. code-block:: perl
@@ -4642,13 +4424,9 @@ Counting semaphore
 ==================
 
 
-A mutex is like having a single toilet: When it is in use everyone
-else will have to wait. A counting semaphore is like having multiple
-toilets: Several people can use the toilets, but when they all are in
-use, everyone else will have to wait.
+A mutex is like having a single toilet: When it is in use everyone else will have to wait. A counting semaphore is like having multiple toilets: Several people can use the toilets, but when they all are in use, everyone else will have to wait.
 
-\ **sem**\  can emulate a counting semaphore. Use \ **--jobs**\  to set the
-number of toilets like this:
+\ **sem**\  can emulate a counting semaphore. Use \ **--jobs**\  to set the number of toilets like this:
 
 
 .. code-block:: perl
@@ -4680,8 +4458,7 @@ Timeout
 =======
 
 
-With \ **--semaphoretimeout**\  you can force running the command anyway after
-a period (positive number) or give up (negative number):
+With \ **--semaphoretimeout**\  you can force running the command anyway after a period (positive number) or give up (negative number):
 
 
 .. code-block:: perl
@@ -4713,8 +4490,7 @@ Informational
 *************
 
 
-GNU \ **parallel**\  has some options to give short information about the
-configuration.
+GNU \ **parallel**\  has some options to give short information about the configuration.
 
 \ **--help**\  will print a summary of the most important options:
 
@@ -4781,7 +4557,7 @@ Output:
 .. code-block:: perl
 
    GNU parallel 20210122
-   Copyright (C) 2007-2021 Ole Tange, http://ole.tange.dk and Free Software
+   Copyright (C) 2007-2022 Ole Tange, http://ole.tange.dk and Free Software
    Foundation, Inc.
    License GPLv3+: GNU GPL version 3 or later <https://gnu.org/licenses/gpl.html>
    This is free software: you are free to change and redistribute it.
@@ -4793,8 +4569,7 @@ Output:
    please cite as described in 'parallel --citation'.
 
 
-In scripts \ **--minversion**\  can be used to ensure the user has at least
-this version:
+In scripts \ **--minversion**\  can be used to ensure the user has at least this version:
 
 
 .. code-block:: perl
@@ -4812,8 +4587,7 @@ Output:
    Your version is at least 20130722.
 
 
-If you are using GNU \ **parallel**\  for research the BibTeX citation can be
-generated using \ **--citation**\ :
+If you are using GNU \ **parallel**\  for research the BibTeX citation can be generated using \ **--citation**\ :
 
 
 .. code-block:: perl
@@ -4853,8 +4627,7 @@ Output:
    mentioned in the release notes of next version of GNU Parallel.
 
 
-With \ **--max-line-length-allowed**\  GNU \ **parallel**\  will report the maximal
-size of the command line:
+With \ **--max-line-length-allowed**\  GNU \ **parallel**\  will report the maximal size of the command line:
 
 
 .. code-block:: perl
@@ -4870,9 +4643,7 @@ Output (may vary on different systems):
    131071
 
 
-\ **--number-of-cpus**\  and \ **--number-of-cores**\  run system specific code to
-determine the number of CPUs and CPU cores on the system. On
-unsupported platforms they will return 1:
+\ **--number-of-cpus**\  and \ **--number-of-cores**\  run system specific code to determine the number of CPUs and CPU cores on the system. On unsupported platforms they will return 1:
 
 
 .. code-block:: perl
@@ -4896,9 +4667,7 @@ Profiles
 ********
 
 
-The defaults for GNU \ **parallel**\  can be changed systemwide by putting the
-command line options in \ **/etc/parallel/config**\ . They can be changed for
-a user by putting them in \ **~/.parallel/config**\ .
+The defaults for GNU \ **parallel**\  can be changed systemwide by putting the command line options in \ **/etc/parallel/config**\ . They can be changed for a user by putting them in \ **~/.parallel/config**\ .
 
 Profiles work the same way, but have to be referred to with \ **--profile**\ :
 
@@ -4950,35 +4719,31 @@ I hope you have learned something from this tutorial.
 If you like GNU \ **parallel**\ :
 
 
-- \*
+- 
  
- (Re-)walk through the tutorial if you have not done so in the past year
- (https://www.gnu.org/software/parallel/parallel_tutorial.html)
+ (Re-)walk through the tutorial if you have not done so in the past year (https://www.gnu.org/software/parallel/parallel_tutorial.html)
  
 
 
-- \*
+- 
  
  Give a demo at your local user group/your team/your colleagues
  
 
 
-- \*
+- 
  
- Post the intro videos and the tutorial on Reddit, Mastodon, Diaspora\*,
- forums, blogs, Identi.ca, Google+, Twitter, Facebook, Linkedin, and
- mailing lists
+ Post the intro videos and the tutorial on Reddit, Mastodon, Diaspora\*, forums, blogs, Identi.ca, Google+, Twitter, Facebook, Linkedin, and mailing lists
  
 
 
-- \*
+- 
  
- Request or write a review for your favourite blog or magazine
- (especially if you do something cool with GNU \ **parallel**\ )
+ Request or write a review for your favourite blog or magazine (especially if you do something cool with GNU \ **parallel**\ )
  
 
 
-- \*
+- 
  
  Invite me for your next conference
  
@@ -4987,7 +4752,7 @@ If you like GNU \ **parallel**\ :
 If you use GNU \ **parallel**\  for research:
 
 
-- \*
+- 
  
  Please cite GNU \ **parallel**\  in you publications (use \ **--citation**\ )
  
@@ -4996,13 +4761,11 @@ If you use GNU \ **parallel**\  for research:
 If GNU \ **parallel**\  saves you money:
 
 
-- \*
+- 
  
- (Have your company) donate to FSF or become a member
- https://my.fsf.org/donate/
+ (Have your company) donate to FSF or become a member https://my.fsf.org/donate/
  
 
 
-(C) 2013-2021 Ole Tange, GFDLv1.3+ (See
-LICENSES/GFDL-1.3-or-later.txt)
+(C) 2013-2022 Ole Tange, GFDLv1.3+ (See LICENSES/GFDL-1.3-or-later.txt)
 

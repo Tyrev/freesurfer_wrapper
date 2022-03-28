@@ -133,7 +133,7 @@
 .\" ========================================================================
 .\"
 .IX Title "PARALLEL 1"
-.TH PARALLEL 1 "2021-08-21" "20210722" "parallel"
+.TH PARALLEL 1 "2022-03-15" "20220222" "parallel"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -206,8 +206,8 @@ you for it.
 \fIHow-to\fR
 .IX Subsection "How-to"
 .PP
-You can find a lot of \fB\s-1EXAMPLE\s0\fRs of use after the list of \fB\s-1OPTIONS\s0\fR
-in \fBman parallel\fR (Use \fBLESS=+/EXAMPLE: man parallel\fR). That will
+You can find a lot of \fB\s-1EXAMPLE\s0\fRs of use after the list of
+\&\fB\s-1OPTIONS\s0\fR in \fBman parallel\fR (Use \fBLESS=+/EXAMPLE: man parallel\fR). That will
 give you an idea of what \s-1GNU\s0 \fBparallel\fR is capable of, and you may
 find a solution you can simply adapt to your situation.
 .PP
@@ -229,7 +229,9 @@ change \s-1GNU\s0 \fBparallel\fR.
 .IX Header "OPTIONS"
 .IP "\fIcommand\fR" 4
 .IX Item "command"
-Command to execute.  If \fIcommand\fR or the following arguments contain
+Command to execute.
+.Sp
+If \fIcommand\fR or the following arguments contain
 replacement strings (such as \fB{}\fR) every instance will be substituted
 with the input.
 .Sp
@@ -247,10 +249,11 @@ alias, or a function.
 \&\fBZsh, Fish, Ksh, and Pdksh functions and aliases\fR: Use \fBenv_parallel\fR.
 .IP "\fB{}\fR" 4
 .IX Item "{}"
-Input line. This replacement string will be replaced by a full line
-read from the input source. The input source is normally stdin
-(standard input), but can also be given with \fB\-a\fR, \fB:::\fR, or
-\&\fB::::\fR.
+Input line.
+.Sp
+This replacement string will be replaced by a full line read from the
+input source. The input source is normally stdin (standard input), but
+can also be given with \fB\-\-arg\-file\fR, \fB:::\fR, or \fB::::\fR.
 .Sp
 The replacement string \fB{}\fR can be changed with \fB\-I\fR.
 .Sp
@@ -260,65 +263,65 @@ appended to the command line.
 Replacement strings are normally quoted, so special characters are not
 parsed by the shell. The exception is if the command starts with a
 replacement string; then the string is not quoted.
+.Sp
+See also: \fB\-\-plus\fR \fB{.}\fR \fB{/}\fR \fB{//}\fR \fB{/.}\fR \fB{#}\fR \fB{%}\fR
+\&\fB{\fR\fIn\fR\fB}\fR \fB{=\fR\fIperl expression\fR\fB=}\fR
 .IP "\fB{.}\fR" 4
 .IX Item "{.}"
-Input line without extension. This replacement string will be replaced
-by the input with the extension removed. If the input line contains
-\&\fB.\fR after the last \fB/\fR, the last \fB.\fR until the end of the string
-will be removed and \fB{.}\fR will be replaced with the
-remaining. E.g. \fIfoo.jpg\fR becomes \fIfoo\fR, \fIsubdir/foo.jpg\fR becomes
-\&\fIsubdir/foo\fR, \fIsub.dir/foo.jpg\fR becomes \fIsub.dir/foo\fR,
-\&\fIsub.dir/bar\fR remains \fIsub.dir/bar\fR. If the input line does not
-contain \fB.\fR it will remain unchanged.
+Input line without extension.
 .Sp
-The replacement string \fB{.}\fR can be changed with \fB\-\-er\fR.
+This replacement string will be replaced by the input with the
+extension removed. If the input line contains \fB.\fR after the last
+\&\fB/\fR, the last \fB.\fR until the end of the string will be removed and
+\&\fB{.}\fR will be replaced with the remaining. E.g. \fIfoo.jpg\fR becomes
+\&\fIfoo\fR, \fIsubdir/foo.jpg\fR becomes \fIsubdir/foo\fR,
+\&\fIsub.dir/foo.jpg\fR becomes \fIsub.dir/foo\fR, \fIsub.dir/bar\fR remains
+\&\fIsub.dir/bar\fR. If the input line does not contain \fB.\fR it will remain
+unchanged.
 .Sp
-To understand replacement strings see \fB{}\fR.
+The replacement string \fB{.}\fR can be changed with \fB\-\-extensionreplace\fR
+.Sp
+See also: \fB{}\fR \fB\-\-extensionreplace\fR
 .IP "\fB{/}\fR" 4
 .IX Item "{/}"
-Basename of input line. This replacement string will be replaced by
-the input with the directory part removed.
+Basename of input line.
 .Sp
-The replacement string \fB{/}\fR can be changed with
-\&\fB\-\-basenamereplace\fR.
+This replacement string will be replaced by the input with the
+directory part removed.
 .Sp
-To understand replacement strings see \fB{}\fR.
+See also: \fB{}\fR \fB\-\-basenamereplace\fR
 .IP "\fB{//}\fR" 4
 .IX Item "{//}"
-Dirname of input line. This replacement string will be replaced by the
-dir of the input line. See \fBdirname\fR(1).
+Dirname of input line.
 .Sp
-The replacement string \fB{//}\fR can be changed with
-\&\fB\-\-dirnamereplace\fR.
+This replacement string will be replaced by the dir of the input
+line. See \fBdirname\fR(1).
 .Sp
-To understand replacement strings see \fB{}\fR.
+See also: \fB{}\fR \fB\-\-dirnamereplace\fR
 .IP "\fB{/.}\fR" 4
 .IX Item "{/.}"
-Basename of input line without extension. This replacement string will
-be replaced by the input with the directory and extension part
-removed. It is a combination of \fB{/}\fR and \fB{.}\fR.
+Basename of input line without extension.
 .Sp
-The replacement string \fB{/.}\fR can be changed with
-\&\fB\-\-basenameextensionreplace\fR.
+This replacement string will be replaced by the input with the
+directory and extension part removed.  \fB{/.}\fR is a combination of
+\&\fB{/}\fR and \fB{.}\fR.
 .Sp
-To understand replacement strings see \fB{}\fR.
+See also: \fB{}\fR \fB\-\-basenameextensionreplace\fR
 .IP "\fB{#}\fR" 4
 .IX Item "{#}"
-Sequence number of the job to run. This replacement string will be
-replaced by the sequence number of the job being run. It contains the
-same number as \f(CW$PARALLEL_SEQ\fR.
+Sequence number of the job to run.
 .Sp
-The replacement string \fB{#}\fR can be changed with \fB\-\-seqreplace\fR.
+This replacement string will be replaced by the sequence number of the
+job being run. It contains the same number as \f(CW$PARALLEL_SEQ\fR.
 .Sp
-To understand replacement strings see \fB{}\fR.
+See also: \fB{}\fR \fB\-\-seqreplace\fR
 .IP "\fB{%}\fR" 4
 .IX Item "{%}"
-Job slot number. This replacement string will be replaced by the job's
-slot number between 1 and number of jobs to run in parallel. There
-will never be 2 jobs running at the same time with the same job slot
-number.
+Job slot number.
 .Sp
-The replacement string \fB{%}\fR can be changed with \fB\-\-slotreplace\fR.
+This replacement string will be replaced by the job's slot number
+between 1 and number of jobs to run in parallel. There will never be 2
+jobs running at the same time with the same job slot number.
 .Sp
 If the job needs to be retried (e.g using \fB\-\-retries\fR or
 \&\fB\-\-retry\-failed\fR) the job slot is not automatically updated. You
@@ -346,67 +349,76 @@ should then instead use \fB\f(CB$PARALLEL_JOBSLOT\fB\fR:
 .Sp
 Notice how {%} and \f(CW$PARALLEL_JOBSLOT\fR differ in the retry run of C and D.
 .Sp
-To understand replacement strings see \fB{}\fR.
+See also: \fB{}\fR \fB\-\-jobs\fR \fB\-\-slotreplace\fR
 .IP "\fB{\fR\fIn\fR\fB}\fR" 4
 .IX Item "{n}"
-Argument from input source \fIn\fR or the \fIn\fR'th argument. This
-positional replacement string will be replaced by the input from input
-source \fIn\fR (when used with \fB\-a\fR or \fB::::\fR) or with the \fIn\fR'th
-argument (when used with \fB\-N\fR). If \fIn\fR is negative it refers to the
-\&\fIn\fR'th last argument.
+Argument from input source \fIn\fR or the \fIn\fR'th argument.
 .Sp
-To understand replacement strings see \fB{}\fR.
+This positional replacement string will be replaced by the input from
+input source \fIn\fR (when used with \fB\-\-arg\-file\fR or \fB::::\fR) or with the
+\&\fIn\fR'th argument (when used with \fB\-N\fR). If \fIn\fR is negative it refers
+to the \fIn\fR'th last argument.
+.Sp
+See also: \fB{}\fR \fB{\fR\fIn\fR.\fB}\fR \fB{\fR\fIn\fR/\fB}\fR \fB{\fR\fIn\fR//\fB}\fR
+\&\fB{\fR\fIn\fR/.\fB}\fR
 .IP "\fB{\fR\fIn\fR.\fB}\fR" 4
 .IX Item "{n.}"
 Argument from input source \fIn\fR or the \fIn\fR'th argument without
-extension. It is a combination of \fB{\fR\fIn\fR\fB}\fR and \fB{.}\fR.
+extension.
+.Sp
+\&\fB{\fR\fIn\fR.\fB}\fR is a combination of \fB{\fR\fIn\fR\fB}\fR and \fB{.}\fR.
 .Sp
 This positional replacement string will be replaced by the input from
-input source \fIn\fR (when used with \fB\-a\fR or \fB::::\fR) or with the
+input source \fIn\fR (when used with \fB\-\-arg\-file\fR or \fB::::\fR) or with the
 \&\fIn\fR'th argument (when used with \fB\-N\fR). The input will have the
 extension removed.
 .Sp
-To understand positional replacement strings see \fB{\fR\fIn\fR\fB}\fR.
+See also: \fB{\fR\fIn\fR\fB}\fR \fB{.}\fR
 .IP "\fB{\fR\fIn\fR/\fB}\fR" 4
 .IX Item "{n/}"
 Basename of argument from input source \fIn\fR or the \fIn\fR'th argument.
-It is a combination of \fB{\fR\fIn\fR\fB}\fR and \fB{/}\fR.
+.Sp
+\&\fB{\fR\fIn\fR/\fB}\fR is a combination of \fB{\fR\fIn\fR\fB}\fR and \fB{/}\fR.
 .Sp
 This positional replacement string will be replaced by the input from
-input source \fIn\fR (when used with \fB\-a\fR or \fB::::\fR) or with the
+input source \fIn\fR (when used with \fB\-\-arg\-file\fR or \fB::::\fR) or with the
 \&\fIn\fR'th argument (when used with \fB\-N\fR). The input will have the
 directory (if any) removed.
 .Sp
-To understand positional replacement strings see \fB{\fR\fIn\fR\fB}\fR.
+See also: \fB{\fR\fIn\fR\fB}\fR \fB{/}\fR
 .IP "\fB{\fR\fIn\fR//\fB}\fR" 4
 .IX Item "{n//}"
 Dirname of argument from input source \fIn\fR or the \fIn\fR'th argument.
-It is a combination of \fB{\fR\fIn\fR\fB}\fR and \fB{//}\fR.
+.Sp
+\&\fB{\fR\fIn\fR//\fB}\fR is a combination of \fB{\fR\fIn\fR\fB}\fR and \fB{//}\fR.
 .Sp
 This positional replacement string will be replaced by the dir of the
-input from input source \fIn\fR (when used with \fB\-a\fR or \fB::::\fR) or with
+input from input source \fIn\fR (when used with \fB\-\-arg\-file\fR or \fB::::\fR) or with
 the \fIn\fR'th argument (when used with \fB\-N\fR). See \fBdirname\fR(1).
 .Sp
-To understand positional replacement strings see \fB{\fR\fIn\fR\fB}\fR.
+See also: \fB{\fR\fIn\fR\fB}\fR \fB{//}\fR
 .IP "\fB{\fR\fIn\fR/.\fB}\fR" 4
 .IX Item "{n/.}"
 Basename of argument from input source \fIn\fR or the \fIn\fR'th argument
-without extension.  It is a combination of \fB{\fR\fIn\fR\fB}\fR, \fB{/}\fR, and
+without extension.
+.Sp
+\&\fB{\fR\fIn\fR/.\fB}\fR is a combination of \fB{\fR\fIn\fR\fB}\fR, \fB{/}\fR, and
 \&\fB{.}\fR.
 .Sp
 This positional replacement string will be replaced by the input from
-input source \fIn\fR (when used with \fB\-a\fR or \fB::::\fR) or with the
+input source \fIn\fR (when used with \fB\-\-arg\-file\fR or \fB::::\fR) or with the
 \&\fIn\fR'th argument (when used with \fB\-N\fR). The input will have the
 directory (if any) and extension removed.
 .Sp
-To understand positional replacement strings see \fB{\fR\fIn\fR\fB}\fR.
+See also: \fB{\fR\fIn\fR\fB}\fR \fB{/.}\fR
 .IP "\fB{=\fR\fIperl expression\fR\fB=}\fR" 4
 .IX Item "{=perl expression=}"
-Replace with calculated \fIperl expression\fR. \fB\f(CB$_\fB\fR will contain the
-same as \fB{}\fR. After evaluating \fIperl expression\fR \fB\f(CB$_\fB\fR will be used
-as the value. It is recommended to only change \f(CW$_\fR but you have full
-access to all of \s-1GNU\s0 \fBparallel\fR's internal functions and data
-structures.
+Replace with calculated \fIperl expression\fR.
+.Sp
+\&\fB\f(CB$_\fB\fR will contain the same as \fB{}\fR. After evaluating \fIperl
+expression\fR \fB\f(CB$_\fB\fR will be used as the value. It is recommended to only
+change \f(CW$_\fR but you have full access to all of \s-1GNU\s0 \fBparallel\fR's
+internal functions and data structures.
 .Sp
 The expression must give the same result if evaluated twice \-
 otherwise the behaviour is undefined. E.g. this will not work as expected:
@@ -451,12 +463,20 @@ skip this job (see also \fB\-\-filter\fR)
 .IX Item " yyyy_mm_dd_hh_mm()"
 .IP " \fB\fByyyy_mm_dd()\fB\fR" 15
 .IX Item " yyyy_mm_dd()"
+.IP " \fB\fBhh_mm_ss()\fB\fR" 15
+.IX Item " hh_mm_ss()"
+.IP " \fB\fBhh_mm()\fB\fR" 15
+.IX Item " hh_mm()"
 .IP " \fB\fByyyymmddhhmmss()\fB\fR" 15
 .IX Item " yyyymmddhhmmss()"
 .IP " \fB\fByyyymmddhhmm()\fB\fR" 15
 .IX Item " yyyymmddhhmm()"
 .IP " \fB\fByyyymmdd()\fB\fR" 15
 .IX Item " yyyymmdd()"
+.IP " \fB\fBhhmmss()\fB\fR" 15
+.IX Item " hhmmss()"
+.IP " \fB\fBhhmm()\fB\fR" 15
+.IX Item " hhmm()"
 .PD
 time functions
 .RE
@@ -470,19 +490,21 @@ Example:
 \&  seq 50 | parallel echo job {#} of {= \*(Aq$_=total_jobs()\*(Aq =}
 .Ve
 .Sp
-See also: \fB\-\-rpl\fR \fB\-\-parens\fR
+See also: \fB\-\-rpl\fR \fB\-\-parens\fR \fB{}\fR \fB{=\fR\fIn\fR \fIperl expression\fR\fB=}\fR
 .RE
 .IP "\fB{=\fR\fIn\fR \fIperl expression\fR\fB=}\fR" 4
 .IX Item "{=n perl expression=}"
-Positional equivalent to \fB{=perl expression=}\fR. To understand
-positional replacement strings see \fB{\fR\fIn\fR\fB}\fR.
+Positional equivalent to \fB{=\fR\fIperl expression\fR\fB=}\fR.
 .Sp
-See also: \fB{=perl expression=}\fR \fB{\fR\fIn\fR\fB}\fR.
+To understand positional replacement strings see \fB{\fR\fIn\fR\fB}\fR.
+.Sp
+See also: \fB{=\fR\fIperl expression\fR\fB=}\fR \fB{\fR\fIn\fR\fB}\fR
 .IP "\fB:::\fR \fIarguments\fR" 4
 .IX Item "::: arguments"
-Use arguments from the command line as input source instead of stdin
-(standard input). Unlike other options for \s-1GNU\s0 \fBparallel\fR \fB:::\fR is
-placed after the \fIcommand\fR and before the arguments.
+Use arguments on the command line as input source.
+.Sp
+Unlike other options for \s-1GNU\s0 \fBparallel\fR \fB:::\fR is placed after the
+\&\fIcommand\fR and before the arguments.
 .Sp
 The following are equivalent:
 .Sp
@@ -496,7 +518,7 @@ The following are equivalent:
 .Ve
 .Sp
 To avoid treating \fB:::\fR as special use \fB\-\-arg\-sep\fR to set the
-argument separator to something else. See also \fB\-\-arg\-sep\fR.
+argument separator to something else.
 .Sp
 If multiple \fB:::\fR are given, each group will be treated as an input
 source, and all combinations of input sources will be
@@ -504,7 +526,7 @@ generated. E.g. ::: 1 2 ::: a b c will result in the combinations
 (1,a) (1,b) (1,c) (2,a) (2,b) (2,c). This is useful for replacing
 nested for-loops.
 .Sp
-\&\fB:::\fR and \fB::::\fR can be mixed. So these are equivalent:
+\&\fB:::\fR, \fB::::\fR, and \fB\-\-arg\-file\fR can be mixed. So these are equivalent:
 .Sp
 .Vb 11
 \&  parallel echo {1} {2} {3} ::: 6 7 ::: 4 5 ::: 1 2 3
@@ -519,6 +541,8 @@ nested for-loops.
 \&  seq 4 5 | parallel echo {1} {2} {3} :::: <(seq 6 7) \- \e
 \&    ::: 1 2 3
 .Ve
+.Sp
+See also: \fB\-\-arg\-sep\fR \fB\-\-arg\-file\fR \fB::::\fR \fB:::+\fR \fB::::+\fR \fB\-\-link\fR
 .IP "\fB:::+\fR \fIarguments\fR" 4
 .IX Item ":::+ arguments"
 Like \fB:::\fR but linked like \fB\-\-link\fR to the previous input source.
@@ -531,67 +555,83 @@ Example:
 .Vb 1
 \&  parallel echo ::: a b c :::+ 1 2 3 ::: X Y :::+ 11 22
 .Ve
+.Sp
+See also: \fB::::+\fR \fB\-\-link\fR
 .IP "\fB::::\fR \fIargfiles\fR" 4
 .IX Item ":::: argfiles"
-Another way to write \fB\-a\fR \fIargfile1\fR \fB\-a\fR \fIargfile2\fR ...
+Another way to write \fB\-\-arg\-file\fR \fIargfile1\fR \fB\-\-arg\-file\fR \fIargfile2\fR ...
 .Sp
 \&\fB:::\fR and \fB::::\fR can be mixed.
 .Sp
-See \fB\-a\fR, \fB:::\fR and \fB\-\-link\fR.
+See also: \fB\-\-arg\-file\fR \fB:::\fR \fB::::+\fR \fB\-\-link\fR
 .IP "\fB::::+\fR \fIargfiles\fR" 4
 .IX Item "::::+ argfiles"
 Like \fB::::\fR but linked like \fB\-\-link\fR to the previous input source.
 .Sp
 Contrary to \fB\-\-link\fR, values do not wrap: The shortest input source
 determines the length.
+.Sp
+See also: \fB\-\-arg\-file\fR \fB:::+\fR \fB\-\-link\fR
 .IP "\fB\-\-null\fR" 4
 .IX Item "--null"
 .PD 0
 .IP "\fB\-0\fR" 4
 .IX Item "-0"
 .PD
-Use \s-1NUL\s0 as delimiter.  Normally input lines will end in \en
-(newline). If they end in \e0 (\s-1NUL\s0), then use this option. It is useful
-for processing arguments that may contain \en (newline).
+Use \s-1NUL\s0 as delimiter.
+.Sp
+Normally input lines will end in \en (newline). If they end in \e0
+(\s-1NUL\s0), then use this option. It is useful for processing arguments
+that may contain \en (newline).
+.Sp
+Shorthand for \fB\-\-delimiter '\e0'\fR.
+.Sp
+See also: \fB\-\-delimiter\fR
 .IP "\fB\-\-arg\-file\fR \fIinput-file\fR" 4
 .IX Item "--arg-file input-file"
 .PD 0
 .IP "\fB\-a\fR \fIinput-file\fR" 4
 .IX Item "-a input-file"
 .PD
-Use \fIinput-file\fR as input source. If you use this option, stdin
-(standard input) is given to the first process run.  Otherwise, stdin
-(standard input) is redirected from /dev/null.
+Use \fIinput-file\fR as input source.
 .Sp
-If multiple \fB\-a\fR are given, each \fIinput-file\fR will be treated as an
+If you use this option, stdin (standard input) is given to the first
+process run.  Otherwise, stdin (standard input) is redirected from
+/dev/null.
+.Sp
+If multiple \fB\-\-arg\-file\fR are given, each \fIinput-file\fR will be treated as an
 input source, and all combinations of input sources will be
-generated. E.g. The file \fBfoo\fR contains \fB1 2\fR, the file \fBbar\fR
-contains \fBa b c\fR.  \fB\-a foo\fR \fB\-a bar\fR will result in the combinations
+generated. E.g. The file \fBfoo\fR contains \fB1 2\fR, the file
+\&\fBbar\fR contains \fBa b c\fR.  \fB\-a foo\fR \fB\-a bar\fR will result in the combinations
 (1,a) (1,b) (1,c) (2,a) (2,b) (2,c). This is useful for replacing
 nested for-loops.
 .Sp
-See also: \fB\-\-link\fR and \fB{\fR\fIn\fR\fB}\fR.
+See also: \fB\-\-link\fR \fB{\fR\fIn\fR\fB}\fR \fB::::\fR \fB::::+\fR \fB:::\fR
 .IP "\fB\-\-arg\-file\-sep\fR \fIsep-str\fR" 4
 .IX Item "--arg-file-sep sep-str"
 Use \fIsep-str\fR instead of \fB::::\fR as separator string between command
-and argument files. Useful if \fB::::\fR is used for something else by the
-command.
+and argument files.
 .Sp
-See also: \fB::::\fR.
+Useful if \fB::::\fR is used for something else by the command.
+.Sp
+See also: \fB::::\fR
 .IP "\fB\-\-arg\-sep\fR \fIsep-str\fR" 4
 .IX Item "--arg-sep sep-str"
-Use \fIsep-str\fR instead of \fB:::\fR as separator string. Useful if \fB:::\fR
-is used for something else by the command.
+Use \fIsep-str\fR instead of \fB:::\fR as separator string.
+.Sp
+Useful if \fB:::\fR is used for something else by the command.
 .Sp
 Also useful if you command uses \fB:::\fR but you still want to read
 arguments from stdin (standard input): Simply change \fB\-\-arg\-sep\fR to a
 string that is not in the command line.
 .Sp
-See also: \fB:::\fR.
+See also: \fB:::\fR
 .IP "\fB\-\-bar\fR" 4
 .IX Item "--bar"
-Show progress as a progress bar. In the bar is shown: % of jobs
-completed, estimated seconds left, and number of jobs started.
+Show progress as a progress bar.
+.Sp
+In the bar is shown: % of jobs completed, estimated seconds left, and
+number of jobs started.
 .Sp
 It is compatible with \fBzenity\fR:
 .Sp
@@ -606,11 +646,16 @@ It is compatible with \fBzenity\fR:
 .IP "\fB\-\-bf\fR \fIfile\fR" 4
 .IX Item "--bf file"
 .PD
-\&\fIfile\fR will be transferred to each sshlogin before a job is
-started. It will be removed if \fB\-\-cleanup\fR is active. The file may be
-a script to run or some common base data needed for the job.
-Multiple \fB\-\-bf\fR can be specified to transfer more basefiles. The
-\&\fIfile\fR will be transferred the same way as \fB\-\-transferfile\fR.
+\&\fIfile\fR will be transferred to each sshlogin before first job is
+started.
+.Sp
+It will be removed if \fB\-\-cleanup\fR is active. The file may be a script
+to run or some common base data needed for the job.  Multiple
+\&\fB\-\-bf\fR can be specified to transfer more basefiles. The \fIfile\fR will be
+transferred the same way as \fB\-\-transferfile\fR.
+.Sp
+See also: \fB\-\-sshlogin\fR \fB\-\-transfer\fR \fB\-\-return\fR \fB\-\-cleanup\fR
+\&\fB\-\-workdir\fR
 .IP "\fB\-\-basenamereplace\fR \fIreplace-str\fR" 4
 .IX Item "--basenamereplace replace-str"
 .PD 0
@@ -619,6 +664,8 @@ Multiple \fB\-\-bf\fR can be specified to transfer more basefiles. The
 .PD
 Use the replacement string \fIreplace-str\fR instead of \fB{/}\fR for
 basename of input line.
+.Sp
+See also: \fB{/}\fR
 .IP "\fB\-\-basenameextensionreplace\fR \fIreplace-str\fR" 4
 .IX Item "--basenameextensionreplace replace-str"
 .PD 0
@@ -626,12 +673,20 @@ basename of input line.
 .IX Item "--bner replace-str"
 .PD
 Use the replacement string \fIreplace-str\fR instead of \fB{/.}\fR for basename of input line without extension.
+.Sp
+See also: \fB{/.}\fR
 .IP "\fB\-\-bin\fR \fIbinexpr\fR" 4
 .IX Item "--bin binexpr"
 Use \fIbinexpr\fR as binning key and bin input to the jobs.
 .Sp
-\&\fIbinexpr\fR is [column number|column name] [perlexpression] e.g. 3,
-Address, 3 \f(CW$_\fR%=100, Address s/\eD//g.
+\&\fIbinexpr\fR is [column number|column name] [perlexpression] e.g.:
+.Sp
+.Vb 4
+\&  3
+\&  Address
+\&  3 $_%=100
+\&  Address s/\eD//g
+.Ve
 .Sp
 Each input line is split using \fB\-\-colsep\fR. The value of the column is
 put into \f(CW$_\fR, the perl expression is executed, the resulting value is
@@ -647,16 +702,21 @@ The performance is in the order of 100K rows per second. Faster if the
 .Sp
 \&\fB\-\-bin\fR requires \fB\-\-pipe\fR and a fixed numeric value for \fB\-\-jobs\fR.
 .Sp
-See also: \fB\-\-shard\fR, \fB\-\-group\-by\fR, \fB\-\-roundrobin\fR.
+See also: \s-1SPREADING BLOCKS OF DATA\s0 \fB\-\-group\-by\fR \fB\-\-round\-robin\fR
+\&\fB\-\-shard\fR
 .IP "\fB\-\-bg\fR" 4
 .IX Item "--bg"
-Run command in background thus \s-1GNU\s0 \fBparallel\fR will not wait for
-completion of the command before exiting. This is the default if
-\&\fB\-\-semaphore\fR is set.
+Run command in background.
 .Sp
-See also: \fB\-\-fg\fR, \fBman sem\fR.
+\&\s-1GNU\s0 \fBparallel\fR will normally wait for the completion of a job. With
+\&\fB\-\-bg\fR \s-1GNU\s0 \fBparallel\fR will not wait for completion of the command
+before exiting.
+.Sp
+This is the default if \fB\-\-semaphore\fR is set.
 .Sp
 Implies \fB\-\-semaphore\fR.
+.Sp
+See also: \fB\-\-fg\fR \fBman sem\fR
 .IP "\fB\-\-bibtex\fR" 4
 .IX Item "--bibtex"
 .PD 0
@@ -680,68 +740,74 @@ making it harder to finance development. However, if you pay 10000
 feel free to use \fB\-\-will\-cite\fR in scripts.
 .Sp
 If you do not want to help financing future development by letting
-other users see the citation notice or by paying, then please use
-another tool instead of \s-1GNU\s0 \fBparallel\fR. You can find some of the
-alternatives in \fBman parallel_alternatives\fR.
+other users see the citation notice or by paying, then please consider
+using another tool instead of \s-1GNU\s0 \fBparallel\fR. You can find some of
+the alternatives in \fBman parallel_alternatives\fR.
 .IP "\fB\-\-block\fR \fIsize\fR" 4
 .IX Item "--block size"
 .PD 0
 .IP "\fB\-\-block\-size\fR \fIsize\fR" 4
 .IX Item "--block-size size"
 .PD
-Size of block in bytes to read at a time. The \fIsize\fR can be postfixed
-with K, M, G, T, P, k, m, g, t, or p (see \s-1UNIT PREFIX\s0).
+Size of block in bytes to read at a time.
+.Sp
+The \fIsize\fR can be postfixed with K, M, G, T, P, k, m, g, t, or p.
 .Sp
 \&\s-1GNU\s0 \fBparallel\fR tries to meet the block size but can be off by the
 length of one record. For performance reasons \fIsize\fR should be bigger
 than a two records. \s-1GNU\s0 \fBparallel\fR will warn you and automatically
 increase the size if you choose a \fIsize\fR that is too small.
 .Sp
-If you use \fB\-N\fR, \fB\-\-block\-size\fR should be bigger than N+1 records.
+If you use \fB\-N\fR, \fB\-\-block\fR should be bigger than N+1 records.
 .Sp
 \&\fIsize\fR defaults to 1M.
 .Sp
-When using \fB\-\-pipepart\fR a negative block size is not interpreted as a
+When using \fB\-\-pipe\-part\fR a negative block size is not interpreted as a
 blocksize but as the number of blocks each jobslot should have. So
 this will run 10*5 = 50 jobs in total:
 .Sp
 .Vb 1
-\&  parallel \-\-pipepart \-a myfile \-\-block \-10 \-j5 wc
+\&  parallel \-\-pipe\-part \-a myfile \-\-block \-10 \-j5 wc
 .Ve
 .Sp
-This is an efficient alternative to \fB\-\-roundrobin\fR because data is
+This is an efficient alternative to \fB\-\-round\-robin\fR because data is
 never read by \s-1GNU\s0 \fBparallel\fR, but you can still have very few
-jobslots process a large amount of data.
+jobslots process large amounts of data.
 .Sp
-See \fB\-\-pipe\fR and \fB\-\-pipepart\fR for use of this.
-.IP "\fB\-\-blocktimeout\fR \fIduration\fR" 4
-.IX Item "--blocktimeout duration"
+See also: \s-1UNIT PREFIX\s0 \fB\-N\fR \fB\-\-pipe\fR \fB\-\-pipe\-part\fR \fB\-\-round\-robin\fR
+\&\fB\-\-block\-timeout\fR
+.IP "\fB\-\-block\-timeout\fR \fIduration\fR" 4
+.IX Item "--block-timeout duration"
 .PD 0
 .IP "\fB\-\-bt\fR \fIduration\fR" 4
 .IX Item "--bt duration"
 .PD
-Time out for reading block when using \fB\-\-pipe\fR. If it takes longer
-than \fIduration\fR to read a full block, use the partial block read so
-far.
+Timeout for reading block when using \fB\-\-pipe\fR.
 .Sp
-\&\fIduration\fR must be in whole seconds, but can be expressed as floats
-postfixed with \fBs\fR, \fBm\fR, \fBh\fR, or \fBd\fR which would multiply the
-float by 1, 60, 3600, or 86400. Thus these are equivalent:
-\&\fB\-\-blocktimeout 100000\fR and \fB\-\-blocktimeout 1d3.5h16.6m4s\fR.
+If it takes longer than \fIduration\fR to read a full block, use the
+partial block read so far.
+.Sp
+\&\fIduration\fR is in seconds, but can be postfixed with s, m, h, or d.
+.Sp
+See also: \s-1TIME POSTFIXES\s0 \fB\-\-pipe\fR \fB\-\-block\fR
 .IP "\fB\-\-cat\fR" 4
 .IX Item "--cat"
-Create a temporary file with content. Normally \fB\-\-pipe\fR/\fB\-\-pipepart\fR
-will give data to the program on stdin (standard input). With \fB\-\-cat\fR
-\&\s-1GNU\s0 \fBparallel\fR will create a temporary file with the name in \fB{}\fR, so
-you can do: \fBparallel \-\-pipe \-\-cat wc {}\fR.
+Create a temporary file with content.
 .Sp
-Implies \fB\-\-pipe\fR unless \fB\-\-pipepart\fR is used.
+Normally \fB\-\-pipe\fR/\fB\-\-pipe\-part\fR will give data to the program on
+stdin (standard input). With \fB\-\-cat\fR \s-1GNU\s0 \fBparallel\fR will create a
+temporary file with the name in \fB{}\fR, so you can do: \fBparallel
+\&\-\-pipe \-\-cat wc {}\fR.
 .Sp
-See also: \fB\-\-fifo\fR.
+Implies \fB\-\-pipe\fR unless \fB\-\-pipe\-part\fR is used.
+.Sp
+See also: \fB\-\-pipe\fR \fB\-\-pipe\-part\fR \fB\-\-fifo\fR
 .IP "\fB\-\-cleanup\fR" 4
 .IX Item "--cleanup"
-Remove transferred files. \fB\-\-cleanup\fR will remove the transferred
-files on the remote computer after processing is done.
+Remove transferred files.
+.Sp
+\&\fB\-\-cleanup\fR will remove the transferred files on the remote computer
+after processing is done.
 .Sp
 .Vb 3
 \&  find log \-name \*(Aq*gz\*(Aq | parallel \e
@@ -757,20 +823,25 @@ With \fB\-\-return\fR the file transferred from the remote computer will be
 removed on the remote computer. Directories on the remote
 computer containing the file will be removed if they are empty.
 .Sp
-\&\fB\-\-cleanup\fR is ignored when not used with \fB\-\-transferfile\fR or
-\&\fB\-\-return\fR.
+\&\fB\-\-cleanup\fR is ignored when not used with \fB\-\-basefile\fR,
+\&\fB\-\-transfer\fR, \fB\-\-transferfile\fR or \fB\-\-return\fR.
+.Sp
+See also: \fB\-\-basefile\fR \fB\-\-transfer\fR \fB\-\-transferfile\fR \fB\-\-sshlogin\fR
+\&\fB\-\-return\fR
 .IP "\fB\-\-colsep\fR \fIregexp\fR" 4
 .IX Item "--colsep regexp"
 .PD 0
 .IP "\fB\-C\fR \fIregexp\fR" 4
 .IX Item "-C regexp"
 .PD
-Column separator. The input will be treated as a table with \fIregexp\fR
-separating the columns. The n'th column can be accessed using
-\&\fB{\fR\fIn\fR\fB}\fR or \fB{\fR\fIn\fR.\fB}\fR. E.g. \fB{3}\fR is the 3rd column.
+Column separator.
+.Sp
+The input will be treated as a table with \fIregexp\fR separating the
+columns. The n'th column can be accessed using \fB{\fR\fIn\fR\fB}\fR or
+\&\fB{\fR\fIn\fR.\fB}\fR. E.g. \fB{3}\fR is the 3rd column.
 .Sp
 If there are more input sources, each input source will be separated,
-but the columns from each input source will be linked (see \fB\-\-link\fR).
+but the columns from each input source will be linked.
 .Sp
 .Vb 2
 \&  parallel \-\-colsep \*(Aq\-\*(Aq echo {4} {3} {2} {1} \e
@@ -782,34 +853,46 @@ but the columns from each input source will be linked (see \fB\-\-link\fR).
 .Sp
 \&\fIregexp\fR is a Perl Regular Expression:
 https://perldoc.perl.org/perlre.html
+.Sp
+See also: \fB\-\-csv\fR \fB{\fR\fIn\fR\fB}\fR \fB\-\-trim\fR \fB\-\-link\fR
 .IP "\fB\-\-compress\fR" 4
 .IX Item "--compress"
-Compress temporary files. If the output is big and very compressible
-this will take up less disk space in \f(CW$TMPDIR\fR and possibly be faster
-due to less disk I/O.
+Compress temporary files.
+.Sp
+If the output is big and very compressible this will take up less disk
+space in \f(CW$TMPDIR\fR and possibly be faster due to less disk I/O.
 .Sp
 \&\s-1GNU\s0 \fBparallel\fR will try \fBpzstd\fR, \fBlbzip2\fR, \fBpbzip2\fR, \fBzstd\fR,
 \&\fBpigz\fR, \fBlz4\fR, \fBlzop\fR, \fBplzip\fR, \fBlzip\fR, \fBlrz\fR, \fBgzip\fR, \fBpxz\fR,
 \&\fBlzma\fR, \fBbzip2\fR, \fBxz\fR, \fBclzip\fR, in that order, and use the first
 available.
+.Sp
+See also: \fB\-\-compress\-program\fR
 .IP "\fB\-\-compress\-program\fR \fIprg\fR" 4
 .IX Item "--compress-program prg"
 .PD 0
 .IP "\fB\-\-decompress\-program\fR \fIprg\fR" 4
 .IX Item "--decompress-program prg"
 .PD
-Use \fIprg\fR for (de)compressing temporary files. It is assumed that \fIprg
-\&\-dc\fR will decompress stdin (standard input) to stdout (standard
-output) unless \fB\-\-decompress\-program\fR is given.
+Use \fIprg\fR for (de)compressing temporary files.
+.Sp
+It is assumed that \fIprg \-dc\fR will decompress stdin (standard input)
+to stdout (standard output) unless \fB\-\-decompress\-program\fR is given.
+.Sp
+See also: \fB\-\-compress\fR
 .IP "\fB\-\-csv\fR" 4
 .IX Item "--csv"
-Treat input as CSV-format. \fB\-\-colsep\fR sets the field delimiter. It
-works very much like \fB\-\-colsep\fR except it deals correctly with
-quoting:
+Treat input as CSV-format.
+.Sp
+\&\fB\-\-colsep\fR sets the field delimiter. It works very much like
+\&\fB\-\-colsep\fR except it deals correctly with quoting. Compare:
 .Sp
 .Vb 2
 \&   echo \*(Aq"1 big, 2 small","2""x4"" plank",12.34\*(Aq |
 \&     parallel \-\-csv echo {1} of {2} at {3}
+\&
+\&   echo \*(Aq"1 big, 2 small","2""x4"" plank",12.34\*(Aq |
+\&     parallel \-\-colsep \*(Aq,\*(Aq echo {1} of {2} at {3}
 .Ve
 .Sp
 Even quoted newlines are parsed correctly:
@@ -821,36 +904,49 @@ Even quoted newlines are parsed correctly:
 .Ve
 .Sp
 When used with \fB\-\-pipe\fR only pass full CSV-records.
-.IP "\fB\-\-ctag\fR \fIstr\fR (alpha testing)" 4
-.IX Item "--ctag str (alpha testing)"
-Color tag. See \fB\-\-tag\fR.
-.IP "\fB\-\-ctagstring\fR \fIstr\fR (alpha testing)" 4
-.IX Item "--ctagstring str (alpha testing)"
-Color tagstring. See \fB\-\-tagstring\fR.
-.IP "\fB\-\-delay\fR \fImytime\fR" 4
-.IX Item "--delay mytime"
-Delay starting next job by \fImytime\fR. \s-1GNU\s0 \fBparallel\fR will pause
-\&\fImytime\fR after starting each job. \fImytime\fR is normally in seconds,
-but can be floats postfixed with \fBs\fR, \fBm\fR, \fBh\fR, or \fBd\fR which would
-multiply the float by 1, 60, 3600, or 86400. Thus these are
-equivalent: \fB\-\-delay 100000\fR and \fB\-\-delay 1d3.5h16.6m4s\fR.
 .Sp
-If you append 'auto' to \fImytime\fR (e.g. 13m3sauto) \s-1GNU\s0 \fBparallel\fR will
-automatically try to find the optimal value: If a job fails, \fImytime\fR
-is doubled. If a job succeeds, \fImytime\fR is decreased by 10%.
+See also: \fB\-\-pipe\fR \fB\-\-link\fR \fB{\fR\fIn\fR\fB}\fR \fB\-\-colsep\fR \fB\-\-header\fR
+.IP "\fB\-\-ctag\fR \fIstr\fR" 4
+.IX Item "--ctag str"
+Color tag.
+.Sp
+If the values look very similar looking at the output it can be hard
+to tell when a new value is used. \fB\-\-ctag\fR gives each value a random
+color.
+.Sp
+See also: \fB\-\-tag\fR
+.IP "\fB\-\-ctagstring\fR \fIstr\fR" 4
+.IX Item "--ctagstring str"
+Color tagstring.
+.Sp
+See also: \fB\-\-ctag\fR \fB\-\-tagstring\fR
+.IP "\fB\-\-delay\fR \fIduration\fR" 4
+.IX Item "--delay duration"
+Delay starting next job by \fIduration\fR.
+.Sp
+\&\s-1GNU\s0 \fBparallel\fR will not start another job for the next \fIduration\fR.
+.Sp
+\&\fIduration\fR is in seconds, but can be postfixed with s, m, h, or d.
+.Sp
+If you append 'auto' to \fIduration\fR (e.g. 13m3sauto) \s-1GNU\s0 \fBparallel\fR
+will automatically try to find the optimal value: If a job fails,
+\&\fIduration\fR is increased by 30%. If a job succeeds, \fIduration\fR is
+decreased by 10%.
+.Sp
+See also: \s-1TIME POSTFIXES\s0 \fB\-\-retries\fR \fB\-\-ssh\-delay\fR
 .IP "\fB\-\-delimiter\fR \fIdelim\fR" 4
 .IX Item "--delimiter delim"
 .PD 0
 .IP "\fB\-d\fR \fIdelim\fR" 4
 .IX Item "-d delim"
 .PD
-Input items are terminated by \fIdelim\fR.  Quotes and backslash are not
-special; every character in the input is taken literally.  Disables
-the end-of-file string, which is treated like any other argument. The
-specified delimiter may be characters, C\-style character escapes such
-as \en, or octal or hexadecimal escape codes.  Octal and hexadecimal
-escape codes are understood as for the printf command.  Multibyte
-characters are not supported.
+Input items are terminated by \fIdelim\fR.
+.Sp
+The specified delimiter may be characters, C\-style character escapes
+such as \en, or octal or hexadecimal escape codes.  Octal and
+hexadecimal escape codes are understood as for the printf command.
+.Sp
+See also: \fB\-\-colsep\fR
 .IP "\fB\-\-dirnamereplace\fR \fIreplace-str\fR" 4
 .IX Item "--dirnamereplace replace-str"
 .PD 0
@@ -859,34 +955,46 @@ characters are not supported.
 .PD
 Use the replacement string \fIreplace-str\fR instead of \fB{//}\fR for
 dirname of input line.
+.Sp
+See also: \fB{//}\fR
 .IP "\fB\-\-dry\-run\fR" 4
 .IX Item "--dry-run"
 Print the job to run on stdout (standard output), but do not run the
-job. Use \fB\-v \-v\fR to include the wrapping that \s-1GNU\s0 \fBparallel\fR
-generates (for remote jobs, \fB\-\-tmux\fR, \fB\-\-nice\fR, \fB\-\-pipe\fR,
-\&\fB\-\-pipepart\fR, \fB\-\-fifo\fR and \fB\-\-cat\fR). Do not count on this
-literally, though, as the job may be scheduled on another computer or
-the local computer if : is in the list.
+job.
+.Sp
+Use \fB\-v \-v\fR to include the wrapping that \s-1GNU\s0 \fBparallel\fR generates
+(for remote jobs, \fB\-\-tmux\fR, \fB\-\-nice\fR, \fB\-\-pipe\fR, \fB\-\-pipe\-part\fR,
+\&\fB\-\-fifo\fR and \fB\-\-cat\fR). Do not count on this literally, though, as
+the job may be scheduled on another computer or the local computer if
+: is in the list.
+.Sp
+See also: \fB\-v\fR
 .IP "\fB\-E\fR \fIeof-str\fR" 4
 .IX Item "-E eof-str"
-Set the end of file string to \fIeof-str\fR.  If the end of file string
-occurs as a line of input, the rest of the input is not read.  If
-neither \fB\-E\fR nor \fB\-e\fR is used, no end of file string is used.
+Set the end of file string to \fIeof-str\fR.
+.Sp
+If the end of file string occurs as a line of input, the rest of the
+input is not read.  If neither \fB\-E\fR nor \fB\-e\fR is used, no end of file
+string is used.
 .IP "\fB\-\-eof\fR[=\fIeof-str\fR]" 4
 .IX Item "--eof[=eof-str]"
 .PD 0
 .IP "\fB\-e\fR[\fIeof-str\fR]" 4
 .IX Item "-e[eof-str]"
 .PD
-This option is a synonym for the \fB\-E\fR option.  Use \fB\-E\fR instead,
-because it is \s-1POSIX\s0 compliant for \fBxargs\fR while this option is not.
-If \fIeof-str\fR is omitted, there is no end of file string.  If neither
-\&\fB\-E\fR nor \fB\-e\fR is used, no end of file string is used.
+This option is a synonym for the \fB\-E\fR option.
+.Sp
+Use \fB\-E\fR instead, because it is \s-1POSIX\s0 compliant for \fBxargs\fR while
+this option is not.  If \fIeof-str\fR is omitted, there is no end of file
+string.  If neither \fB\-E\fR nor \fB\-e\fR is used, no end of file string is
+used.
 .IP "\fB\-\-embed\fR" 4
 .IX Item "--embed"
-Embed \s-1GNU\s0 \fBparallel\fR in a shell script. If you need to distribute your
-script to someone who does not want to install \s-1GNU\s0 \fBparallel\fR you can
-embed \s-1GNU\s0 \fBparallel\fR in your own shell script:
+Embed \s-1GNU\s0 \fBparallel\fR in a shell script.
+.Sp
+If you need to distribute your script to someone who does not want to
+install \s-1GNU\s0 \fBparallel\fR you can embed \s-1GNU\s0 \fBparallel\fR in your own
+shell script:
 .Sp
 .Vb 1
 \&  parallel \-\-embed > new_script
@@ -896,12 +1004,13 @@ After which you add your code at the end of \fBnew_script\fR. This is tested
 on \fBash\fR, \fBbash\fR, \fBdash\fR, \fBksh\fR, \fBsh\fR, and \fBzsh\fR.
 .IP "\fB\-\-env\fR \fIvar\fR" 4
 .IX Item "--env var"
-Copy environment variable \fIvar\fR. This will copy \fIvar\fR to the
-environment that the command is run in. This is especially useful for
-remote execution.
+Copy environment variable \fIvar\fR.
+.Sp
+This will copy \fIvar\fR to the environment that the command is run
+in. This is especially useful for remote execution.
 .Sp
 In Bash \fIvar\fR can also be a Bash function \- just remember to \fBexport
-\&\-f\fR the function, see \fBcommand\fR.
+\&\-f\fR the function.
 .Sp
 The variable '_' is special. It will copy all exported environment
 variables except for the ones mentioned in ~/.parallel/ignored_vars.
@@ -909,19 +1018,22 @@ variables except for the ones mentioned in ~/.parallel/ignored_vars.
 To copy the full environment (both exported and not exported
 variables, arrays, and functions) use \fBenv_parallel\fR.
 .Sp
-See also: \fB\-\-record\-env\fR, \fB\-\-session\fR.
+See also: \fB\-\-record\-env\fR \fB\-\-session\fR \fB\-\-sshlogin\fR \fIcommand\fR
+\&\fBenv_parallel\fR
 .IP "\fB\-\-eta\fR" 4
 .IX Item "--eta"
-Show the estimated number of seconds before finishing. This forces \s-1GNU\s0
-\&\fBparallel\fR to read all jobs before starting to find the number of
-jobs. \s-1GNU\s0 \fBparallel\fR normally only reads the next job to run.
+Show the estimated number of seconds before finishing.
+.Sp
+This forces \s-1GNU\s0 \fBparallel\fR to read all jobs before starting to find
+the number of jobs. \s-1GNU\s0 \fBparallel\fR normally only reads the next job
+to run.
 .Sp
 The estimate is based on the runtime of finished jobs, so the first
 estimate will only be shown when the first job has finished.
 .Sp
 Implies \fB\-\-progress\fR.
 .Sp
-See also: \fB\-\-bar\fR, \fB\-\-progress\fR.
+See also: \fB\-\-bar\fR \fB\-\-progress\fR
 .IP "\fB\-\-fg\fR" 4
 .IX Item "--fg"
 Run command in foreground.
@@ -931,35 +1043,50 @@ the foreground.
 .Sp
 With \fB\-\-semaphore\fR \s-1GNU\s0 \fBparallel\fR will run the command in the
 foreground (opposite \fB\-\-bg\fR), and wait for completion of the command
-before exiting.
+before exiting. Exit code will be that of the command.
 .Sp
-See also: \fB\-\-bg\fR, \fBman sem\fR.
+See also: \fB\-\-bg\fR \fBman sem\fR
 .IP "\fB\-\-fifo\fR" 4
 .IX Item "--fifo"
-Create a temporary fifo with content. Normally \fB\-\-pipe\fR and
-\&\fB\-\-pipepart\fR will give data to the program on stdin (standard
-input). With \fB\-\-fifo\fR \s-1GNU\s0 \fBparallel\fR will create a temporary fifo
-with the name in \fB{}\fR, so you can do: \fBparallel \-\-pipe \-\-fifo wc {}\fR.
+Create a temporary fifo with content.
 .Sp
-Beware: If data is not read from the fifo, the job will block forever.
+Normally \fB\-\-pipe\fR and \fB\-\-pipe\-part\fR will give data to the program on
+stdin (standard input). With \fB\-\-fifo\fR \s-1GNU\s0 \fBparallel\fR will create a
+temporary fifo with the name in \fB{}\fR, so you can do:
 .Sp
-Implies \fB\-\-pipe\fR unless \fB\-\-pipepart\fR is used.
+.Vb 1
+\&  parallel \-\-pipe \-\-fifo wc {}
+.Ve
 .Sp
-See also: \fB\-\-cat\fR.
+Beware: If the fifo is never opened for reading, the job will block forever:
+.Sp
+.Vb 2
+\&  seq 1000000 | parallel \-\-fifo echo This will block
+\&  seq 1000000 | parallel \-\-fifo \*(Aqecho This will not block < {}\*(Aq
+.Ve
+.Sp
+Implies \fB\-\-pipe\fR unless \fB\-\-pipe\-part\fR is used.
+.Sp
+See also: \fB\-\-cat\fR \fB\-\-pipe\fR \fB\-\-pipe\-part\fR
 .IP "\fB\-\-filter\fR \fIfilter\fR" 4
 .IX Item "--filter filter"
-Only run jobs where \fIfilter\fR is true. \fIfilter\fR can contain
-replacement strings and Perl code. Example:
+Only run jobs where \fIfilter\fR is true.
+.Sp
+\&\fIfilter\fR can contain replacement strings and Perl code. Example:
 .Sp
 .Vb 1
 \&   parallel \-\-filter \*(Aq{1} < {2}+1\*(Aq echo ::: {1..3} ::: {1..3}
 .Ve
 .Sp
 Outputs: 1,1 1,2 1,3 2,2 2,3 3,3
+.Sp
+See also: \fB\fBskip()\fB\fR \fB\-\-no\-run\-if\-empty\fR
 .IP "\fB\-\-filter\-hosts\fR" 4
 .IX Item "--filter-hosts"
-Remove down hosts. For each remote host: check that login through ssh
-works. If not: do not use this host.
+Remove down hosts.
+.Sp
+For each remote host: check that login through ssh works. If not: do
+not use this host.
 .Sp
 For performance reasons, this check is performed only at the start and
 every time \fB\-\-sshloginfile\fR is changed. If an host goes down after
@@ -970,28 +1097,36 @@ Currently you can \fInot\fR put \fB\-\-filter\-hosts\fR in a profile,
 \&\f(CW$PARALLEL\fR, /etc/parallel/config or similar. This is because \s-1GNU\s0
 \&\fBparallel\fR uses \s-1GNU\s0 \fBparallel\fR to compute this, so you will get an
 infinite loop. This will likely be fixed in a later release.
+.Sp
+See also: \fB\-\-sshloginfile\fR \fB\-\-sshlogin\fR \fB\-\-retries\fR
 .IP "\fB\-\-gnu\fR" 4
 .IX Item "--gnu"
-Behave like \s-1GNU\s0 \fBparallel\fR. This option historically took precedence
-over \fB\-\-tollef\fR. The \fB\-\-tollef\fR option is now retired, and therefore
-may not be used. \fB\-\-gnu\fR is kept for compatibility.
+Behave like \s-1GNU\s0 \fBparallel\fR.
+.Sp
+This option historically took precedence over \fB\-\-tollef\fR. The
+\&\fB\-\-tollef\fR option is now retired, and therefore may not be
+used. \fB\-\-gnu\fR is kept for compatibility.
 .IP "\fB\-\-group\fR" 4
 .IX Item "--group"
-Group output. Output from each job is grouped together and is only
-printed when the command is finished. Stdout (standard output) first
-followed by stderr (standard error).
+Group output.
 .Sp
-This takes in the order of 0.5ms per job and depends on the speed of
-your disk for larger output. It can be disabled with \fB\-u\fR, but this
-means output from different commands can get mixed.
+Output from each job is grouped together and is only printed when the
+command is finished. Stdout (standard output) first followed by stderr
+(standard error).
+.Sp
+This takes in the order of 0.5ms \s-1CPU\s0 time per job and depends on the
+speed of your disk for larger output. It can be disabled with \fB\-u\fR,
+but this means output from different commands can get mixed.
 .Sp
 \&\fB\-\-group\fR is the default. Can be reversed with \fB\-u\fR.
 .Sp
-See also: \fB\-\-line\-buffer\fR \fB\-\-ungroup\fR
+See also: \fB\-\-line\-buffer\fR \fB\-\-ungroup\fR \fB\-\-tag\fR
 .IP "\fB\-\-group\-by\fR \fIval\fR" 4
 .IX Item "--group-by val"
-Group input by value. Combined with \fB\-\-pipe\fR/\fB\-\-pipepart\fR
-\&\fB\-\-group\-by\fR groups lines with the same value into a record.
+Group input by value.
+.Sp
+Combined with \fB\-\-pipe\fR/\fB\-\-pipe\-part\fR \fB\-\-group\-by\fR groups lines with
+the same value into a record.
 .Sp
 The value can be computed from the full line or from a single column.
 .Sp
@@ -1005,7 +1140,7 @@ Use the value in the column numbered.
 Treat the first line as a header and use the value in the column
 named.
 .Sp
-(Not supported with \fB\-\-pipepart\fR).
+(Not supported with \fB\-\-pipe\-part\fR).
 .IP " perl expression" 15
 .IX Item " perl expression"
 Run the perl expression and use \f(CW$_\fR as the value.
@@ -1016,7 +1151,7 @@ Put the value of the column put in \f(CW$_\fR, run the perl expression, and use 
 .IX Item " column name perl expression"
 Put the value of the column put in \f(CW$_\fR, run the perl expression, and use \f(CW$_\fR as the value.
 .Sp
-(Not supported with \fB\-\-pipepart\fR).
+(Not supported with \fB\-\-pipe\-part\fR).
 .RE
 .RS 4
 .Sp
@@ -1062,7 +1197,8 @@ UserID when grouping:
 \&    \-\-group\-by \*(AqUserID s/\eD//g\*(Aq \-kN1 wc
 .Ve
 .Sp
-See also: \fB\-\-shard\fR, \fB\-\-roundrobin\fR.
+See also: \s-1SPREADING BLOCKS OF DATA\s0 \fB\-\-pipe\fR \fB\-\-pipe\-part\fR \fB\-\-bin\fR
+\&\fB\-\-shard\fR \fB\-\-round\-robin\fR
 .RE
 .IP "\fB\-\-help\fR" 4
 .IX Item "--help"
@@ -1077,9 +1213,10 @@ Print a summary of the options to \s-1GNU\s0 \fBparallel\fR and exit.
 .IP "\fB\-\-halt\fR \fIval\fR" 4
 .IX Item "--halt val"
 .PD
-When should \s-1GNU\s0 \fBparallel\fR terminate? In some situations it makes no
-sense to run all jobs. \s-1GNU\s0 \fBparallel\fR should simply give up as soon
-as a condition is met.
+When should \s-1GNU\s0 \fBparallel\fR terminate?
+.Sp
+In some situations it makes no sense to run all jobs. \s-1GNU\s0
+\&\fBparallel\fR should simply stop as soon as a condition is met.
 .Sp
 \&\fIval\fR defaults to \fBnever\fR, which runs all jobs no matter what.
 .Sp
@@ -1149,28 +1286,34 @@ soon,fail=1\-99%
 .RE
 .IP "\fB\-\-header\fR \fIregexp\fR" 4
 .IX Item "--header regexp"
-Use regexp as header. For normal usage the matched header (typically
-the first line: \fB\-\-header '.*\en'\fR) will be split using \fB\-\-colsep\fR
-(which will default to '\et') and column names can be used as
-replacement variables: \fB{column name}\fR, \fB{column name/}\fR, \fB{column
-name//}\fR, \fB{column name/.}\fR, \fB{column name.}\fR, \fB{=column name perl
-expression =}\fR, ..
+Use regexp as header.
+.Sp
+For normal usage the matched header (typically the first line:
+\&\fB\-\-header '.*\en'\fR) will be split using \fB\-\-colsep\fR (which will
+default to '\et') and column names can be used as replacement
+variables: \fB{column name}\fR, \fB{column name/}\fR, \fB{column name//}\fR,
+\&\fB{column name/.}\fR, \fB{column name.}\fR, \fB{=column name perl expression
+=}\fR, ..
 .Sp
 For \fB\-\-pipe\fR the matched header will be prepended to each output.
 .Sp
 \&\fB\-\-header :\fR is an alias for \fB\-\-header '.*\en'\fR.
 .Sp
 If \fIregexp\fR is a number, it is a fixed number of lines.
+.Sp
+See also: \fB\-\-colsep\fR \fB\-\-pipe\fR \fB\-\-pipe\-part\fR
 .IP "\fB\-\-hostgroups\fR" 4
 .IX Item "--hostgroups"
 .PD 0
 .IP "\fB\-\-hgrp\fR" 4
 .IX Item "--hgrp"
 .PD
-Enable hostgroups on arguments. If an argument contains '@' the string
-after '@' will be removed and treated as a list of hostgroups on which
-this job is allowed to run. If there is no \fB\-\-sshlogin\fR with a
-corresponding group, the job will run on any hostgroup.
+Enable hostgroups on arguments.
+.Sp
+If an argument contains '@' the string after '@' will be removed and
+treated as a list of hostgroups on which this job is allowed to
+run. If there is no \fB\-\-sshlogin\fR with a corresponding group, the job
+will run on any hostgroup.
 .Sp
 Example:
 .Sp
@@ -1185,26 +1328,32 @@ Example:
 \&\fBthird\fR may be run on either \fBmyserver1\fR or \fBmyserver3\fR,
 but \fBarg_for_grp2\fR will only be run on \fBmyserver2\fR.
 .Sp
-See also: \fB\-\-sshlogin\fR, \fB\f(CB$PARALLEL_HOSTGROUPS\fB\fR, \fB\f(CB$PARALLEL_ARGHOSTGROUPS\fB\fR.
+See also: \fB\-\-sshlogin\fR \fB\f(CB$PARALLEL_HOSTGROUPS\fB\fR \fB\f(CB$PARALLEL_ARGHOSTGROUPS\fB\fR
 .IP "\fB\-I\fR \fIreplace-str\fR" 4
 .IX Item "-I replace-str"
 Use the replacement string \fIreplace-str\fR instead of \fB{}\fR.
-.IP "\fB\-\-replace\fR[=\fIreplace-str\fR]" 4
-.IX Item "--replace[=replace-str]"
+.Sp
+See also: \fB{}\fR
+.IP "\fB\-\-replace\fR [\fIreplace-str\fR]" 4
+.IX Item "--replace [replace-str]"
 .PD 0
-.IP "\fB\-i\fR[\fIreplace-str\fR]" 4
-.IX Item "-i[replace-str]"
+.IP "\fB\-i\fR [\fIreplace-str\fR]" 4
+.IX Item "-i [replace-str]"
 .PD
+This option is deprecated; use \fB\-I\fR instead.
+.Sp
 This option is a synonym for \fB\-I\fR\fIreplace-str\fR if \fIreplace-str\fR is
-specified, and for \fB\-I {}\fR otherwise.  This option is deprecated;
-use \fB\-I\fR instead.
+specified, and for \fB\-I {}\fR otherwise.
+.Sp
+See also: \fB{}\fR
 .IP "\fB\-\-joblog\fR \fIlogfile\fR" 4
 .IX Item "--joblog logfile"
-Logfile for executed jobs. Save a list of the executed jobs to
-\&\fIlogfile\fR in the following \s-1TAB\s0 separated format: sequence number,
-sshlogin, start time as seconds since epoch, run time in seconds,
-bytes in files transferred, bytes in files returned, exit status,
-signal, and command run.
+Logfile for executed jobs.
+.Sp
+Save a list of the executed jobs to \fIlogfile\fR in the following \s-1TAB\s0
+separated format: sequence number, sshlogin, start time as seconds
+since epoch, run time in seconds, bytes in files transferred, bytes in
+files returned, exit status, signal, and command run.
 .Sp
 For \fB\-\-pipe\fR bytes transferred and bytes returned are number of input
 and output of bytes.
@@ -1225,7 +1374,7 @@ If the host is long, you can use \fBcolumn \-t\fR to pretty print it:
 \&  cat joblog | column \-t
 .Ve
 .Sp
-See also: \fB\-\-resume\fR \fB\-\-resume\-failed\fR.
+See also: \fB\-\-resume\fR \fB\-\-resume\-failed\fR
 .IP "\fB\-\-jobs\fR \fIN\fR" 4
 .IX Item "--jobs N"
 .PD 0
@@ -1236,9 +1385,21 @@ See also: \fB\-\-resume\fR \fB\-\-resume\-failed\fR.
 .IP "\fB\-P\fR \fIN\fR" 4
 .IX Item "-P N"
 .PD
-Number of jobslots on each machine. Run up to N jobs in parallel.  0
-means as many as possible. Default is 100% which will run one job per
+Number of jobslots on each machine.
+.Sp
+Run up to N jobs in parallel.  0 means as many as possible (this can
+take a while to determine). Default is 100% which will run one job per
 \&\s-1CPU\s0 on each machine.
+.Sp
+Due to a bug \fB\-j 0\fR will also evaluate replacement strings twice up
+to the number of joblots:
+.Sp
+.Vb 4
+\&  # This will not count from 1 but from number\-of\-jobslots
+\&  seq 10000 | parallel \-j0   echo \*(Aq{= $_ = $foo++; =}\*(Aq | head
+\&  # This will count from 1
+\&  seq 10000 | parallel \-j100 echo \*(Aq{= $_ = $foo++; =}\*(Aq | head
+.Ve
 .Sp
 If \fB\-\-semaphore\fR is set, the default is 1 thus making a mutex.
 .IP "\fB\-\-jobs\fR \fI+N\fR" 4
@@ -1251,9 +1412,12 @@ If \fB\-\-semaphore\fR is set, the default is 1 thus making a mutex.
 .IP "\fB\-P\fR \fI+N\fR" 4
 .IX Item "-P +N"
 .PD
-Add N to the number of CPUs.  Run this many jobs in parallel.  See
-also \fB\-\-use\-cores\-instead\-of\-threads\fR and
-\&\fB\-\-use\-sockets\-instead\-of\-threads\fR.
+Add N to the number of \s-1CPU\s0 threads.
+.Sp
+Run this many jobs in parallel.
+.Sp
+See also: \fB\-\-number\-of\-threads\fR \fB\-\-number\-of\-cores\fR
+\&\fB\-\-number\-of\-sockets\fR
 .IP "\fB\-\-jobs\fR \fI\-N\fR" 4
 .IX Item "--jobs -N"
 .PD 0
@@ -1264,10 +1428,13 @@ also \fB\-\-use\-cores\-instead\-of\-threads\fR and
 .IP "\fB\-P\fR \fI\-N\fR" 4
 .IX Item "-P -N"
 .PD
-Subtract N from the number of CPUs.  Run this many jobs in parallel.
-If the evaluated number is less than 1 then 1 will be used.  See also
-\&\fB\-\-use\-cores\-instead\-of\-threads\fR and
-\&\fB\-\-use\-sockets\-instead\-of\-threads\fR.
+Subtract N from the number of \s-1CPU\s0 threads.
+.Sp
+Run this many jobs in parallel.  If the evaluated number is less than
+1 then 1 will be used.
+.Sp
+See also: \fB\-\-number\-of\-threads\fR \fB\-\-number\-of\-cores\fR
+\&\fB\-\-number\-of\-sockets\fR
 .IP "\fB\-\-jobs\fR \fIN\fR%" 4
 .IX Item "--jobs N%"
 .PD 0
@@ -1278,9 +1445,12 @@ If the evaluated number is less than 1 then 1 will be used.  See also
 .IP "\fB\-P\fR \fIN\fR%" 4
 .IX Item "-P N%"
 .PD
-Multiply N% with the number of CPUs.  Run this many jobs in
-parallel. See also \fB\-\-use\-cores\-instead\-of\-threads\fR and
-\&\fB\-\-use\-sockets\-instead\-of\-threads\fR.
+Multiply N% with the number of \s-1CPU\s0 threads.
+.Sp
+Run this many jobs in parallel.
+.Sp
+See also: \fB\-\-number\-of\-threads\fR \fB\-\-number\-of\-cores\fR
+\&\fB\-\-number\-of\-sockets\fR
 .IP "\fB\-\-jobs\fR \fIprocfile\fR" 4
 .IX Item "--jobs procfile"
 .PD 0
@@ -1291,23 +1461,26 @@ parallel. See also \fB\-\-use\-cores\-instead\-of\-threads\fR and
 .IP "\fB\-P\fR \fIprocfile\fR" 4
 .IX Item "-P procfile"
 .PD
-Read parameter from file. Use the content of \fIprocfile\fR as parameter
-for \fI\-j\fR. E.g. \fIprocfile\fR could contain the string 100% or +2 or
-10. If \fIprocfile\fR is changed when a job completes, \fIprocfile\fR is
-read again and the new number of jobs is computed. If the number is
-lower than before, running jobs will be allowed to finish but new jobs
-will not be started until the wanted number of jobs has been reached.
-This makes it possible to change the number of simultaneous running
-jobs while \s-1GNU\s0 \fBparallel\fR is running.
+Read parameter from file.
+.Sp
+Use the content of \fIprocfile\fR as parameter for
+\&\fI\-j\fR. E.g. \fIprocfile\fR could contain the string 100% or +2 or 10. If
+\&\fIprocfile\fR is changed when a job completes, \fIprocfile\fR is read again
+and the new number of jobs is computed. If the number is lower than
+before, running jobs will be allowed to finish but new jobs will not
+be started until the wanted number of jobs has been reached.  This
+makes it possible to change the number of simultaneous running jobs
+while \s-1GNU\s0 \fBparallel\fR is running.
 .IP "\fB\-\-keep\-order\fR" 4
 .IX Item "--keep-order"
 .PD 0
 .IP "\fB\-k\fR" 4
 .IX Item "-k"
 .PD
-Keep sequence of output same as the order of input. Normally the
-output of a job will be printed as soon as the job completes. Try this
-to see the difference:
+Keep sequence of output same as the order of input.
+.Sp
+Normally the output of a job will be printed as soon as the job
+completes. Try this to see the difference:
 .Sp
 .Vb 2
 \&  parallel \-j4 sleep {}\e; echo {} ::: 2 1 4 3
@@ -1317,11 +1490,20 @@ to see the difference:
 If used with \fB\-\-onall\fR or \fB\-\-nonall\fR the output will grouped by
 sshlogin in sorted order.
 .Sp
-If used with \fB\-\-pipe \-\-roundrobin\fR and the same input, the jobslots
-will get the same blocks in the same order in every run.
+\&\fB\-\-keep\-order\fR cannot keep the output order when used with \fB\-\-pipe
+\&\-\-round\-robin\fR. Here it instead means, that the jobslots will get the
+same blocks as input in the same order in every run if the input is
+kept the same. Run each of these twice and compare:
+.Sp
+.Vb 2
+\&  seq 10000000 | parallel \-\-pipe \-\-round\-robin \*(Aqsleep 0.$RANDOM; wc\*(Aq
+\&  seq 10000000 | parallel \-\-pipe \-k \-\-round\-robin \*(Aqsleep 0.$RANDOM; wc\*(Aq
+.Ve
 .Sp
 \&\fB\-k\fR only affects the order in which the output is printed \- not the
 order in which jobs are run.
+.Sp
+See also: \fB\-\-group\fR \fB\-\-line\-buffer\fR
 .IP "\fB\-L\fR \fIrecsize\fR" 4
 .IX Item "-L recsize"
 When used with \fB\-\-pipe\fR: Read records of \fIrecsize\fR.
@@ -1333,12 +1515,14 @@ continued on the next input line.
 \&\fB\-L 0\fR means read one line, but insert 0 arguments on the command
 line.
 .Sp
-\&\fIrecsize\fR can be postfixed with K, M, G, T, P, k, m, g, t, or p (see
-\&\s-1UNIT PREFIX\s0).
+\&\fIrecsize\fR can be postfixed with K, M, G, T, P, k, m, g, t, or p.
 .Sp
 Implies \fB\-X\fR unless \fB\-m\fR, \fB\-\-xargs\fR, or \fB\-\-pipe\fR is set.
-.IP "\fB\-\-max\-lines\fR[=\fIrecsize\fR]" 4
-.IX Item "--max-lines[=recsize]"
+.Sp
+See also: \s-1UNIT PREFIX\s0 \fB\-N\fR \fB\-\-max\-lines\fR \fB\-\-block\fR \fB\-X\fR \fB\-m\fR
+\&\fB\-\-xargs\fR \fB\-\-pipe\fR
+.IP "\fB\-\-max\-lines\fR [\fIrecsize\fR]" 4
+.IX Item "--max-lines [recsize]"
 .PD 0
 .IP "\fB\-l\fR[\fIrecsize\fR]" 4
 .IX Item "-l[recsize]"
@@ -1353,12 +1537,16 @@ standard specifies \fB\-L\fR instead.
 \&\fB\-l 0\fR is an alias for \fB\-l 1\fR.
 .Sp
 Implies \fB\-X\fR unless \fB\-m\fR, \fB\-\-xargs\fR, or \fB\-\-pipe\fR is set.
+.Sp
+See also: \s-1UNIT PREFIX\s0 \fB\-N\fR \fB\-\-block\fR \fB\-X\fR \fB\-m\fR
+\&\fB\-\-xargs\fR \fB\-\-pipe\fR
 .ie n .IP "\fB\-\-limit\fR ""\fIcommand\fR \fIargs\fR""" 4
 .el .IP "\fB\-\-limit\fR ``\fIcommand\fR \fIargs\fR''" 4
 .IX Item "--limit ""command args"""
-Dynamic job limit. Before starting a new job run \fIcommand\fR with
-\&\fIargs\fR. The exit value of \fIcommand\fR determines what \s-1GNU\s0 \fBparallel\fR
-will do:
+Dynamic job limit.
+.Sp
+Before starting a new job run \fIcommand\fR with \fIargs\fR. The exit value
+of \fIcommand\fR determines what \s-1GNU\s0 \fBparallel\fR will do:
 .RS 4
 .IP "0" 4
 Below limit. Start another job.
@@ -1388,6 +1576,8 @@ Similar to \fB\-\-load\fR.
 Similar to \fB\-\-memfree\fR.
 .RE
 .RS 4
+.Sp
+See also: \fB\-\-memfree\fR \fB\-\-load\fR
 .RE
 .IP "\fB\-\-line\-buffer\fR" 4
 .IX Item "--line-buffer"
@@ -1395,11 +1585,13 @@ Similar to \fB\-\-memfree\fR.
 .IP "\fB\-\-lb\fR" 4
 .IX Item "--lb"
 .PD
-Buffer output on line basis. \fB\-\-group\fR will keep the output together
-for a whole job. \fB\-\-ungroup\fR allows output to mixup with half a line
-coming from one job and half a line coming from another
-job. \fB\-\-line\-buffer\fR fits between these two: \s-1GNU\s0 \fBparallel\fR will
-print a full line, but will allow for mixing lines of different jobs.
+Buffer output on line basis.
+.Sp
+\&\fB\-\-group\fR will keep the output together for a whole job. \fB\-\-ungroup\fR
+allows output to mixup with half a line coming from one job and half a
+line coming from another job. \fB\-\-line\-buffer\fR fits between these two:
+\&\s-1GNU\s0 \fBparallel\fR will print a full line, but will allow for mixing
+lines of different jobs.
 .Sp
 \&\fB\-\-line\-buffer\fR takes more \s-1CPU\s0 power than both \fB\-\-group\fR and
 \&\fB\-\-ungroup\fR, but can be much faster than \fB\-\-group\fR if the \s-1CPU\s0 is not
@@ -1422,19 +1614,21 @@ mix. Compare:
 \&  parallel \-j0 \-k \-\-lb \*(Aqecho {};sleep {};echo {}\*(Aq ::: 1 3 2 4
 .Ve
 .Sp
-See also: \fB\-\-group\fR \fB\-\-ungroup\fR
-.IP "\fB\-\-xapply\fR" 4
-.IX Item "--xapply"
-.PD 0
+See also: \fB\-\-group\fR \fB\-\-ungroup\fR \fB\-\-keep\-order\fR \fB\-\-tag\fR
 .IP "\fB\-\-link\fR" 4
 .IX Item "--link"
+.PD 0
+.IP "\fB\-\-xapply\fR" 4
+.IX Item "--xapply"
 .PD
-Link input sources. Read multiple input sources like \fBxapply\fR. If
-multiple input sources are given, one argument will be read from each
-of the input sources. The arguments can be accessed in the command as
-\&\fB{1}\fR .. \fB{\fR\fIn\fR\fB}\fR, so \fB{1}\fR will be a line from the first input
-source, and \fB{6}\fR will refer to the line with the same line number
-from the 6th input source.
+Link input sources.
+.Sp
+Read multiple input sources like the command \fBxapply\fR. If multiple
+input sources are given, one argument will be read from each of the
+input sources. The arguments can be accessed in the command as \fB{1}\fR
+\&.. \fB{\fR\fIn\fR\fB}\fR, so \fB{1}\fR will be a line from the first input source,
+and \fB{6}\fR will refer to the line with the same line number from the
+6th input source.
 .Sp
 Compare these two:
 .Sp
@@ -1450,27 +1644,36 @@ Arguments will be recycled if one input source has more arguments than the other
 \&    ::: 1 2 ::: I II III ::: a b c d e f g
 .Ve
 .Sp
-See also \fB\-\-header\fR, \fB:::+\fR, \fB::::+\fR.
+See also: \fB\-\-header\fR \fB:::+\fR \fB::::+\fR
 .IP "\fB\-\-load\fR \fImax-load\fR" 4
 .IX Item "--load max-load"
+Only start jobs if load is less than max-load.
+.Sp
 Do not start new jobs on a given computer unless the number of running
 processes on the computer is less than \fImax-load\fR. \fImax-load\fR uses
 the same syntax as \fB\-\-jobs\fR, so \fI100%\fR for one per \s-1CPU\s0 is a valid
 setting. Only difference is 0 which is interpreted as 0.01.
+.Sp
+See also: \fB\-\-limit\fR \fB\-\-jobs\fR
 .IP "\fB\-\-controlmaster\fR" 4
 .IX Item "--controlmaster"
 .PD 0
 .IP "\fB\-M\fR" 4
 .IX Item "-M"
 .PD
-Use ssh's ControlMaster to make ssh connections faster. Useful if jobs
-run remote and are very fast to run. This is disabled for sshlogins
-that specify their own ssh command.
+Use ssh's ControlMaster to make ssh connections faster.
+.Sp
+Useful if jobs run remote and are very fast to run. This is disabled
+for sshlogins that specify their own ssh command.
+.Sp
+See also: \fB\-\-ssh\fR \fB\-\-sshlogin\fR
 .IP "\fB\-m\fR" 4
 .IX Item "-m"
-Multiple arguments. Insert as many arguments as the command line
-length permits. If multiple jobs are being run in parallel: distribute
-the arguments evenly among the jobs. Use \fB\-j1\fR or \fB\-\-xargs\fR to avoid this.
+Multiple arguments.
+.Sp
+Insert as many arguments as the command line length permits. If
+multiple jobs are being run in parallel: distribute the arguments
+evenly among the jobs. Use \fB\-j1\fR or \fB\-\-xargs\fR to avoid this.
 .Sp
 If \fB{}\fR is not used the arguments will be appended to the
 line.  If \fB{}\fR is used multiple times each \fB{}\fR will be replaced
@@ -1478,32 +1681,32 @@ with all the arguments.
 .Sp
 Support for \fB\-m\fR with \fB\-\-sshlogin\fR is limited and may fail.
 .Sp
-See also \fB\-X\fR for context replace. If in doubt use \fB\-X\fR as that will
-most likely do what is needed.
+If in doubt use \fB\-X\fR as that will most likely do what is needed.
+.Sp
+See also: \fB\-X\fR \fB\-\-xargs\fR
 .IP "\fB\-\-memfree\fR \fIsize\fR" 4
 .IX Item "--memfree size"
-Minimum memory free when starting another job. The \fIsize\fR can be
-postfixed with K, M, G, T, P, k, m, g, t, or p (see \s-1UNIT PREFIX\s0).
+Minimum memory free when starting another job.
+.Sp
+The \fIsize\fR can be postfixed with K, M, G, T, P, k, m, g, t, or p.
 .Sp
 If the jobs take up very different amount of \s-1RAM, GNU\s0 \fBparallel\fR will
 only start as many as there is memory for. If less than \fIsize\fR bytes
 are free, no more jobs will be started. If less than 50% \fIsize\fR bytes
-are free, the youngest job will be killed, and put back on the queue
-to be run later.
+are free, the youngest job will be killed (as per \fB\-\-term\-seq\fR), and
+put back on the queue to be run later.
 .Sp
 \&\fB\-\-retries\fR must be set to determine how many times \s-1GNU\s0 \fBparallel\fR
 should retry a given job.
 .Sp
-See also: \fB\-\-memsuspend\fR
+See also: \s-1UNIT PREFIX\s0 \fB\-\-term\-seq\fR \fB\-\-retries\fR \fB\-\-memsuspend\fR
 .IP "\fB\-\-memsuspend\fR \fIsize\fR" 4
 .IX Item "--memsuspend size"
-Suspend jobs when there is less than 2 * \fIsize\fR memory free. The
-\&\fIsize\fR can be postfixed with K, M, G, T, P, k, m, g, t, or p (see
-\&\s-1UNIT PREFIX\s0).
+Suspend jobs when there is less memory available.
 .Sp
-If the available memory falls below 2 * \fIsize\fR, \s-1GNU\s0 \fBparallel\fR
-will suspend some of the running jobs. If the available memory falls
-below \fIsize\fR, only one job will be running.
+If the available memory falls below 2 * \fIsize\fR, \s-1GNU\s0 \fBparallel\fR will
+suspend some of the running jobs. If the available memory falls below
+\&\fIsize\fR, only one job will be running.
 .Sp
 If a single job takes up at most \fIsize\fR \s-1RAM,\s0 all jobs will complete
 without running out of memory. If you have swap available, you can
@@ -1516,25 +1719,37 @@ oldest job completes.
 \&\fB\-\-memsuspend\fR only works on local jobs because there is no obvious
 way to suspend remote jobs.
 .Sp
-See also: \fB\-\-memfree\fR
+\&\fIsize\fR can be postfixed with K, M, G, T, P, k, m, g, t, or p.
+.Sp
+See also: \s-1UNIT PREFIX\s0 \fB\-\-memfree\fR
 .IP "\fB\-\-minversion\fR \fIversion\fR" 4
 .IX Item "--minversion version"
-Print the version \s-1GNU\s0 \fBparallel\fR and exit.  If the current version of
-\&\s-1GNU\s0 \fBparallel\fR is less than \fIversion\fR the exit code is
-255. Otherwise it is 0.
+Print the version \s-1GNU\s0 \fBparallel\fR and exit.
+.Sp
+If the current version of \s-1GNU\s0 \fBparallel\fR is less than \fIversion\fR the
+exit code is 255. Otherwise it is 0.
 .Sp
 This is useful for scripts that depend on features only available from
-a certain version of \s-1GNU\s0 \fBparallel\fR.
-.IP "\fB\-\-max\-args\fR=\fImax-args\fR" 4
-.IX Item "--max-args=max-args"
+a certain version of \s-1GNU\s0 \fBparallel\fR:
+.Sp
+.Vb 3
+\&   parallel \-\-minversion 20170422 &&
+\&     echo halt done=50% supported from version 20170422 &&
+\&     parallel \-\-halt now,done=50% echo ::: {1..100}
+.Ve
+.Sp
+See also: \fB\-\-version\fR
+.IP "\fB\-\-max\-args\fR \fImax-args\fR" 4
+.IX Item "--max-args max-args"
 .PD 0
 .IP "\fB\-n\fR \fImax-args\fR" 4
 .IX Item "-n max-args"
 .PD
-Use at most \fImax-args\fR arguments per command line.  Fewer than
-\&\fImax-args\fR arguments will be used if the size (see the \fB\-s\fR option)
-is exceeded, unless the \fB\-x\fR option is given, in which case
-\&\s-1GNU\s0 \fBparallel\fR will exit.
+Use at most \fImax-args\fR arguments per command line.
+.Sp
+Fewer than \fImax-args\fR arguments will be used if the size (see the
+\&\fB\-s\fR option) is exceeded, unless the \fB\-x\fR option is given, in which
+case \s-1GNU\s0 \fBparallel\fR will exit.
 .Sp
 \&\fB\-n 0\fR means read one argument, but insert 0 arguments on the command
 line.
@@ -1543,16 +1758,19 @@ line.
 \&\s-1UNIT PREFIX\s0).
 .Sp
 Implies \fB\-X\fR unless \fB\-m\fR is set.
-.IP "\fB\-\-max\-replace\-args\fR=\fImax-args\fR" 4
-.IX Item "--max-replace-args=max-args"
+.Sp
+See also: \fB\-X\fR \fB\-m\fR \fB\-\-xargs\fR \fB\-\-max\-replace\-args\fR
+.IP "\fB\-\-max\-replace\-args\fR \fImax-args\fR" 4
+.IX Item "--max-replace-args max-args"
 .PD 0
 .IP "\fB\-N\fR \fImax-args\fR" 4
 .IX Item "-N max-args"
 .PD
-Use at most \fImax-args\fR arguments per command line. Like \fB\-n\fR but
-also makes replacement strings \fB{1}\fR .. \fB{\fR\fImax-args\fR\fB}\fR that
-represents argument 1 .. \fImax-args\fR. If too few args the \fB{\fR\fIn\fR\fB}\fR will
-be empty.
+Use at most \fImax-args\fR arguments per command line.
+.Sp
+Like \fB\-n\fR but also makes replacement strings \fB{1}\fR
+\&.. \fB{\fR\fImax-args\fR\fB}\fR that represents argument 1 .. \fImax-args\fR. If
+too few args the \fB{\fR\fIn\fR\fB}\fR will be empty.
 .Sp
 \&\fB\-N 0\fR means read one argument, but insert 0 arguments on the command
 line.
@@ -1565,32 +1783,40 @@ This will set the owner of the homedir to the user:
 .Sp
 Implies \fB\-X\fR unless \fB\-m\fR or \fB\-\-pipe\fR is set.
 .Sp
-\&\fImax-args\fR can be postfixed with K, M, G, T, P, k, m, g, t, or p (see
-\&\s-1UNIT PREFIX\s0).
+\&\fImax-args\fR can be postfixed with K, M, G, T, P, k, m, g, t, or p.
 .Sp
 When used with \fB\-\-pipe\fR \fB\-N\fR is the number of records to read. This
 is somewhat slower than \fB\-\-block\fR.
+.Sp
+See also: \s-1UNIT PREFIX\s0 \fB\-\-pipe\fR \fB\-\-block\fR \fB\-m\fR \fB\-X\fR \fB\-\-max\-args\fR
 .IP "\fB\-\-nonall\fR" 4
 .IX Item "--nonall"
-\&\fB\-\-onall\fR with no arguments. Run the command on all computers given
-with \fB\-\-sshlogin\fR but take no arguments. \s-1GNU\s0 \fBparallel\fR will log
-into \fB\-\-jobs\fR number of computers in parallel and run the job on the
-computer. \fB\-j\fR adjusts how many computers to log into in parallel.
+\&\fB\-\-onall\fR with no arguments.
+.Sp
+Run the command on all computers given with \fB\-\-sshlogin\fR but take no
+arguments. \s-1GNU\s0 \fBparallel\fR will log into \fB\-\-jobs\fR number of computers
+in parallel and run the job on the computer. \fB\-j\fR adjusts how many
+computers to log into in parallel.
 .Sp
 This is useful for running the same command (e.g. uptime) on a list of
 servers.
+.Sp
+See also: \fB\-\-onall\fR \fB\-\-sshlogin\fR
 .IP "\fB\-\-onall\fR" 4
 .IX Item "--onall"
-Run all the jobs on all computers given with \fB\-\-sshlogin\fR. \s-1GNU\s0
-\&\fBparallel\fR will log into \fB\-\-jobs\fR number of computers in parallel
-and run one job at a time on the computer. The order of the jobs will
-not be changed, but some computers may finish before others.
+Run all the jobs on all computers given with \fB\-\-sshlogin\fR.
+.Sp
+\&\s-1GNU\s0 \fBparallel\fR will log into \fB\-\-jobs\fR number of computers in
+parallel and run one job at a time on the computer. The order of the
+jobs will not be changed, but some computers may finish before others.
 .Sp
 When using \fB\-\-group\fR the output will be grouped by each server, so
 all the output from one server will be grouped together.
 .Sp
 \&\fB\-\-joblog\fR will contain an entry for each job on each server, so
 there will be several job sequence 1.
+.Sp
+See also: \fB\-\-nonall\fR \fB\-\-sshlogin\fR
 .IP "\fB\-\-output\-as\-files\fR" 4
 .IX Item "--output-as-files"
 .PD 0
@@ -1599,6 +1825,8 @@ there will be several job sequence 1.
 .IP "\fB\-\-files\fR" 4
 .IX Item "--files"
 .PD
+Save output to files.
+.Sp
 Instead of printing the output to stdout (standard output) the output
 of each job is saved in a file and the filename is then printed.
 .Sp
@@ -1609,43 +1837,46 @@ See also: \fB\-\-results\fR
 .IP "\fB\-\-spreadstdin\fR" 4
 .IX Item "--spreadstdin"
 .PD
-Spread input to jobs on stdin (standard input). Read a block of data
-from stdin (standard input) and give one block of data as input to one
-job.
+Spread input to jobs on stdin (standard input).
 .Sp
-The block size is determined by \fB\-\-block\fR. The strings \fB\-\-recstart\fR
-and \fB\-\-recend\fR tell \s-1GNU\s0 \fBparallel\fR how a record starts and/or
-ends. The block read will have the final partial record removed before
-the block is passed on to the job. The partial record will be
+Read a block of data from stdin (standard input) and give one block of
+data as input to one job.
+.Sp
+The block size is determined by \fB\-\-block\fR (default: 1M). The strings
+\&\fB\-\-recstart\fR and \fB\-\-recend\fR tell \s-1GNU\s0 \fBparallel\fR how a record starts
+and/or ends. The block read will have the final partial record removed
+before the block is passed on to the job. The partial record will be
 prepended to next block.
 .Sp
-If \fB\-\-recstart\fR is given this will be used to split at record start.
-.Sp
-If \fB\-\-recend\fR is given this will be used to split at record end.
-.Sp
-If both \fB\-\-recstart\fR and \fB\-\-recend\fR are given both will have to
-match to find a split position.
-.Sp
-If neither \fB\-\-recstart\fR nor \fB\-\-recend\fR are given \fB\-\-recend\fR
-defaults to '\en'. To have no record separator use \fB\-\-recend ""\fR.
-.Sp
-\&\fB\-\-files\fR is often used with \fB\-\-pipe\fR.
+You can limit the number of records to be passed with \fB\-N\fR, and set
+the record size with \fB\-L\fR.
 .Sp
 \&\fB\-\-pipe\fR maxes out at around 1 GB/s input, and 100 MB/s output. If
-performance is important use \fB\-\-pipepart\fR.
+performance is important use \fB\-\-pipe\-part\fR.
 .Sp
-See also: \fB\-\-recstart\fR, \fB\-\-recend\fR, \fB\-\-fifo\fR, \fB\-\-cat\fR,
-\&\fB\-\-pipepart\fR, \fB\-\-files\fR.
-.IP "\fB\-\-pipepart\fR" 4
-.IX Item "--pipepart"
-Pipe parts of a physical file. \fB\-\-pipepart\fR works similar to
-\&\fB\-\-pipe\fR, but is much faster.
+\&\fB\-\-fifo\fR and \fB\-\-cat\fR will give stdin (standard input) on a fifo or a
+temporary file.
 .Sp
-\&\fB\-\-pipepart\fR has a few limitations:
+If data is arriving slowly, you can use \fB\-\-block\-timeout\fR to finish
+reading a block early.
+.Sp
+The data can be spread between the jobs in specific ways using
+\&\fB\-\-round\-robin\fR, \fB\-\-bin\fR, \fB\-\-shard\fR, \fB\-\-group\-by\fR. See the
+section: \s-1SPREADING BLOCKS OF DATA\s0
+.Sp
+See also: \fB\-\-block\fR \fB\-\-block\-timeout\fR \fB\-\-recstart\fR \fB\-\-recend\fR
+\&\fB\-\-fifo\fR \fB\-\-cat\fR \fB\-\-pipe\-part\fR \fB\-N\fR \fB\-L\fR \fB\-\-round\-robin\fR
+.IP "\fB\-\-pipe\-part\fR" 4
+.IX Item "--pipe-part"
+Pipe parts of a physical file.
+.Sp
+\&\fB\-\-pipe\-part\fR works similar to \fB\-\-pipe\fR, but is much faster.
+.Sp
+\&\fB\-\-pipe\-part\fR has a few limitations:
 .RS 4
 .IP "\(bu" 3
 The file must be a normal file or a block device (technically it must
-be seekable) and must be given using \fB\-a\fR or \fB::::\fR. The file cannot
+be seekable) and must be given using \fB\-\-arg\-file\fR or \fB::::\fR. The file cannot
 be a pipe, a fifo, or a stream as they are not seekable.
 .Sp
 If using a block device with lot of \s-1NUL\s0 bytes, remember to set
@@ -1656,14 +1887,22 @@ work. Instead use \fB\-\-recstart\fR and \fB\-\-recend\fR to determine
 where records end.
 .RE
 .RS 4
+.Sp
+See also: \fB\-\-pipe\fR \fB\-\-recstart\fR \fB\-\-recend\fR \fB\-\-arg\-file\fR \fB::::\fR
 .RE
 .IP "\fB\-\-plain\fR" 4
 .IX Item "--plain"
+Ignore \fB\-\-profile\fR, \f(CW$PARALLEL\fR, and ~/.parallel/config.
+.Sp
 Ignore any \fB\-\-profile\fR, \f(CW$PARALLEL\fR, and ~/.parallel/config to get full
 control on the command line (used by \s-1GNU\s0 \fBparallel\fR internally when
 called with \fB\-\-sshlogin\fR).
+.Sp
+See also: \fB\-\-profile\fR
 .IP "\fB\-\-plus\fR" 4
 .IX Item "--plus"
+Add more replacement strings.
+.Sp
 Activate additional replacement strings: {+/} {+.} {+..} {+...} {..}
 {...} {/..} {/...} {##}. The idea being that '{+foo}' matches the opposite of
 \&'{foo}' and {} = {+/}/{/} = {.}.{+.} = {+/}/{/.}.{+.} = {..}.{+..} =
@@ -1681,6 +1920,8 @@ choose k. k is the number of input sources and n is the number of
 arguments in an input source.  The content of the input sources must
 be the same and the arguments must be unique.
 .Sp
+\&\fB{uniq}\fR skips jobs where values from two input sources are the same.
+.Sp
 Shorthands for variables:
 .Sp
 .Vb 5
@@ -1697,7 +1938,7 @@ inspired by bash's parameter expansion:
 .Vb 12
 \&  {:\-str}       str if the value is empty
 \&  {:num}        remove the first num characters
-\&  {:num1:num2}  characters from num1 to num2
+\&  {:pos:len}    substring from position pos length len
 \&  {#regexp}     remove prefix regexp (non\-greedy)
 \&  {##regexp}    remove prefix regexp (greedy)
 \&  {%regexp}     remove postfix regexp (non\-greedy)
@@ -1708,26 +1949,33 @@ inspired by bash's parameter expansion:
 \&  {,str}        lowercase str if found at the start
 \&  {,,str}       lowercase str
 .Ve
+.Sp
+See also: \fB\-\-rpl\fR \fB{}\fR
 .IP "\fB\-\-progress\fR" 4
 .IX Item "--progress"
-Show progress of computations. List the computers involved in the task
-with number of CPUs detected and the max number of jobs to run. After
-that show progress for each computer: number of running jobs, number
-of completed jobs, and percentage of all jobs done by this
-computer. The percentage will only be available after all jobs have
-been scheduled as \s-1GNU\s0 \fBparallel\fR only read the next job when ready to
-schedule it \- this is to avoid wasting time and memory by reading
-everything at startup.
+Show progress of computations.
+.Sp
+List the computers involved in the task with number of CPUs detected
+and the max number of jobs to run. After that show progress for each
+computer: number of running jobs, number of completed jobs, and
+percentage of all jobs done by this computer. The percentage will only
+be available after all jobs have been scheduled as \s-1GNU\s0 \fBparallel\fR
+only read the next job when ready to schedule it \- this is to avoid
+wasting time and memory by reading everything at startup.
 .Sp
 By sending \s-1GNU\s0 \fBparallel\fR \s-1SIGUSR2\s0 you can toggle turning on/off
 \&\fB\-\-progress\fR on a running \s-1GNU\s0 \fBparallel\fR process.
 .Sp
-See also: \fB\-\-eta\fR and \fB\-\-bar\fR.
+See also: \fB\-\-eta\fR \fB\-\-bar\fR
 .IP "\fB\-\-max\-line\-length\-allowed\fR" 4
 .IX Item "--max-line-length-allowed"
+Print maximal command line length.
+.Sp
 Print the maximal number of characters allowed on the command line and
 exit (used by \s-1GNU\s0 \fBparallel\fR itself to determine the line length
 on remote computers).
+.Sp
+See also: \fB\-\-show\-limits\fR
 .IP "\fB\-\-number\-of\-cpus\fR (obsolete)" 4
 .IX Item "--number-of-cpus (obsolete)"
 Print the number of physical \s-1CPU\s0 cores and exit.
@@ -1735,16 +1983,24 @@ Print the number of physical \s-1CPU\s0 cores and exit.
 .IX Item "--number-of-cores"
 Print the number of physical \s-1CPU\s0 cores and exit (used by \s-1GNU\s0 \fBparallel\fR itself
 to determine the number of physical \s-1CPU\s0 cores on remote computers).
+.Sp
+See also: \fB\-\-number\-of\-sockets\fR \fB\-\-number\-of\-threads\fR
+\&\fB\-\-use\-cores\-instead\-of\-threads\fR \fB\-\-jobs\fR
 .IP "\fB\-\-number\-of\-sockets\fR" 4
 .IX Item "--number-of-sockets"
 Print the number of filled \s-1CPU\s0 sockets and exit (used by \s-1GNU\s0
 \&\fBparallel\fR itself to determine the number of filled \s-1CPU\s0 sockets on
 remote computers).
+.Sp
+See also: \fB\-\-number\-of\-cores\fR \fB\-\-number\-of\-threads\fR
+\&\fB\-\-use\-sockets\-instead\-of\-threads\fR \fB\-\-jobs\fR
 .IP "\fB\-\-number\-of\-threads\fR" 4
 .IX Item "--number-of-threads"
 Print the number of hyperthreaded \s-1CPU\s0 cores and exit (used by \s-1GNU\s0
 \&\fBparallel\fR itself to determine the number of hyperthreaded \s-1CPU\s0 cores
 on remote computers).
+.Sp
+See also: \fB\-\-number\-of\-cores\fR \fB\-\-number\-of\-sockets\fR \fB\-\-jobs\fR
 .IP "\fB\-\-no\-keep\-order\fR" 4
 .IX Item "--no-keep-order"
 Overrides an earlier \fB\-\-keep\-order\fR (e.g. if set in
@@ -1767,12 +2023,16 @@ be run at level 10, but remote jobs run at nice level 5).
 .IP "\fB\-p\fR" 4
 .IX Item "-p"
 .PD
+Ask user before running a job.
+.Sp
 Prompt the user about whether to run each command line and read a line
 from the terminal.  Only run the command line if the response starts
 with 'y' or 'Y'.  Implies \fB\-t\fR.
 .IP "\fB\-\-parens\fR \fIparensstring\fR" 4
 .IX Item "--parens parensstring"
-Define start and end parenthesis for \fB{= perl expression =}\fR. The
+Use \fIparensstring\fR instead of \fB{==}\fR.
+.Sp
+Define start and end parenthesis for \fB{=perl expression=}\fR. The
 left and the right parenthesis can be multiple characters and are
 assumed to be the same length. The default is \fB{==}\fR giving \fB{=\fR as
 the start parenthesis and \fB=}\fR as the end parenthesis.
@@ -1784,48 +2044,61 @@ Another useful setting is \fB,,,,\fR which would make both parenthesis
 \&  parallel \-\-parens ,,,, echo foo is ,,s/I/O/g,, ::: FII
 .Ve
 .Sp
-See also: \fB\-\-rpl\fR \fB{= perl expression =}\fR
+See also: \fB\-\-rpl\fR \fB{=\fR\fIperl expression\fR\fB=}\fR
 .IP "\fB\-\-profile\fR \fIprofilename\fR" 4
 .IX Item "--profile profilename"
 .PD 0
 .IP "\fB\-J\fR \fIprofilename\fR" 4
 .IX Item "-J profilename"
 .PD
-Use profile \fIprofilename\fR for options. This is useful if you want to
-have multiple profiles. You could have one profile for running jobs in
-parallel on the local computer and a different profile for running jobs
-on remote computers. See the section \s-1PROFILE FILES\s0 for examples.
+Use profile \fIprofilename\fR for options.
+.Sp
+This is useful if you want to have multiple profiles. You could have
+one profile for running jobs in parallel on the local computer and a
+different profile for running jobs on remote computers.
 .Sp
 \&\fIprofilename\fR corresponds to the file ~/.parallel/\fIprofilename\fR.
 .Sp
 You can give multiple profiles by repeating \fB\-\-profile\fR. If parts of
 the profiles conflict, the later ones will be used.
 .Sp
-Default: config
+Default: ~/.parallel/config
+.Sp
+See also: \s-1PROFILE FILES\s0
 .IP "\fB\-\-quote\fR" 4
 .IX Item "--quote"
 .PD 0
 .IP "\fB\-q\fR" 4
 .IX Item "-q"
 .PD
-Quote \fIcommand\fR. If your command contains special characters that
-should not be interpreted by the shell (e.g. ; \e | *), use \fB\-\-quote\fR to
-escape these. The command must be a simple command (see \fBman
-bash\fR) without redirections and without variable assignments.
+Quote \fIcommand\fR.
 .Sp
-See the section \s-1QUOTING.\s0 Most people will not need this.  Quoting is
-disabled by default.
+If your command contains special characters that should not be
+interpreted by the shell (e.g. ; \e | *), use \fB\-\-quote\fR to escape
+these. The command must be a simple command (see \fBman bash\fR) without
+redirections and without variable assignments.
+.Sp
+Most people will not need this. Quoting is disabled by default.
+.Sp
+See also: \s-1QUOTING\s0 \fIcommand\fR \fB\-\-shell\-quote\fR \fB\fBuq()\fB\fR \fBQ()\fR
 .IP "\fB\-\-no\-run\-if\-empty\fR" 4
 .IX Item "--no-run-if-empty"
 .PD 0
 .IP "\fB\-r\fR" 4
 .IX Item "-r"
 .PD
-If the stdin (standard input) only contains whitespace, do not run the command.
+Do not run empty input.
+.Sp
+If the stdin (standard input) only contains whitespace, do not run the
+command.
 .Sp
 If used with \fB\-\-pipe\fR this is slow.
+.Sp
+See also: \fIcommand\fR \fB\-\-pipe\fR \fB\-\-interactive\fR
 .IP "\fB\-\-noswap\fR" 4
 .IX Item "--noswap"
+Do not start job is computer is swapping.
+.Sp
 Do not start new jobs on a given computer if there is both swap-in and
 swap-out activity.
 .Sp
@@ -1838,18 +2111,24 @@ problem, but both swapping in and out usually indicates a problem.
 .Sp
 \&\fB\-\-memfree\fR and \fB\-\-memsuspend\fR may give better results, so try using
 those first.
+.Sp
+See also: \fB\-\-memfree\fR \fB\-\-memsuspend\fR
 .IP "\fB\-\-record\-env\fR" 4
 .IX Item "--record-env"
+Record environment.
+.Sp
 Record current environment variables in ~/.parallel/ignored_vars. This
 is useful before using \fB\-\-env _\fR.
 .Sp
-See also: \fB\-\-env\fR, \fB\-\-session\fR.
+See also: \fB\-\-env\fR \fB\-\-session\fR \fBenv_parallel\fR
 .IP "\fB\-\-recstart\fR \fIstartstring\fR" 4
 .IX Item "--recstart startstring"
 .PD 0
 .IP "\fB\-\-recend\fR \fIendstring\fR" 4
 .IX Item "--recend endstring"
 .PD
+Split record between \fIendstring\fR and \fIstartstring\fR.
+.Sp
 If \fB\-\-recstart\fR is given \fIstartstring\fR will be used to split at record start.
 .Sp
 If \fB\-\-recend\fR is given \fIendstring\fR will be used to split at record end.
@@ -1859,17 +2138,26 @@ If both \fB\-\-recstart\fR and \fB\-\-recend\fR are given the combined string
 position. This is useful if either \fIstartstring\fR or \fIendstring\fR
 match in the middle of a record.
 .Sp
-If neither \fB\-\-recstart\fR nor \fB\-\-recend\fR are given then \fB\-\-recend\fR
-defaults to '\en'. To have no record separator use \fB\-\-recend ""\fR.
+If neither \fB\-\-recstart\fR nor \fB\-\-recend\fR are given, then \fB\-\-recend\fR
+defaults to '\en'. To have no record separator (e.g. for binary files)
+use \fB\-\-recend ""\fR.
 .Sp
 \&\fB\-\-recstart\fR and \fB\-\-recend\fR are used with \fB\-\-pipe\fR.
 .Sp
 Use \fB\-\-regexp\fR to interpret \fB\-\-recstart\fR and \fB\-\-recend\fR as regular
 expressions. This is slow, however.
+.Sp
+Use \fB\-\-remove\-rec\-sep\fR to remove \fB\-\-recstart\fR and \fB\-\-recend\fR before
+passing the block to the job.
+.Sp
+See also: \fB\-\-pipe\fR \fB\-\-regexp\fR \fB\-\-remove\-rec\-sep\fR
 .IP "\fB\-\-regexp\fR" 4
 .IX Item "--regexp"
 Use \fB\-\-regexp\fR to interpret \fB\-\-recstart\fR and \fB\-\-recend\fR as regular
 expressions. This is slow, however.
+.Sp
+See also: \fB\-\-pipe\fR \fB\-\-regexp\fR \fB\-\-remove\-rec\-sep\fR \fB\-\-recstart\fR
+\&\fB\-\-recend\fR
 .IP "\fB\-\-remove\-rec\-sep\fR" 4
 .IX Item "--remove-rec-sep"
 .PD 0
@@ -1878,15 +2166,20 @@ expressions. This is slow, however.
 .IP "\fB\-\-rrs\fR" 4
 .IX Item "--rrs"
 .PD
+Remove record separator.
+.Sp
 Remove the text matched by \fB\-\-recstart\fR and \fB\-\-recend\fR before piping
 it to the command.
 .Sp
-Only used with \fB\-\-pipe\fR.
-.IP "\fB\-\-results\fR \fIname\fR (beta testing)" 4
-.IX Item "--results name (beta testing)"
+Only used with \fB\-\-pipe\fR/\fB\-\-pipe\-part\fR.
+.Sp
+See also: \fB\-\-pipe\fR \fB\-\-regexp\fR \fB\-\-pipe\-part\fR \fB\-\-recstart\fR
+\&\fB\-\-recend\fR
+.IP "\fB\-\-results\fR \fIname\fR" 4
+.IX Item "--results name"
 .PD 0
-.IP "\fB\-\-res\fR \fIname\fR (beta testing)" 4
-.IX Item "--res name (beta testing)"
+.IP "\fB\-\-res\fR \fIname\fR" 4
+.IX Item "--res name"
 .PD
 Save the output into files.
 .Sp
@@ -2019,20 +2312,24 @@ will generate the files:
 \&  my_foo/stdout
 .Ve
 .Sp
-See also: \fB\-\-files\fR, \fB\-\-tag\fR, \fB\-\-header\fR, \fB\-\-joblog\fR.
+See also: \fB\-\-files\fR \fB\-\-tag\fR \fB\-\-header\fR \fB\-\-joblog\fR
 .IP "\fB\-\-resume\fR" 4
 .IX Item "--resume"
-Resumes from the last unfinished job. By reading \fB\-\-joblog\fR or the
+Resumes from the last unfinished job.
+.Sp
+By reading \fB\-\-joblog\fR or the
 \&\fB\-\-results\fR dir \s-1GNU\s0 \fBparallel\fR will figure out the last unfinished
 job and continue from there. As \s-1GNU\s0 \fBparallel\fR only looks at the
 sequence numbers in \fB\-\-joblog\fR then the input, the command, and
 \&\fB\-\-joblog\fR all have to remain unchanged; otherwise \s-1GNU\s0 \fBparallel\fR
 may run wrong commands.
 .Sp
-See also: \fB\-\-joblog\fR, \fB\-\-results\fR, \fB\-\-resume\-failed\fR, \fB\-\-retries\fR.
+See also: \fB\-\-joblog\fR \fB\-\-results\fR \fB\-\-resume\-failed\fR \fB\-\-retries\fR
 .IP "\fB\-\-resume\-failed\fR" 4
 .IX Item "--resume-failed"
-Retry all failed and resume from the last unfinished job. By reading
+Retry all failed and resume from the last unfinished job.
+.Sp
+By reading
 \&\fB\-\-joblog\fR \s-1GNU\s0 \fBparallel\fR will figure out the failed jobs and run
 those again. After that it will resume last unfinished job and
 continue from there. As \s-1GNU\s0 \fBparallel\fR only looks at the sequence
@@ -2040,10 +2337,12 @@ numbers in \fB\-\-joblog\fR then the input, the command, and \fB\-\-joblog\fR
 all have to remain unchanged; otherwise \s-1GNU\s0 \fBparallel\fR may run wrong
 commands.
 .Sp
-See also: \fB\-\-joblog\fR, \fB\-\-resume\fR, \fB\-\-retry\-failed\fR, \fB\-\-retries\fR.
+See also: \fB\-\-joblog\fR \fB\-\-resume\fR \fB\-\-retry\-failed\fR \fB\-\-retries\fR
 .IP "\fB\-\-retry\-failed\fR" 4
 .IX Item "--retry-failed"
-Retry all failed jobs in joblog. By reading \fB\-\-joblog\fR \s-1GNU\s0
+Retry all failed jobs in joblog.
+.Sp
+By reading \fB\-\-joblog\fR \s-1GNU\s0
 \&\fBparallel\fR will figure out the failed jobs and run those again.
 .Sp
 \&\fB\-\-retry\-failed\fR ignores the command and arguments on the command
@@ -2118,17 +2417,23 @@ line:
 \&  4     [...]   1       0       echo 7;sleep .7; exit 1
 .Ve
 .Sp
-See also: \fB\-\-joblog\fR, \fB\-\-resume\fR, \fB\-\-resume\-failed\fR, \fB\-\-retries\fR.
+See also: \fB\-\-joblog\fR \fB\-\-resume\fR \fB\-\-resume\-failed\fR \fB\-\-retries\fR
 .IP "\fB\-\-retries\fR \fIn\fR" 4
 .IX Item "--retries n"
+Try failing jobs \fIn\fR times.
+.Sp
 If a job fails, retry it on another computer on which it has not
 failed. Do this \fIn\fR times. If there are fewer than \fIn\fR computers in
 \&\fB\-\-sshlogin\fR \s-1GNU\s0 \fBparallel\fR will re-use all the computers. This is
 useful if some jobs fail for no apparent reason (such as network
 failure).
+.Sp
+See also: \fB\-\-term\-seq\fR \fB\-\-sshlogin\fR
 .IP "\fB\-\-return\fR \fIfilename\fR" 4
 .IX Item "--return filename"
-Transfer files from remote computers. \fB\-\-return\fR is used with
+Transfer files from remote computers.
+.Sp
+\&\fB\-\-return\fR is used with
 \&\fB\-\-sshlogin\fR when the arguments are files on the remote computers. When
 processing is done the file \fIfilename\fR will be transferred
 from the remote computer using \fBrsync\fR and will be put relative to
@@ -2169,31 +2474,38 @@ times:
 \&    \-\-return {.}.out \-\-return {.}.out2 touch {.}.out {.}.out2
 .Ve
 .Sp
-\&\fB\-\-return\fR is often used with \fB\-\-transferfile\fR and \fB\-\-cleanup\fR.
-.Sp
 \&\fB\-\-return\fR is ignored when used with \fB\-\-sshlogin :\fR or when not used
 with \fB\-\-sshlogin\fR.
 .Sp
 For details on transferring see \fB\-\-transferfile\fR.
+.Sp
+See also: \fB\-\-transfer\fR \fB\-\-transferfile\fR \fB\-\-sshlogin\fR \fB\-\-cleanup\fR
+\&\fB\-\-workdir\fR
 .IP "\fB\-\-round\-robin\fR" 4
 .IX Item "--round-robin"
 .PD 0
 .IP "\fB\-\-round\fR" 4
 .IX Item "--round"
 .PD
+Distribute chunks of standard input in a round robin fashion.
+.Sp
 Normally \fB\-\-pipe\fR will give a single block to each instance of the
-command. With \fB\-\-roundrobin\fR all blocks will at random be written to
+command. With \fB\-\-round\-robin\fR all blocks will at random be written to
 commands already running. This is useful if the command takes a long
 time to initialize.
 .Sp
-\&\fB\-\-keep\-order\fR will not work with \fB\-\-roundrobin\fR as it is
+\&\fB\-\-keep\-order\fR will not work with \fB\-\-round\-robin\fR as it is
 impossible to track which input block corresponds to which output.
 .Sp
-\&\fB\-\-roundrobin\fR implies \fB\-\-pipe\fR, except if \fB\-\-pipepart\fR is given.
+\&\fB\-\-round\-robin\fR implies \fB\-\-pipe\fR, except if \fB\-\-pipe\-part\fR is given.
 .Sp
-See also: \fB\-\-group\-by\fR, \fB\-\-shard\fR.
+See the section: \s-1SPREADING BLOCKS OF DATA.\s0
+.Sp
+See also: \fB\-\-bin\fR \fB\-\-group\-by\fR \fB\-\-shard\fR
 .IP "\fB\-\-rpl\fR '\fItag\fR \fIperl expression\fR'" 4
 .IX Item "--rpl 'tag perl expression'"
+Define replacement string.
+.Sp
 Use \fItag\fR as a replacement string for \fIperl expression\fR. This makes
 it possible to define your own replacement strings. \s-1GNU\s0 \fBparallel\fR's
 7 replacement strings are implemented as:
@@ -2204,7 +2516,7 @@ it possible to define your own replacement strings. \s-1GNU\s0 \fBparallel\fR's
 \&  \-\-rpl \*(Aq{%} 1 $_=$job\->slot()\*(Aq
 \&  \-\-rpl \*(Aq{/} s:.*/::\*(Aq
 \&  \-\-rpl \*(Aq{//} $Global::use{"File::Basename"} ||=
-\&    eval "use File::Basename; 1;"; $_ = dirname($_);\*(Aq
+\&              eval "use File::Basename; 1;"; $_ = dirname($_);\*(Aq
 \&  \-\-rpl \*(Aq{/.} s:.*/::; s:\e.[^/.]+$::;\*(Aq
 \&  \-\-rpl \*(Aq{.} s:\e.[^/.]+$::\*(Aq
 .Ve
@@ -2212,25 +2524,42 @@ it possible to define your own replacement strings. \s-1GNU\s0 \fBparallel\fR's
 The \fB\-\-plus\fR replacement strings are implemented as:
 .Sp
 .Vb 10
-\&  \-\-rpl \*(Aq{+/} s:/[^/]*$::\*(Aq
-\&  \-\-rpl \*(Aq{+.} s:.*\e.::\*(Aq
-\&  \-\-rpl \*(Aq{+..} s:.*\e.([^.]*\e.):$1:\*(Aq
-\&  \-\-rpl \*(Aq{+...} s:.*\e.([^.]*\e.[^.]*\e.):$1:\*(Aq
-\&  \-\-rpl \*(Aq{..} s:\e.[^/.]+$::; s:\e.[^/.]+$::\*(Aq
-\&  \-\-rpl \*(Aq{...} s:\e.[^/.]+$::; s:\e.[^/.]+$::; s:\e.[^/.]+$::\*(Aq
-\&  \-\-rpl \*(Aq{/..} s:.*/::; s:\e.[^/.]+$::; s:\e.[^/.]+$::\*(Aq
-\&  \-\-rpl \*(Aq{/...} s:.*/::;s:\e.[^/.]+$::;s:\e.[^/.]+$::;s:\e.[^/.]+$::\*(Aq
-\&  \-\-rpl \*(Aq{##} $_=total_jobs()\*(Aq
-\&  \-\-rpl \*(Aq{:\-(.+?)} $_ ||= $$1\*(Aq
+\&  \-\-rpl \*(Aq{+/} s:/[^/]*$:: || s:.*$::\*(Aq
+\&  \-\-rpl \*(Aq{+.} s:.*\e.:: || s:.*$::\*(Aq
+\&  \-\-rpl \*(Aq{+..} s:.*\e.([^/.]+\e.[^/.]+)$:$1: || s:.*$::\*(Aq
+\&  \-\-rpl \*(Aq{+...} s:.*\e.([^/.]+\e.[^/.]+\e.[^/.]+)$:$1: || s:.*$::\*(Aq
+\&  \-\-rpl \*(Aq{..} s:\e.[^/.]+\e.[^/.]+$::\*(Aq
+\&  \-\-rpl \*(Aq{...} s:\e.[^/.]+\e.[^/.]+\e.[^/.]+$::\*(Aq
+\&  \-\-rpl \*(Aq{/..} s:.*/::; s:\e.[^/.]+\e.[^/.]+$::\*(Aq
+\&  \-\-rpl \*(Aq{/...} s:.*/::; s:\e.[^/.]+\e.[^/.]+\e.[^/.]+$::\*(Aq
+\&  \-\-rpl \*(Aq{choose_k}
+\&         for $t (2..$#arg){ if($arg[$t\-1] ge $arg[$t]) { skip() } }\*(Aq
+\&  \-\-rpl \*(Aq{##} 1 $_=total_jobs()\*(Aq
+\&  \-\-rpl \*(Aq{0%} 1 $f=1+int((log($Global::max_jobs_running||1)/
+\&                          log(10))); $_=sprintf("%0${f}d",slot())\*(Aq
+\&  \-\-rpl \*(Aq{0#} 1 $f=1+int((log(total_jobs())/log(10)));
+\&              $_=sprintf("%0${f}d",seq())\*(Aq
+\&
+\&  \-\-rpl \*(Aq{:\-([^}]+?)} $_ ||= $$1\*(Aq
 \&  \-\-rpl \*(Aq{:(\ed+?)} substr($_,0,$$1) = ""\*(Aq
 \&  \-\-rpl \*(Aq{:(\ed+?):(\ed+?)} $_ = substr($_,$$1,$$2);\*(Aq
-\&  \-\-rpl \*(Aq{#([^#].*?)} s/^$$1//;\*(Aq
-\&  \-\-rpl \*(Aq{%(.+?)} s/$$1$//;\*(Aq
-\&  \-\-rpl \*(Aq{/(.+?)/(.*?)} s/$$1/$$2/;\*(Aq
-\&  \-\-rpl \*(Aq{^(.+?)} s/^($$1)/uc($1)/e;\*(Aq
-\&  \-\-rpl \*(Aq{^^(.+?)} s/($$1)/uc($1)/eg;\*(Aq
-\&  \-\-rpl \*(Aq{,(.+?)} s/^($$1)/lc($1)/e;\*(Aq
-\&  \-\-rpl \*(Aq{,,(.+?)} s/($$1)/lc($1)/eg;\*(Aq
+\&  \-\-rpl \*(Aq{#([^#}][^}]*?)} $nongreedy=::make_regexp_ungreedy($$1);
+\&                          s/^$nongreedy(.*)/$1/;\*(Aq
+\&  \-\-rpl \*(Aq{##([^#}][^}]*?)} s/^$$1//;\*(Aq
+\&  \-\-rpl \*(Aq{%([^}]+?)} $nongreedy=::make_regexp_ungreedy($$1);
+\&                     s/(.*)$nongreedy$/$1/;\*(Aq
+\&  \-\-rpl \*(Aq{%%([^}]+?)} s/$$1$//;\*(Aq
+\&  \-\-rpl \*(Aq{/([^}]+?)/([^}]*?)} s/$$1/$$2/;\*(Aq
+\&  \-\-rpl \*(Aq{^([^}]+?)} s/^($$1)/uc($1)/e;\*(Aq
+\&  \-\-rpl \*(Aq{^^([^}]+?)} s/($$1)/uc($1)/eg;\*(Aq
+\&  \-\-rpl \*(Aq{,([^}]+?)} s/^($$1)/lc($1)/e;\*(Aq
+\&  \-\-rpl \*(Aq{,,([^}]+?)} s/($$1)/lc($1)/eg;\*(Aq
+\&
+\&  \-\-rpl \*(Aq{slot} 1 $_="\e${PARALLEL_JOBSLOT}";uq()\*(Aq
+\&  \-\-rpl \*(Aq{host} 1 $_="\e${PARALLEL_SSHHOST}";uq()\*(Aq
+\&  \-\-rpl \*(Aq{sshlogin} 1 $_="\e${PARALLEL_SSHLOGIN}";uq()\*(Aq
+\&  \-\-rpl \*(Aq{hgrp} 1 $_="\e${PARALLEL_HOSTGROUPS}";uq()\*(Aq
+\&  \-\-rpl \*(Aq{agrp} 1 $_="\e${PARALLEL_ARGHOSTGROUPS}";uq()\*(Aq
 .Ve
 .Sp
 If the user defined replacement string starts with '{' it can also be
@@ -2277,17 +2606,21 @@ You can even use multiple matches:
 \&    echo {swap/these} ::: \-middle\-
 .Ve
 .Sp
-See also: \fB{= perl expression =}\fR \fB\-\-parens\fR
+See also: \fB{=\fR\fIperl expression\fR\fB=}\fR \fB\-\-parens\fR
 .IP "\fB\-\-rsync\-opts\fR \fIoptions\fR" 4
 .IX Item "--rsync-opts options"
-Options to pass on to \fBrsync\fR. Setting \fB\-\-rsync\-opts\fR takes
-precedence over setting the environment variable \f(CW$PARALLEL_RSYNC_OPTS\fR.
-.IP "\fB\-\-max\-chars\fR=\fImax-chars\fR" 4
-.IX Item "--max-chars=max-chars"
+Options to pass on to \fBrsync\fR.
+.Sp
+Setting \fB\-\-rsync\-opts\fR takes precedence over setting the environment
+variable \f(CW$PARALLEL_RSYNC_OPTS\fR.
+.IP "\fB\-\-max\-chars\fR \fImax-chars\fR" 4
+.IX Item "--max-chars max-chars"
 .PD 0
 .IP "\fB\-s\fR \fImax-chars\fR" 4
 .IX Item "-s max-chars"
 .PD
+Limit length of command.
+.Sp
 Use at most \fImax-chars\fR characters per command line, including the
 command and initial-arguments and the terminating nulls at the ends of
 the argument strings.  The largest allowed value is system-dependent,
@@ -2297,38 +2630,44 @@ of your environment.  The default value is the maximum.
 \&\fImax-chars\fR can be postfixed with K, M, G, T, P, k, m, g, t, or p
 (see \s-1UNIT PREFIX\s0).
 .Sp
-Implies \fB\-X\fR unless \fB\-m\fR is set.
+Implies \fB\-X\fR unless \fB\-m\fR or \fB\-\-xargs\fR is set.
+.Sp
+See also: \fB\-X\fR \fB\-m\fR \fB\-\-xargs\fR \fB\-\-max\-line\-length\-allowed\fR
+\&\fB\-\-show\-limits\fR
 .IP "\fB\-\-show\-limits\fR" 4
 .IX Item "--show-limits"
+Display limits given by the operating system.
+.Sp
 Display the limits on the command-line length which are imposed by the
 operating system and the \fB\-s\fR option.  Pipe the input from /dev/null
 (and perhaps specify \-\-no\-run\-if\-empty) if you don't want \s-1GNU\s0 \fBparallel\fR
 to do anything.
+.Sp
+See also: \fB\-\-max\-chars\fR \fB\-\-max\-line\-length\-allowed\fR \fB\-\-version\fR
 .IP "\fB\-\-semaphore\fR" 4
 .IX Item "--semaphore"
-Work as a counting semaphore. \fB\-\-semaphore\fR will cause \s-1GNU\s0
-\&\fBparallel\fR to start \fIcommand\fR in the background. When the number of
-jobs given by \fB\-\-jobs\fR is reached, \s-1GNU\s0 \fBparallel\fR will wait for one of
-these to complete before starting another command.
+Work as a counting semaphore.
+.Sp
+\&\fB\-\-semaphore\fR will cause \s-1GNU\s0 \fBparallel\fR to start \fIcommand\fR in the
+background. When the number of jobs given by \fB\-\-jobs\fR is reached, \s-1GNU\s0
+\&\fBparallel\fR will wait for one of these to complete before starting
+another command.
 .Sp
 \&\fB\-\-semaphore\fR implies \fB\-\-bg\fR unless \fB\-\-fg\fR is specified.
 .Sp
-\&\fB\-\-semaphore\fR implies \fB\-\-semaphorename `tty`\fR unless
-\&\fB\-\-semaphorename\fR is specified.
-.Sp
-Used with \fB\-\-fg\fR, \fB\-\-wait\fR, and \fB\-\-semaphorename\fR.
-.Sp
 The command \fBsem\fR is an alias for \fBparallel \-\-semaphore\fR.
 .Sp
-See also: \fBman sem\fR.
-.IP "\fB\-\-semaphorename\fR \fIname\fR" 4
-.IX Item "--semaphorename name"
+See also: \fBman sem\fR \fB\-\-bg\fR \fB\-\-fg\fR \fB\-\-semaphore\-name\fR
+\&\fB\-\-semaphore\-timeout\fR \fB\-\-wait\fR
+.IP "\fB\-\-semaphore\-name\fR \fIname\fR" 4
+.IX Item "--semaphore-name name"
 .PD 0
 .IP "\fB\-\-id\fR \fIname\fR" 4
 .IX Item "--id name"
 .PD
-Use \fBname\fR as the name of the semaphore. Default is the name of the
-controlling tty (output from \fBtty\fR).
+Use \fBname\fR as the name of the semaphore.
+.Sp
+The default is the name of the controlling tty (output from \fBtty\fR).
 .Sp
 The default normally works as expected when used interactively, but
 when used in a script \fIname\fR should be set. \fI$$\fR or \fImy_task_name\fR
@@ -2338,24 +2677,31 @@ The semaphore is stored in ~/.parallel/semaphores/
 .Sp
 Implies \fB\-\-semaphore\fR.
 .Sp
-See also: \fBman sem\fR.
-.IP "\fB\-\-semaphoretimeout\fR \fIsecs\fR" 4
-.IX Item "--semaphoretimeout secs"
+See also: \fBman sem\fR \fB\-\-semaphore\fR
+.IP "\fB\-\-semaphore\-timeout\fR \fIsecs\fR" 4
+.IX Item "--semaphore-timeout secs"
 .PD 0
 .IP "\fB\-\-st\fR \fIsecs\fR" 4
 .IX Item "--st secs"
 .PD
-If \fIsecs\fR > 0: If the semaphore is not released within \fIsecs\fR seconds, take it anyway.
+If \fIsecs\fR > 0: If the semaphore is not released within \fIsecs\fR
+seconds, take it anyway.
 .Sp
-If \fIsecs\fR < 0: If the semaphore is not released within \fIsecs\fR seconds, exit.
+If \fIsecs\fR < 0: If the semaphore is not released within \fIsecs\fR
+seconds, exit.
+.Sp
+\&\fIsecs\fR is in seconds, but can be postfixed with s, m, h, or d (see
+the section \s-1TIME POSTFIXES\s0).
 .Sp
 Implies \fB\-\-semaphore\fR.
 .Sp
-See also: \fBman sem\fR.
+See also: \fBman sem\fR
 .IP "\fB\-\-seqreplace\fR \fIreplace-str\fR" 4
 .IX Item "--seqreplace replace-str"
 Use the replacement string \fIreplace-str\fR instead of \fB{#}\fR for
 job sequence number.
+.Sp
+See also: \fB{#}\fR
 .IP "\fB\-\-session\fR" 4
 .IX Item "--session"
 Record names in current environment in \fB\f(CB$PARALLEL_IGNORED_NAMES\fB\fR and
@@ -2364,13 +2710,19 @@ variables with names in \fB\f(CB$PARALLEL_IGNORED_NAMES\fB\fR will not be copied
 .Sp
 Only supported in \fBAsh, Bash, Dash, Ksh, Sh, and Zsh\fR.
 .Sp
-See also: \fB\-\-env\fR, \fB\-\-record\-env\fR.
+See also: \fB\-\-env\fR \fB\-\-record\-env\fR \fBenv_parallel\fR
 .IP "\fB\-\-shard\fR \fIshardexpr\fR" 4
 .IX Item "--shard shardexpr"
 Use \fIshardexpr\fR as shard key and shard input to the jobs.
 .Sp
-\&\fIshardexpr\fR is [column number|column name] [perlexpression] e.g. 3,
-Address, 3 \f(CW$_\fR%=100, Address s/\ed//g.
+\&\fIshardexpr\fR is [column number|column name] [perlexpression] e.g.:
+.Sp
+.Vb 4
+\&  3
+\&  Address
+\&  3 $_%=100
+\&  Address s/\ed//g
+.Ve
 .Sp
 Each input line is split using \fB\-\-colsep\fR. The value of the column is
 put into \f(CW$_\fR, the perl expression is executed, the resulting value is
@@ -2384,7 +2736,9 @@ The performance is in the order of 100K rows per second. Faster if the
 .Sp
 \&\fB\-\-shard\fR requires \fB\-\-pipe\fR and a fixed numeric value for \fB\-\-jobs\fR.
 .Sp
-See also: \fB\-\-bin\fR, \fB\-\-group\-by\fR, \fB\-\-roundrobin\fR.
+See the section: \s-1SPREADING BLOCKS OF DATA.\s0
+.Sp
+See also: \fB\-\-bin\fR \fB\-\-group\-by\fR \fB\-\-round\-robin\fR
 .IP "\fB\-\-shebang\fR" 4
 .IX Item "--shebang"
 .PD 0
@@ -2419,6 +2773,8 @@ On FreeBSD \fBenv\fR is needed:
 .Sp
 There are many limitations of shebang (#!) depending on your operating
 system. See details on https://www.in\-ulm.de/~mascheck/various/shebang/
+.Sp
+See also: \fB\-\-shebang\-wrap\fR
 .IP "\fB\-\-shebang\-wrap\fR" 4
 .IX Item "--shebang-wrap"
 \&\s-1GNU\s0 \fBparallel\fR can parallelize scripts by wrapping the shebang
@@ -2459,29 +2815,44 @@ E.g.
 .Ve
 .Sp
 \&\fB\-\-shebang\-wrap\fR must be set as the first option.
-.IP "\fB\-\-shellquote\fR" 4
-.IX Item "--shellquote"
+.Sp
+See also: \fB\-\-shebang\fR
+.IP "\fB\-\-shell\-quote\fR" 4
+.IX Item "--shell-quote"
 Does not run the command but quotes it. Useful for making quoted
 composed commands for \s-1GNU\s0 \fBparallel\fR.
 .Sp
-Multiple \fB\-\-shellquote\fR with quote the string multiple times, so
-\&\fBparallel \-\-shellquote | parallel \-\-shellquote\fR can be written as
-\&\fBparallel \-\-shellquote \-\-shellquote\fR.
+Multiple \fB\-\-shell\-quote\fR with quote the string multiple times, so
+\&\fBparallel \-\-shell\-quote | parallel \-\-shell\-quote\fR can be written as
+\&\fBparallel \-\-shell\-quote \-\-shell\-quote\fR.
+.Sp
+See also: \fB\-\-quote\fR
 .IP "\fB\-\-shuf\fR" 4
 .IX Item "--shuf"
-Shuffle jobs. When having multiple input sources it is hard to
-randomize jobs. \-\-shuf will generate all jobs, and shuffle them before
+Shuffle jobs.
+.Sp
+When having multiple input sources it is hard to randomize
+jobs. \fB\-\-shuf\fR will generate all jobs, and shuffle them before
 running them. This is useful to get a quick preview of the results
 before running the full batch.
+.Sp
+Combined with \fB\-\-halt soon,done=1%\fR you can run a random 1% sample of
+all jobs:
+.Sp
+.Vb 1
+\&  parallel \-\-shuf \-\-halt soon,done=1% echo ::: {1..100} ::: {1..100}
+.Ve
+.Sp
+See also: \fB\-\-halt\fR
 .IP "\fB\-\-skip\-first\-line\fR" 4
 .IX Item "--skip-first-line"
 Do not use the first line of input (used by \s-1GNU\s0 \fBparallel\fR itself
 when called with \fB\-\-shebang\fR).
 .IP "\fB\-\-sql\fR \fI\s-1DBURL\s0\fR (obsolete)" 4
 .IX Item "--sql DBURL (obsolete)"
-Use \fB\-\-sqlmaster\fR instead.
-.IP "\fB\-\-sqlmaster\fR \fI\s-1DBURL\s0\fR" 4
-.IX Item "--sqlmaster DBURL"
+Use \fB\-\-sql\-master\fR instead.
+.IP "\fB\-\-sql\-master\fR \fI\s-1DBURL\s0\fR" 4
+.IX Item "--sql-master DBURL"
 Submit jobs via \s-1SQL\s0 server. \fI\s-1DBURL\s0\fR must point to a table, which will
 contain the same information as \fB\-\-joblog\fR, the values from the input
 sources (stored in columns V1 .. Vn), and the output (stored in
@@ -2526,11 +2897,15 @@ It can also be an alias from ~/.sql/aliases:
 .Vb 1
 \&  :myalias mysql:///mydb/paralleljobs
 .Ve
-.IP "\fB\-\-sqlandworker\fR \fI\s-1DBURL\s0\fR" 4
-.IX Item "--sqlandworker DBURL"
-Shorthand for: \fB\-\-sqlmaster\fR \fI\s-1DBURL\s0\fR \fB\-\-sqlworker\fR \fI\s-1DBURL\s0\fR.
-.IP "\fB\-\-sqlworker\fR \fI\s-1DBURL\s0\fR" 4
-.IX Item "--sqlworker DBURL"
+.Sp
+See also: \fB\-\-sql\-and\-worker\fR \fB\-\-sql\-worker\fR \fB\-\-joblog\fR
+.IP "\fB\-\-sql\-and\-worker\fR \fI\s-1DBURL\s0\fR" 4
+.IX Item "--sql-and-worker DBURL"
+Shorthand for: \fB\-\-sql\-master\fR \fI\s-1DBURL\s0\fR \fB\-\-sql\-worker\fR \fI\s-1DBURL\s0\fR.
+.Sp
+See also: \fB\-\-sql\-master\fR \fB\-\-sql\-worker\fR
+.IP "\fB\-\-sql\-worker\fR \fI\s-1DBURL\s0\fR" 4
+.IX Item "--sql-worker DBURL"
 Execute jobs via \s-1SQL\s0 server. Read the input sources variables from the
 table pointed to by \fI\s-1DBURL\s0\fR. The \fIcommand\fR on the command line
 should be the same as given by \fB\-\-sqlmaster\fR.
@@ -2540,29 +2915,37 @@ once.
 .Sp
 If \fB\-\-sqlworker\fR runs on the local machine, the hostname in the \s-1SQL\s0
 table will not be ':' but instead the hostname of the machine.
+.Sp
+See also: \fB\-\-sql\-master\fR \fB\-\-sql\-and\-worker\fR
 .IP "\fB\-\-ssh\fR \fIsshcommand\fR" 4
 .IX Item "--ssh sshcommand"
 \&\s-1GNU\s0 \fBparallel\fR defaults to using \fBssh\fR for remote access. This can
 be overridden with \fB\-\-ssh\fR. It can also be set on a per server
-basis (see \fB\-\-sshlogin\fR).
-.IP "\fB\-\-sshdelay\fR \fImytime\fR" 4
-.IX Item "--sshdelay mytime"
-Delay starting next ssh by \fImytime\fR. \s-1GNU\s0 \fBparallel\fR will not start
-another ssh for the next \fImytime\fR.
+basis with \fB\-\-sshlogin\fR.
 .Sp
-For details on \fImytime\fR see \fB\-\-delay\fR.
-.IP "\fB\-S\fR \fI[@hostgroups/][ncpus/]sshlogin[,[@hostgroups/][ncpus/]sshlogin[,...]]\fR" 4
-.IX Item "-S [@hostgroups/][ncpus/]sshlogin[,[@hostgroups/][ncpus/]sshlogin[,...]]"
-.PD 0
-.IP "\fB\-S\fR \fI\f(CI@hostgroup\fI\fR" 4
-.IX Item "-S @hostgroup"
+See also: \fB\-\-sshlogin\fR
+.IP "\fB\-\-ssh\-delay\fR \fIduration\fR" 4
+.IX Item "--ssh-delay duration"
+Delay starting next ssh by \fIduration\fR.
+.Sp
+\&\s-1GNU\s0 \fBparallel\fR will not start another ssh for the next \fIduration\fR.
+.Sp
+\&\fIduration\fR is in seconds, but can be postfixed with s, m, h, or d.
+.Sp
+See also: \s-1TIME POSTFIXES\s0 \fB\-\-sshlogin\fR \fB\-\-delay\fR
 .IP "\fB\-\-sshlogin\fR \fI[@hostgroups/][ncpus/]sshlogin[,[@hostgroups/][ncpus/]sshlogin[,...]]\fR" 4
 .IX Item "--sshlogin [@hostgroups/][ncpus/]sshlogin[,[@hostgroups/][ncpus/]sshlogin[,...]]"
+.PD 0
 .IP "\fB\-\-sshlogin\fR \fI\f(CI@hostgroup\fI\fR" 4
 .IX Item "--sshlogin @hostgroup"
+.IP "\fB\-S\fR \fI[@hostgroups/][ncpus/]sshlogin[,[@hostgroups/][ncpus/]sshlogin[,...]]\fR" 4
+.IX Item "-S [@hostgroups/][ncpus/]sshlogin[,[@hostgroups/][ncpus/]sshlogin[,...]]"
+.IP "\fB\-S\fR \fI\f(CI@hostgroup\fI\fR" 4
+.IX Item "-S @hostgroup"
 .PD
-Distribute jobs to remote computers. The jobs will be run on a list of
-remote computers.
+Distribute jobs to remote computers.
+.Sp
+The jobs will be run on a list of remote computers.
 .Sp
 If \fIhostgroups\fR is given, the \fIsshlogin\fR will be added to that
 hostgroup. Multiple hostgroups are separated by '+'. The \fIsshlogin\fR
@@ -2580,11 +2963,12 @@ needed.
 An \fIsshlogin\fR is of the form:
 .Sp
 .Vb 1
-\&  [sshcommand [options]] [username@]hostname
+\&  [sshcommand [options]] [username[:password]@]hostname
 .Ve
 .Sp
-The sshlogin must not require a password (\fBssh-agent\fR,
-\&\fBssh-copy-id\fR, and \fBsshpass\fR may help with that).
+If \fIpassword\fR is given, \fBsshpass\fR will be used. Otherwise the
+sshlogin must not require a password (\fBssh-agent\fR and \fBssh-copy-id\fR
+may help with that).
 .Sp
 The sshlogin ':' is special, it means 'no ssh' and will therefore run
 on the local computer.
@@ -2604,8 +2988,9 @@ The remote host must have \s-1GNU\s0 \fBparallel\fR installed.
 .Sp
 \&\fB\-\-sshlogin\fR is known to cause problems with \fB\-m\fR and \fB\-X\fR.
 .Sp
-\&\fB\-\-sshlogin\fR is often used with \fB\-\-transferfile\fR, \fB\-\-return\fR,
-\&\fB\-\-cleanup\fR, and \fB\-\-trc\fR.
+See also: \fB\-\-basefile\fR \fB\-\-transferfile\fR \fB\-\-return\fR \fB\-\-cleanup\fR
+\&\fB\-\-trc\fR \fB\-\-sshloginfile\fR \fB\-\-workdir\fR \fB\-\-filter\-hosts\fR
+\&\fB\-\-ssh\fR
 .IP "\fB\-\-sshloginfile\fR \fIfilename\fR" 4
 .IX Item "--sshloginfile filename"
 .PD 0
@@ -2674,23 +3059,33 @@ only contain servers that are up:
 \&    done &
 \&    parallel \-\-slf tmp2.slf ...
 .Ve
+.Sp
+See also: \fB\-\-filter\-hosts\fR
 .IP "\fB\-\-slotreplace\fR \fIreplace-str\fR" 4
 .IX Item "--slotreplace replace-str"
 Use the replacement string \fIreplace-str\fR instead of \fB{%}\fR for
 job slot number.
+.Sp
+See also: \fB{%}\fR
 .IP "\fB\-\-silent\fR" 4
 .IX Item "--silent"
-Silent.  The job to be run will not be printed. This is the default.
-Can be reversed with \fB\-v\fR.
+Silent.
+.Sp
+The job to be run will not be printed. This is the default.  Can be
+reversed with \fB\-v\fR.
+.Sp
+See also: \fB\-v\fR
 .IP "\fB\-\-template\fR \fIfile\fR=\fIrepl\fR" 4
 .IX Item "--template file=repl"
 .PD 0
 .IP "\fB\-\-tmpl\fR \fIfile\fR=\fIrepl\fR" 4
 .IX Item "--tmpl file=repl"
 .PD
-Copy \fIfile\fR to \fIrepl\fR. All replacement strings in the contents of
-\&\fIfile\fR will be replaced. All replacement strings in the name \fIrepl\fR
-will be replaced.
+Replace replacement strings in \fIfile\fR and save it in \fIrepl\fR.
+.Sp
+All replacement strings in the contents of \fIfile\fR will be
+replaced. All replacement strings in the name \fIrepl\fR will be
+replaced.
 .Sp
 With \fB\-\-cleanup\fR the new file will be removed when the job is done.
 .Sp
@@ -2714,13 +3109,17 @@ it can be used like this:
 \&  parallel \-\-cleanup \-\-header : \-\-tmpl my.tmpl={#}.t myprog {#}.t \e
 \&    ::: x 1.234 2.345 3.45678 ::: y 1 2 3
 .Ve
+.Sp
+See also: \fB{}\fR \fB\-\-cleanup\fR
 .IP "\fB\-\-tty\fR" 4
 .IX Item "--tty"
-Open terminal tty. If \s-1GNU\s0 \fBparallel\fR is used for starting a program
-that accesses the tty (such as an interactive program) then this
-option may be needed. It will default to starting only one job at a
-time (i.e. \fB\-j1\fR), not buffer the output (i.e. \fB\-u\fR), and it will
-open a tty for the job.
+Open terminal tty.
+.Sp
+If \s-1GNU\s0 \fBparallel\fR is used for starting a program that accesses the
+tty (such as an interactive program) then this option may be
+needed. It will default to starting only one job at a time
+(i.e. \fB\-j1\fR), not buffer the output (i.e. \fB\-u\fR), and it will open a
+tty for the job.
 .Sp
 You can of course override \fB\-j1\fR and \fB\-u\fR.
 .Sp
@@ -2728,28 +3127,34 @@ Using \fB\-\-tty\fR unfortunately means that \s-1GNU\s0 \fBparallel\fR cannot ki
 the jobs (with \fB\-\-timeout\fR, \fB\-\-memfree\fR, or \fB\-\-halt\fR). This is due
 to \s-1GNU\s0 \fBparallel\fR giving each child its own process group, which is
 then killed. Process groups are dependant on the tty.
-.IP "\fB\-\-tag\fR (alpha testing)" 4
-.IX Item "--tag (alpha testing)"
-Tag lines with arguments. Each output line will be prepended with the
-arguments and \s-1TAB\s0 (\et). When combined with \fB\-\-onall\fR or \fB\-\-nonall\fR
-the lines will be prepended with the sshlogin instead.
+.Sp
+See also: \fB\-\-ungroup\fR
+.IP "\fB\-\-tag\fR" 4
+.IX Item "--tag"
+Tag lines with arguments.
+.Sp
+Each output line will be prepended with the arguments and \s-1TAB\s0
+(\et). When combined with \fB\-\-onall\fR or \fB\-\-nonall\fR the lines will be
+prepended with the sshlogin instead.
 .Sp
 \&\fB\-\-tag\fR is ignored when using \fB\-u\fR.
 .Sp
-\&\fB\-\-ctag\fR gives the tag a color.
-.IP "\fB\-\-tagstring\fR \fIstr\fR (alpha testing)" 4
-.IX Item "--tagstring str (alpha testing)"
-Tag lines with a string. Each output line will be prepended with
-\&\fIstr\fR and \s-1TAB\s0 (\et). \fIstr\fR can contain replacement strings such as
-\&\fB{}\fR.
+See also: \fB\-\-tagstring\fR \fB\-\-ctag\fR
+.IP "\fB\-\-tagstring\fR \fIstr\fR" 4
+.IX Item "--tagstring str"
+Tag lines with a string.
+.Sp
+Each output line will be prepended with \fIstr\fR and \s-1TAB\s0 (\et). \fIstr\fR
+can contain replacement strings such as \fB{}\fR.
 .Sp
 \&\fB\-\-tagstring\fR is ignored when using \fB\-u\fR, \fB\-\-onall\fR, and \fB\-\-nonall\fR.
 .Sp
-\&\fB\-\-ctagstring\fR gives the tag a color.
+See also: \fB\-\-tag\fR \fB\-\-ctagstring\fR
 .IP "\fB\-\-tee\fR" 4
 .IX Item "--tee"
-Pipe all data to all jobs. Used with \fB\-\-pipe\fR/\fB\-\-pipepart\fR and
-\&\fB:::\fR.
+Pipe all data to all jobs.
+.Sp
+Used with \fB\-\-pipe\fR/\fB\-\-pipe\-part\fR and \fB:::\fR.
 .Sp
 .Vb 1
 \&  seq 1000 | parallel \-\-pipe \-\-tee \-v wc {} ::: \-w \-l \-c
@@ -2766,14 +3171,18 @@ fill:
 How many words contain a..z and how many bytes do they fill?
 .Sp
 .Vb 2
-\&  parallel \-a /usr/share/dict/words \-\-pipepart \-\-tee \-\-tag \e
+\&  parallel \-a /usr/share/dict/words \-\-pipe\-part \-\-tee \-\-tag \e
 \&    \*(Aqgrep {1} | wc {2}\*(Aq ::: {a..z} ::: \-l \-c
 .Ve
-.IP "\fB\-\-termseq\fR \fIsequence\fR" 4
-.IX Item "--termseq sequence"
-Termination sequence. When a job is killed due to \fB\-\-timeout\fR,
-\&\fB\-\-memfree\fR, \fB\-\-halt\fR, or abnormal termination of \s-1GNU\s0 \fBparallel\fR,
-\&\fIsequence\fR determines how the job is killed. The default is:
+.Sp
+See also: \fB:::\fR \fB\-\-pipe\fR \fB\-\-pipe\-part\fR
+.IP "\fB\-\-term\-seq\fR \fIsequence\fR" 4
+.IX Item "--term-seq sequence"
+Termination sequence.
+.Sp
+When a job is killed due to \fB\-\-timeout\fR, \fB\-\-memfree\fR, \fB\-\-halt\fR, or
+abnormal termination of \s-1GNU\s0 \fBparallel\fR, \fIsequence\fR determines how
+the job is killed. The default is:
 .Sp
 .Vb 1
 \&    TERM,200,TERM,100,TERM,50,KILL,25
@@ -2783,34 +3192,42 @@ which sends a \s-1TERM\s0 signal, waits 200 ms, sends another \s-1TERM\s0 signal
 waits 100 ms, sends another \s-1TERM\s0 signal, waits 50 ms, sends a \s-1KILL\s0
 signal, waits 25 ms, and exits. \s-1GNU\s0 \fBparallel\fR detects if a process
 dies before the waiting time is up.
+.Sp
+See also: \fB\-\-halt\fR \fB\-\-timeout\fR \fB\-\-memfree\fR
 .IP "\fB\-\-tmpdir\fR \fIdirname\fR" 4
 .IX Item "--tmpdir dirname"
-Directory for temporary files. \s-1GNU\s0 \fBparallel\fR normally buffers output
-into temporary files in /tmp. By setting \fB\-\-tmpdir\fR you can use a
-different dir for the files. Setting \fB\-\-tmpdir\fR is equivalent to
-setting \f(CW$TMPDIR\fR.
+Directory for temporary files.
+.Sp
+\&\s-1GNU\s0 \fBparallel\fR normally buffers output into temporary files in
+/tmp. By setting \fB\-\-tmpdir\fR you can use a different dir for the
+files. Setting \fB\-\-tmpdir\fR is equivalent to setting \f(CW$TMPDIR\fR.
+.Sp
+See also: \fB\-\-compress\fR \fB\f(CB$TMPDIR\fB\fR \fB\f(CB$PARALLEL_REMOTE_TMPDIR\fB\fR
 .IP "\fB\-\-tmux\fR (Long beta testing)" 4
 .IX Item "--tmux (Long beta testing)"
 Use \fBtmux\fR for output. Start a \fBtmux\fR session and run each job in a
 window in that session. No other output will be produced.
+.Sp
+See also: \fB\-\-tmuxpane\fR
 .IP "\fB\-\-tmuxpane\fR (Long beta testing)" 4
 .IX Item "--tmuxpane (Long beta testing)"
 Use \fBtmux\fR for output but put output into panes in the first window.
 Useful if you want to monitor the progress of less than 100 concurrent
 jobs.
+.Sp
+See also: \fB\-\-tmux\fR
 .IP "\fB\-\-timeout\fR \fIduration\fR" 4
 .IX Item "--timeout duration"
 Time out for command. If the command runs for longer than \fIduration\fR
-seconds it will get killed as per \fB\-\-termseq\fR.
+seconds it will get killed as per \fB\-\-term\-seq\fR.
 .Sp
 If \fIduration\fR is followed by a % then the timeout will dynamically be
 computed as a percentage of the median average runtime of successful
 jobs. Only values > 100% will make sense.
 .Sp
-\&\fIduration\fR is normally in seconds, but can be floats postfixed with
-\&\fBs\fR, \fBm\fR, \fBh\fR, or \fBd\fR which would multiply the float by 1, 60,
-3600, or 86400. Thus these are equivalent: \fB\-\-timeout 100000\fR and
-\&\fB\-\-timeout 1d3.5h16.6m4s\fR.
+\&\fIduration\fR is in seconds, but can be postfixed with s, m, h, or d.
+.Sp
+See also: \s-1TIME POSTFIXES\s0 \fB\-\-term\-seq\fR \fB\-\-retries\fR
 .IP "\fB\-\-verbose\fR" 4
 .IX Item "--verbose"
 .PD 0
@@ -2819,19 +3236,25 @@ jobs. Only values > 100% will make sense.
 .PD
 Print the job to be run on stderr (standard error).
 .Sp
-See also: \fB\-v\fR, \fB\-p\fR.
+See also: \fB\-v\fR \fB\-\-interactive\fR
 .IP "\fB\-\-transfer\fR" 4
 .IX Item "--transfer"
-Transfer files to remote computers. Shorthand for: \fB\-\-transferfile {}\fR.
+Transfer files to remote computers.
+.Sp
+Shorthand for: \fB\-\-transferfile {}\fR.
+.Sp
+See also: \fB\-\-transferfile\fR.
 .IP "\fB\-\-transferfile\fR \fIfilename\fR" 4
 .IX Item "--transferfile filename"
 .PD 0
 .IP "\fB\-\-tf\fR \fIfilename\fR" 4
 .IX Item "--tf filename"
 .PD
+Transfer \fIfilename\fR to remote computers.
+.Sp
 \&\fB\-\-transferfile\fR is used with \fB\-\-sshlogin\fR to transfer files to the
 remote computers. The files will be transferred using \fBrsync\fR and
-will be put relative to the work dir (see \fB\-\-workdir\fR).
+will be put relative to the work dir.
 .Sp
 The \fIfilename\fR will normally contain a replacement string.
 .Sp
@@ -2880,11 +3303,15 @@ shorthand for \fB\-\-transferfile {}\fR is \fB\-\-transfer\fR.
 .Sp
 \&\fB\-\-transferfile\fR is ignored when used with \fB\-\-sshlogin :\fR or when
 not used with \fB\-\-sshlogin\fR.
+.Sp
+See also: \fB\-\-workdir\fR \fB\-\-sshlogin\fR \fB\-\-basefile\fR \fB\-\-return\fR
+\&\fB\-\-cleanup\fR
 .IP "\fB\-\-trc\fR \fIfilename\fR" 4
 .IX Item "--trc filename"
-Transfer, Return, Cleanup. Shorthand for:
+Transfer, Return, Cleanup. Shorthand for: \fB\-\-transfer\fR \fB\-\-return\fR
+\&\fIfilename\fR \fB\-\-cleanup\fR
 .Sp
-\&\fB\-\-transferfile {}\fR \fB\-\-return\fR \fIfilename\fR \fB\-\-cleanup\fR
+See also: \fB\-\-transfer\fR \fB\-\-return\fR \fB\-\-cleanup\fR
 .IP "\fB\-\-trim\fR <n|l|r|lr|rl>" 4
 .IX Item "--trim <n|l|r|lr|rl>"
 Trim white space in input.
@@ -2908,6 +3335,8 @@ Both trim. Remove white space from both start and end of input. E.g. \*(L"
 a bc \*(R" \-> \*(L"a bc\*(R". This is the default if \fB\-\-colsep\fR is used.
 .RE
 .RS 4
+.Sp
+See also: \fB\-\-no\-run\-if\-empty\fR \fB{}\fR \fB\-\-colsep\fR
 .RE
 .IP "\fB\-\-ungroup\fR" 4
 .IX Item "--ungroup"
@@ -2915,10 +3344,12 @@ a bc \*(R" \-> \*(L"a bc\*(R". This is the default if \fB\-\-colsep\fR is used.
 .IP "\fB\-u\fR" 4
 .IX Item "-u"
 .PD
-Ungroup output.  Output is printed as soon as possible and bypasses
-\&\s-1GNU\s0 \fBparallel\fR internal processing. This may cause output from
-different commands to be mixed thus should only be used if you do not
-care about the output. Compare these:
+Ungroup output.
+.Sp
+Output is printed as soon as possible and bypasses \s-1GNU\s0 \fBparallel\fR
+internal processing. This may cause output from different commands to
+be mixed thus should only be used if you do not care about the
+output. Compare these:
 .Sp
 .Vb 4
 \&  seq 4 | parallel \-j0 \e
@@ -2947,17 +3378,21 @@ See also: \fB\-\-line\-buffer\fR \fB\-\-group\fR
 .PD
 Use the replacement string \fIreplace-str\fR instead of \fB{.}\fR for input
 line without extension.
+.Sp
+See also: \fB{.}\fR
 .IP "\fB\-\-use\-sockets\-instead\-of\-threads\fR" 4
 .IX Item "--use-sockets-instead-of-threads"
-.PD 0
+See also: \fB\-\-use\-cores\-instead\-of\-threads\fR
 .IP "\fB\-\-use\-cores\-instead\-of\-threads\fR" 4
 .IX Item "--use-cores-instead-of-threads"
+.PD 0
 .IP "\fB\-\-use\-cpus\-instead\-of\-cores\fR (obsolete)" 4
 .IX Item "--use-cpus-instead-of-cores (obsolete)"
 .PD
-Determine how \s-1GNU\s0 \fBparallel\fR counts the number of CPUs. \s-1GNU\s0
-\&\fBparallel\fR uses this number when the number of jobslots is computed
-relative to the number of CPUs (e.g. 100% or +1).
+Determine how \s-1GNU\s0 \fBparallel\fR counts the number of CPUs.
+.Sp
+\&\s-1GNU\s0 \fBparallel\fR uses this number when the number of jobslots is
+computed relative to the number of CPUs (e.g. 100% or +1).
 .Sp
 CPUs can be counted in three different ways:
 .RS 4
@@ -2985,13 +3420,20 @@ Most users will not need these options.
 \&\fB\-\-use\-cpus\-instead\-of\-cores\fR is a (misleading) alias for
 \&\fB\-\-use\-sockets\-instead\-of\-threads\fR and is kept for backwards
 compatibility.
+.Sp
+See also: \fB\-\-number\-of\-threads\fR \fB\-\-number\-of\-cores\fR
+\&\fB\-\-number\-of\-sockets\fR
 .RE
 .IP "\fB\-v\fR" 4
 .IX Item "-v"
-Verbose.  Print the job to be run on stdout (standard output). Can be reversed
-with \fB\-\-silent\fR. See also \fB\-t\fR.
+Verbose.
+.Sp
+Print the job to be run on stdout (standard output). Can be reversed
+with \fB\-\-silent\fR.
 .Sp
 Use \fB\-v\fR \fB\-v\fR to print the wrapping ssh command when running remotely.
+.Sp
+See also: \fB\-t\fR
 .IP "\fB\-\-version\fR" 4
 .IX Item "--version"
 .PD 0
@@ -3036,7 +3478,7 @@ Wait for all commands to complete.
 .Sp
 Used with \fB\-\-semaphore\fR or \fB\-\-sqlmaster\fR.
 .Sp
-See also: \fBman sem\fR.
+See also: \fBman sem\fR
 .IP "\fB\-X\fR" 4
 .IX Item "-X"
 Multiple arguments with context replace. Insert as many arguments as
@@ -3054,7 +3496,7 @@ unexpected results if \fB{}\fR is used as part of a word.
 .Sp
 Support for \fB\-X\fR with \fB\-\-sshlogin\fR is limited and may fail.
 .Sp
-See also: \fB\-m\fR.
+See also: \fB\-m\fR
 .IP "\fB\-\-exit\fR" 4
 .IX Item "--exit"
 .PD 0
@@ -3073,8 +3515,7 @@ with all the arguments.
 .Sp
 Support for \fB\-\-xargs\fR with \fB\-\-sshlogin\fR is limited and may fail.
 .Sp
-See also \fB\-X\fR for context replace. If in doubt use \fB\-X\fR as that will
-most likely do what is needed.
+See also: \fB\-X\fR
 .SH "EXAMPLES"
 .IX Header "EXAMPLES"
 .SS "\s-1EXAMPLE:\s0 Working as xargs \-n1. Argument appending"
@@ -3323,8 +3764,8 @@ To do this on remote servers you need to transfer the function using
 .Ve
 .PP
 If your environment (aliases, variables, and functions) is small you
-can copy the full environment without having to \fBexport \-f\fR
-anything. See \fBenv_parallel\fR.
+can copy the full environment without having to
+\&\fBexport \-f\fR anything. See \fBenv_parallel\fR.
 .SS "\s-1EXAMPLE:\s0 Function tester"
 .IX Subsection "EXAMPLE: Function tester"
 To test a program with different parameters:
@@ -3785,6 +4226,15 @@ repeat the list and use replacement string \fB{choose_k}\fR:
 .Vb 1
 \&  parallel \-\-plus echo {choose_k} ::: A B C D ::: A B C D ::: A B C D
 .Ve
+.PP
+Where \fB{choose_k}\fR does not care about order, \fB{uniq}\fR cares about
+order. It simply skips jobs where values from different input sources
+are the same:
+.PP
+.Vb 2
+\&  parallel \-\-plus echo {uniq} ::: A B C  ::: A B C  ::: A B C
+\&  parallel \-\-plus echo {1uniq}+{2uniq}+{3uniq} ::: A B C  ::: A B C  ::: A B C
+.Ve
 .SS "\s-1EXAMPLE:\s0 From a to b and b to c"
 .IX Subsection "EXAMPLE: From a to b and b to c"
 Assume you have input like:
@@ -4124,7 +4574,7 @@ is much faster.
 If it still does not fit in memory you can do this:
 .PP
 .Vb 2
-\&  parallel \-\-pipepart \-a regexps.txt \-\-block 1M grep \-F \-f \- \-n bigfile | \e
+\&  parallel \-\-pipe\-part \-a regexps.txt \-\-block 1M grep \-F \-f \- \-n bigfile | \e
 \&    sort \-un | perl \-pe \*(Aqs/^\ed+://\*(Aq
 .Ve
 .PP
@@ -4137,7 +4587,7 @@ GNU/Linux you can do:
 \&              END { print sum }\*(Aq /proc/meminfo)
 \&  percpu=$((free / 200 / $(parallel \-\-number\-of\-threads)))k
 \&
-\&  parallel \-\-pipepart \-a regexps.txt \-\-block $percpu \-\-compress \e
+\&  parallel \-\-pipe\-part \-a regexps.txt \-\-block $percpu \-\-compress \e
 \&    grep \-F \-f \- \-n bigfile | \e
 \&    sort \-un | perl \-pe \*(Aqs/^\ed+://\*(Aq
 .Ve
@@ -4145,7 +4595,7 @@ GNU/Linux you can do:
 If you can live with duplicated lines and wrong order, it is faster to do:
 .PP
 .Vb 2
-\&  parallel \-\-pipepart \-a regexps.txt \-\-block $percpu \-\-compress \e
+\&  parallel \-\-pipe\-part \-a regexps.txt \-\-block $percpu \-\-compress \e
 \&    grep \-F \-f \- bigfile
 .Ve
 .PP
@@ -4156,7 +4606,7 @@ If the \s-1CPU\s0 is the limiting factor parallelization should be done on
 the regexps:
 .PP
 .Vb 3
-\&  cat regexps.txt | parallel \-\-pipe \-L1000 \-\-roundrobin \-\-compress \e
+\&  cat regexps.txt | parallel \-\-pipe \-L1000 \-\-round\-robin \-\-compress \e
 \&    grep \-f \- \-n bigfile | \e
 \&    sort \-un | perl \-pe \*(Aqs/^\ed+://\*(Aq
 .Ve
@@ -4171,7 +4621,7 @@ parallel. This is true for some \s-1RAID\s0 systems and for some network file
 systems. To parallelize the reading of \fIbigfile\fR:
 .PP
 .Vb 2
-\&  parallel \-\-pipepart \-\-block 100M \-a bigfile \-k \-\-compress \e
+\&  parallel \-\-pipe\-part \-\-block 100M \-a bigfile \-k \-\-compress \e
 \&    grep \-f regexps.txt
 .Ve
 .PP
@@ -4180,8 +4630,8 @@ these chunks. To parallelize both reading of \fIbigfile\fR and \fIregexps.txt\fR
 combine the two using \fB\-\-cat\fR:
 .PP
 .Vb 2
-\&  parallel \-\-pipepart \-\-block 100M \-a bigfile \-\-cat cat regexps.txt \e
-\&    \e| parallel \-\-pipe \-L1000 \-\-roundrobin grep \-f \- {}
+\&  parallel \-\-pipe\-part \-\-block 100M \-a bigfile \-\-cat cat regexps.txt \e
+\&    \e| parallel \-\-pipe \-L1000 \-\-round\-robin grep \-f \- {}
 .Ve
 .PP
 If a line matches multiple regexps, the line may be duplicated.
@@ -4507,6 +4957,20 @@ If not all hosts are accessible through \s-1TOR:\s0
 .Ve
 .PP
 See more \fBssh\fR tricks on https://en.wikibooks.org/wiki/OpenSSH/Cookbook/Proxies_and_Jump_Hosts
+.SS "\s-1EXAMPLE:\s0 Use sshpass with ssh"
+.IX Subsection "EXAMPLE: Use sshpass with ssh"
+If you cannot use passwordless login, you may be able to use \fBsshpass\fR:
+.PP
+.Vb 5
+\&  export SSHPASS=MyPa$$w0rd
+\&  seq 10 |
+\&    parallel \-S \*(Aq4/sshpass \-e ssh user\-with\-password@server\*(Aq echo
+\&  seq 10 |
+\&    parallel \-\-ssh \*(Aqsshpass \-e ssh\*(Aq \-S 4/user\-with\-password@server\*(Aq echo
+.Ve
+.PP
+Currently the remote detection of \s-1CPU\s0 cores is incompatible with
+\&\fBsshpass\fR so use the '4/' syntax to tell the server has 4 cores.
 .SS "\s-1EXAMPLE:\s0 Use outrun instead of ssh"
 .IX Subsection "EXAMPLE: Use outrun instead of ssh"
 \&\fBoutrun\fR lets you run a command on a remote server. \fBoutrun\fR sets up
@@ -4516,7 +4980,13 @@ transfers files. \fBoutrun\fR must be installed on the remote system.
 You can use \fBoutrun\fR in an sshlogin this way:
 .PP
 .Vb 1
-\&  parallel \-S \*(Aqoutrun user@server eval\*(Aq command
+\&  parallel \-S \*(Aqoutrun user@server\*(Aq command
+.Ve
+.PP
+or:
+.PP
+.Vb 1
+\&  parallel \-\-ssh outrun \-S server command
 .Ve
 .SS "\s-1EXAMPLE:\s0 Slurm cluster"
 .IX Subsection "EXAMPLE: Slurm cluster"
@@ -4787,7 +5257,7 @@ This will cut big.fq into one chunk per \s-1CPU\s0 core and pass it on
 stdin (standard input) to the program fastq-reader:
 .PP
 .Vb 3
-\&  parallel \-\-pipepart \-a big.fq \-\-block \-1 \-\-regexp \e
+\&  parallel \-\-pipe\-part \-a big.fq \-\-block \-1 \-\-regexp \e
 \&    \-\-recend \*(Aq\en\*(Aq \-\-recstart \*(Aq@.*(/1| 1:.*)\en[A\-Za\-z\en\e.~]\*(Aq \e
 \&    fastq\-reader
 .Ve
@@ -4829,7 +5299,7 @@ real (seekable) file \s-1GNU\s0 \fBparallel\fR can by-pass the copying and send
 the parts directly to the program:
 .PP
 .Vb 2
-\&  parallel \-\-pipepart \-\-block 100m \-a bigfile \-\-files sort |\e
+\&  parallel \-\-pipe\-part \-\-block 100m \-a bigfile \-\-files sort |\e
 \&    parallel \-Xj1 sort \-m {} \*(Aq;\*(Aq rm {} >bigfile.sort
 .Ve
 .SS "\s-1EXAMPLE:\s0 Grouping input lines"
@@ -4884,7 +5354,7 @@ each of them can run 250 jobs. This will spawn up to 2500 jobs:
 .PP
 .Vb 2
 \&  cat myinput |\e
-\&    parallel \-\-pipe \-N 50 \-\-roundrobin \-j50 parallel \-j50 your_prg
+\&    parallel \-\-pipe \-N 50 \-\-round\-robin \-j50 parallel \-j50 your_prg
 .Ve
 .PP
 This will spawn up to 62500 jobs (use with caution \- you need 64 \s-1GB
@@ -4892,7 +5362,7 @@ RAM\s0 to do this, and you may need to increase /proc/sys/kernel/pid_max):
 .PP
 .Vb 2
 \&  cat myinput |\e
-\&    parallel \-\-pipe \-N 250 \-\-roundrobin \-j250 parallel \-j250 your_prg
+\&    parallel \-\-pipe \-N 250 \-\-round\-robin \-j250 parallel \-j250 your_prg
 .Ve
 .SS "\s-1EXAMPLE:\s0 Working as mutex and counting semaphore"
 .IX Subsection "EXAMPLE: Working as mutex and counting semaphore"
@@ -5028,6 +5498,10 @@ computers:
 \&  true >jobqueue; tail \-n+0 \-f jobqueue | parallel \-S ..
 .Ve
 .PP
+Output only will be printed when reading the next input after a job
+has finished: So you need to submit a job after the first has finished
+to see the output from the first job.
+.PP
 If you keep this running for a long time, jobqueue will grow. A way of
 removing the jobs already run is by making \s-1GNU\s0 \fBparallel\fR stop when
 it hits a special value and then restart. To use \fB\-\-eof\fR to make \s-1GNU\s0
@@ -5060,20 +5534,6 @@ In some cases you can run on more CPUs and computers during the night:
 .PP
 \&\s-1GNU\s0 \fBparallel\fR discovers if \fBjobfile\fR or \fB~/.parallel/sshloginfile\fR
 changes.
-.PP
-There is a a small issue when using \s-1GNU\s0 \fBparallel\fR as queue
-system/batch manager: You have to submit JobSlot number of jobs before
-they will start, and after that you can submit one at a time, and job
-will start immediately if free slots are available.
-.PP
-Output from the running or completed jobs are held back and will only
-be printed when the next job is started (unless you use \-\-ungroup or
-\&\-\-line\-buffer, in which case the output from the jobs are printed
-immediately).
-.PP
-E.g. if you have 10 jobslots then the output from the first completed
-job will only be printed when job 11 has started, and the output of
-second completed job will only be printed when job 12 has started.
 .SS "\s-1EXAMPLE: GNU\s0 Parallel as dir processor"
 .IX Subsection "EXAMPLE: GNU Parallel as dir processor"
 If you have a dir in which users drop files that needs to be processed
@@ -5140,7 +5600,7 @@ a chunk to the program.
 \&\fB\-\-pipe\-part\fR starts one job per chunk \- just like normal
 \&\fB\-\-pipe\fR. It first finds record endings near all block borders in the
 file and then starts the jobs. By using \fB\-\-block \-1\fR it will set the
-block size to 1/\fIn\fR * size-of-file. Used this way it will start \fIn\fR
+block size to size\-of\-file/\fIn\fR. Used this way it will start \fIn\fR
 jobs in total.
 .PP
 \&\fB\-\-round\-robin\fR starts \fIn\fR jobs in total. It reads a block and
@@ -5166,6 +5626,12 @@ parsed, with \fB\-\-pipe\-part\fR only a few lines are parsed to find the
 chunk border.
 .PP
 \&\fB\-\-group\-by\fR can be combined with \fB\-\-round\-robin\fR or \fB\-\-pipe\-part\fR.
+.SH "TIME POSTFIXES"
+.IX Header "TIME POSTFIXES"
+Arguments that give a duration are given in seconds, but can be
+expressed as floats postfixed with \fBs\fR, \fBm\fR, \fBh\fR, or \fBd\fR which
+would multiply the float by 1, 60, 60*60, or 60*60*24. Thus these are
+equivalent: 100000 and 1d3.5h16.6m4s.
 .SH "UNIT PREFIX"
 .IX Header "UNIT PREFIX"
 Many numerical arguments in \s-1GNU\s0 \fBparallel\fR can be postfixed with K,
@@ -5298,8 +5764,8 @@ It needs to be quoted like one of these:
 \&  ls | parallel perl \-ne \e\*(Aq\*(Aq/^\eS+\es+\eS+$/ and print $ARGV,"\en"\*(Aq\e\*(Aq
 .Ve
 .PP
-Notice how spaces, \e's, "'s, and $'s need to be quoted. \s-1GNU\s0 \fBparallel\fR
-can do the quoting by using option \-q:
+Notice how spaces, \e's, "'s, and $'s need to be quoted. \s-1GNU\s0
+\&\fBparallel\fR can do the quoting by using option \-q:
 .PP
 .Vb 1
 \&  ls | parallel \-q  perl \-ne \*(Aq/^\eS+\es+\eS+$/ and print $ARGV,"\en"\*(Aq
@@ -5341,8 +5807,8 @@ Or for substituting output:
 \&    \*(Aqtar c {} | tee >(gzip >{}.tar.gz) | bzip2 >{}.tar.bz2\*(Aq
 .Ve
 .PP
-\&\fBConclusion\fR: To avoid dealing with the quoting problems it may be
-easier just to write a small script or a function (remember to
+\&\fBConclusion\fR: If this is confusing consider avoiding having to deal
+with quoting by writing a small script or a function (remember to
 \&\fBexport \-f\fR the function) and have \s-1GNU\s0 \fBparallel\fR call that.
 .SH "LIST RUNNING JOBS"
 .IX Header "LIST RUNNING JOBS"
@@ -5497,7 +5963,15 @@ Path to \fBtmux\fR. If unset the \fBtmux\fR in \f(CW$PATH\fR is used.
 .ie n .IP "$TMPDIR" 9
 .el .IP "\f(CW$TMPDIR\fR" 9
 .IX Item "$TMPDIR"
-Directory for temporary files. See: \fB\-\-tmpdir\fR.
+Directory for temporary files.
+.Sp
+See also: \fB\-\-tmpdir\fR
+.ie n .IP "$PARALLEL_REMOTE_TMPDIR" 9
+.el .IP "\f(CW$PARALLEL_REMOTE_TMPDIR\fR" 9
+.IX Item "$PARALLEL_REMOTE_TMPDIR"
+Directory for temporary files on remote servers.
+.Sp
+See also: \fB\-\-tmpdir\fR
 .ie n .IP "$PARALLEL" 9
 .el .IP "\f(CW$PARALLEL\fR" 9
 .IX Item "$PARALLEL"
@@ -5522,6 +5996,8 @@ can be written as:
 .Sp
 Notice the \e after 'myssh' is needed because 'myssh' and 'user@server'
 must be one argument.
+.Sp
+See also: \fB\-\-profile\fR
 .SH "DEFAULT PROFILE (CONFIG FILE)"
 .IX Header "DEFAULT PROFILE (CONFIG FILE)"
 The global configuration file /etc/parallel/config, followed by user
@@ -5726,7 +6202,7 @@ The \fB\-\-sql*\fR options may fail randomly with MySQL. This problem does
 not exist with PostgreSQL.
 .SH "REPORTING BUGS"
 .IX Header "REPORTING BUGS"
-Report bugs to <bug\-parallel@gnu.org> or
+Report bugs to <parallel@gnu.org> or
 https://savannah.gnu.org/bugs/?func=additem&group=parallel
 .PP
 When you write your report, please keep in mind, that you must give
@@ -5792,10 +6268,11 @@ installed software that is not in the VirtualBox images.
 If you cannot reproduce the error on any of the VirtualBox images
 above, see if you can build a VirtualBox image on which you can
 reproduce the error. If not you should assume the debugging will be
-done through you. That will put more burden on you and it is extra
-important you give any information that help. In general the problem
-will be fixed faster and with less work for you if you can reproduce
-the error on a VirtualBox.
+done through you. That will put a lot more burden on you and it is
+extra important you give any information that help. In general the
+problem will be fixed faster and with much less work for you if you
+can reproduce the error on a VirtualBox \- even if you have to build a
+VirtualBox image.
 .SS "In summary"
 .IX Subsection "In summary"
 Your report must include:
@@ -5821,7 +6298,7 @@ Copyright (C) 2007\-10\-18 Ole Tange, http://ole.tange.dk
 .PP
 Copyright (C) 2008\-2010 Ole Tange, http://ole.tange.dk
 .PP
-Copyright (C) 2010\-2021 Ole Tange, http://ole.tange.dk and Free
+Copyright (C) 2010\-2022 Ole Tange, http://ole.tange.dk and Free
 Software Foundation, Inc.
 .PP
 Parts of the manual concerning \fBxargs\fR compatibility is inspired by

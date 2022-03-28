@@ -88,6 +88,7 @@
           <li><a href="#No-jumphost-no-port-forwards">No jumphost, no port forwards</a></li>
         </ul>
       </li>
+      <li><a href="#EXAMPLE:-Use-sshpass-with-ssh">EXAMPLE: Use sshpass with ssh</a></li>
       <li><a href="#EXAMPLE:-Use-outrun-instead-of-ssh">EXAMPLE: Use outrun instead of ssh</a></li>
       <li><a href="#EXAMPLE:-Slurm-cluster">EXAMPLE: Slurm cluster</a></li>
       <li><a href="#EXAMPLE:-Parallelizing-rsync">EXAMPLE: Parallelizing rsync</a></li>
@@ -113,6 +114,7 @@
     </ul>
   </li>
   <li><a href="#SPREADING-BLOCKS-OF-DATA">SPREADING BLOCKS OF DATA</a></li>
+  <li><a href="#TIME-POSTFIXES">TIME POSTFIXES</a></li>
   <li><a href="#UNIT-PREFIX">UNIT PREFIX</a></li>
   <li><a href="#QUOTING">QUOTING</a></li>
   <li><a href="#LIST-RUNNING-JOBS">LIST RUNNING JOBS</a></li>
@@ -218,7 +220,9 @@
 <dt id="command"><i>command</i></dt>
 <dd>
 
-<p>Command to execute. If <i>command</i> or the following arguments contain replacement strings (such as <b>{}</b>) every instance will be substituted with the input.</p>
+<p>Command to execute.</p>
+
+<p>If <i>command</i> or the following arguments contain replacement strings (such as <b>{}</b>) every instance will be substituted with the input.</p>
 
 <p>If <i>command</i> is given, GNU <b>parallel</b> solve the same tasks as <b>xargs</b>. If <i>command</i> is not given GNU <b>parallel</b> will behave similar to <b>cat | sh</b>.</p>
 
@@ -234,7 +238,9 @@
 <dt id="pod"><b>{}</b></dt>
 <dd>
 
-<p>Input line. This replacement string will be replaced by a full line read from the input source. The input source is normally stdin (standard input), but can also be given with <b>-a</b>, <b>:::</b>, or <b>::::</b>.</p>
+<p>Input line.</p>
+
+<p>This replacement string will be replaced by a full line read from the input source. The input source is normally stdin (standard input), but can also be given with <b>--arg-file</b>, <b>:::</b>, or <b>::::</b>.</p>
 
 <p>The replacement string <b>{}</b> can be changed with <b>-I</b>.</p>
 
@@ -242,63 +248,67 @@
 
 <p>Replacement strings are normally quoted, so special characters are not parsed by the shell. The exception is if the command starts with a replacement string; then the string is not quoted.</p>
 
+<p>See also: <b>--plus</b> <b>{.}</b> <b>{/}</b> <b>{//}</b> <b>{/.}</b> <b>{#}</b> <b>{%}</b> <b>{</b><i>n</i><b>}</b> <b>{=</b><i>perl expression</i><b>=}</b></p>
+
 </dd>
 <dt id="pod1"><b>{.}</b></dt>
 <dd>
 
-<p>Input line without extension. This replacement string will be replaced by the input with the extension removed. If the input line contains <b>.</b> after the last <b>/</b>, the last <b>.</b> until the end of the string will be removed and <b>{.}</b> will be replaced with the remaining. E.g. <i>foo.jpg</i> becomes <i>foo</i>, <i>subdir/foo.jpg</i> becomes <i>subdir/foo</i>, <i>sub.dir/foo.jpg</i> becomes <i>sub.dir/foo</i>, <i>sub.dir/bar</i> remains <i>sub.dir/bar</i>. If the input line does not contain <b>.</b> it will remain unchanged.</p>
+<p>Input line without extension.</p>
 
-<p>The replacement string <b>{.}</b> can be changed with <b>--er</b>.</p>
+<p>This replacement string will be replaced by the input with the extension removed. If the input line contains <b>.</b> after the last <b>/</b>, the last <b>.</b> until the end of the string will be removed and <b>{.}</b> will be replaced with the remaining. E.g. <i>foo.jpg</i> becomes <i>foo</i>, <i>subdir/foo.jpg</i> becomes <i>subdir/foo</i>, <i>sub.dir/foo.jpg</i> becomes <i>sub.dir/foo</i>, <i>sub.dir/bar</i> remains <i>sub.dir/bar</i>. If the input line does not contain <b>.</b> it will remain unchanged.</p>
 
-<p>To understand replacement strings see <b>{}</b>.</p>
+<p>The replacement string <b>{.}</b> can be changed with <b>--extensionreplace</b></p>
+
+<p>See also: <b>{}</b> <b>--extensionreplace</b></p>
 
 </dd>
 <dt id="pod2"><b>{/}</b></dt>
 <dd>
 
-<p>Basename of input line. This replacement string will be replaced by the input with the directory part removed.</p>
+<p>Basename of input line.</p>
 
-<p>The replacement string <b>{/}</b> can be changed with <b>--basenamereplace</b>.</p>
+<p>This replacement string will be replaced by the input with the directory part removed.</p>
 
-<p>To understand replacement strings see <b>{}</b>.</p>
+<p>See also: <b>{}</b> <b>--basenamereplace</b></p>
 
 </dd>
 <dt id="pod3"><b>{//}</b></dt>
 <dd>
 
-<p>Dirname of input line. This replacement string will be replaced by the dir of the input line. See <b>dirname</b>(1).</p>
+<p>Dirname of input line.</p>
 
-<p>The replacement string <b>{//}</b> can be changed with <b>--dirnamereplace</b>.</p>
+<p>This replacement string will be replaced by the dir of the input line. See <b>dirname</b>(1).</p>
 
-<p>To understand replacement strings see <b>{}</b>.</p>
+<p>See also: <b>{}</b> <b>--dirnamereplace</b></p>
 
 </dd>
 <dt id="pod4"><b>{/.}</b></dt>
 <dd>
 
-<p>Basename of input line without extension. This replacement string will be replaced by the input with the directory and extension part removed. It is a combination of <b>{/}</b> and <b>{.}</b>.</p>
+<p>Basename of input line without extension.</p>
 
-<p>The replacement string <b>{/.}</b> can be changed with <b>--basenameextensionreplace</b>.</p>
+<p>This replacement string will be replaced by the input with the directory and extension part removed. <b>{/.}</b> is a combination of <b>{/}</b> and <b>{.}</b>.</p>
 
-<p>To understand replacement strings see <b>{}</b>.</p>
+<p>See also: <b>{}</b> <b>--basenameextensionreplace</b></p>
 
 </dd>
 <dt id="pod5"><b>{#}</b></dt>
 <dd>
 
-<p>Sequence number of the job to run. This replacement string will be replaced by the sequence number of the job being run. It contains the same number as $PARALLEL_SEQ.</p>
+<p>Sequence number of the job to run.</p>
 
-<p>The replacement string <b>{#}</b> can be changed with <b>--seqreplace</b>.</p>
+<p>This replacement string will be replaced by the sequence number of the job being run. It contains the same number as $PARALLEL_SEQ.</p>
 
-<p>To understand replacement strings see <b>{}</b>.</p>
+<p>See also: <b>{}</b> <b>--seqreplace</b></p>
 
 </dd>
 <dt id="pod6"><b>{%}</b></dt>
 <dd>
 
-<p>Job slot number. This replacement string will be replaced by the job&#39;s slot number between 1 and number of jobs to run in parallel. There will never be 2 jobs running at the same time with the same job slot number.</p>
+<p>Job slot number.</p>
 
-<p>The replacement string <b>{%}</b> can be changed with <b>--slotreplace</b>.</p>
+<p>This replacement string will be replaced by the job&#39;s slot number between 1 and number of jobs to run in parallel. There will never be 2 jobs running at the same time with the same job slot number.</p>
 
 <p>If the job needs to be retried (e.g using <b>--retries</b> or <b>--retry-failed</b>) the job slot is not automatically updated. You should then instead use <b>$PARALLEL_JOBSLOT</b>:</p>
 
@@ -322,61 +332,73 @@
 
 <p>Notice how {%} and $PARALLEL_JOBSLOT differ in the retry run of C and D.</p>
 
-<p>To understand replacement strings see <b>{}</b>.</p>
+<p>See also: <b>{}</b> <b>--jobs</b> <b>--slotreplace</b></p>
 
 </dd>
 <dt id="n"><b>{</b><i>n</i><b>}</b></dt>
 <dd>
 
-<p>Argument from input source <i>n</i> or the <i>n</i>&#39;th argument. This positional replacement string will be replaced by the input from input source <i>n</i> (when used with <b>-a</b> or <b>::::</b>) or with the <i>n</i>&#39;th argument (when used with <b>-N</b>). If <i>n</i> is negative it refers to the <i>n</i>&#39;th last argument.</p>
+<p>Argument from input source <i>n</i> or the <i>n</i>&#39;th argument.</p>
 
-<p>To understand replacement strings see <b>{}</b>.</p>
+<p>This positional replacement string will be replaced by the input from input source <i>n</i> (when used with <b>--arg-file</b> or <b>::::</b>) or with the <i>n</i>&#39;th argument (when used with <b>-N</b>). If <i>n</i> is negative it refers to the <i>n</i>&#39;th last argument.</p>
+
+<p>See also: <b>{}</b> <b>{</b><i>n</i>.<b>}</b> <b>{</b><i>n</i>/<b>}</b> <b>{</b><i>n</i>//<b>}</b> <b>{</b><i>n</i>/.<b>}</b></p>
 
 </dd>
 <dt id="n1"><b>{</b><i>n</i>.<b>}</b></dt>
 <dd>
 
-<p>Argument from input source <i>n</i> or the <i>n</i>&#39;th argument without extension. It is a combination of <b>{</b><i>n</i><b>}</b> and <b>{.}</b>.</p>
+<p>Argument from input source <i>n</i> or the <i>n</i>&#39;th argument without extension.</p>
 
-<p>This positional replacement string will be replaced by the input from input source <i>n</i> (when used with <b>-a</b> or <b>::::</b>) or with the <i>n</i>&#39;th argument (when used with <b>-N</b>). The input will have the extension removed.</p>
+<p><b>{</b><i>n</i>.<b>}</b> is a combination of <b>{</b><i>n</i><b>}</b> and <b>{.}</b>.</p>
 
-<p>To understand positional replacement strings see <b>{</b><i>n</i><b>}</b>.</p>
+<p>This positional replacement string will be replaced by the input from input source <i>n</i> (when used with <b>--arg-file</b> or <b>::::</b>) or with the <i>n</i>&#39;th argument (when used with <b>-N</b>). The input will have the extension removed.</p>
+
+<p>See also: <b>{</b><i>n</i><b>}</b> <b>{.}</b></p>
 
 </dd>
 <dt id="n2"><b>{</b><i>n</i>/<b>}</b></dt>
 <dd>
 
-<p>Basename of argument from input source <i>n</i> or the <i>n</i>&#39;th argument. It is a combination of <b>{</b><i>n</i><b>}</b> and <b>{/}</b>.</p>
+<p>Basename of argument from input source <i>n</i> or the <i>n</i>&#39;th argument.</p>
 
-<p>This positional replacement string will be replaced by the input from input source <i>n</i> (when used with <b>-a</b> or <b>::::</b>) or with the <i>n</i>&#39;th argument (when used with <b>-N</b>). The input will have the directory (if any) removed.</p>
+<p><b>{</b><i>n</i>/<b>}</b> is a combination of <b>{</b><i>n</i><b>}</b> and <b>{/}</b>.</p>
 
-<p>To understand positional replacement strings see <b>{</b><i>n</i><b>}</b>.</p>
+<p>This positional replacement string will be replaced by the input from input source <i>n</i> (when used with <b>--arg-file</b> or <b>::::</b>) or with the <i>n</i>&#39;th argument (when used with <b>-N</b>). The input will have the directory (if any) removed.</p>
+
+<p>See also: <b>{</b><i>n</i><b>}</b> <b>{/}</b></p>
 
 </dd>
 <dt id="n3"><b>{</b><i>n</i>//<b>}</b></dt>
 <dd>
 
-<p>Dirname of argument from input source <i>n</i> or the <i>n</i>&#39;th argument. It is a combination of <b>{</b><i>n</i><b>}</b> and <b>{//}</b>.</p>
+<p>Dirname of argument from input source <i>n</i> or the <i>n</i>&#39;th argument.</p>
 
-<p>This positional replacement string will be replaced by the dir of the input from input source <i>n</i> (when used with <b>-a</b> or <b>::::</b>) or with the <i>n</i>&#39;th argument (when used with <b>-N</b>). See <b>dirname</b>(1).</p>
+<p><b>{</b><i>n</i>//<b>}</b> is a combination of <b>{</b><i>n</i><b>}</b> and <b>{//}</b>.</p>
 
-<p>To understand positional replacement strings see <b>{</b><i>n</i><b>}</b>.</p>
+<p>This positional replacement string will be replaced by the dir of the input from input source <i>n</i> (when used with <b>--arg-file</b> or <b>::::</b>) or with the <i>n</i>&#39;th argument (when used with <b>-N</b>). See <b>dirname</b>(1).</p>
+
+<p>See also: <b>{</b><i>n</i><b>}</b> <b>{//}</b></p>
 
 </dd>
 <dt id="n4"><b>{</b><i>n</i>/.<b>}</b></dt>
 <dd>
 
-<p>Basename of argument from input source <i>n</i> or the <i>n</i>&#39;th argument without extension. It is a combination of <b>{</b><i>n</i><b>}</b>, <b>{/}</b>, and <b>{.}</b>.</p>
+<p>Basename of argument from input source <i>n</i> or the <i>n</i>&#39;th argument without extension.</p>
 
-<p>This positional replacement string will be replaced by the input from input source <i>n</i> (when used with <b>-a</b> or <b>::::</b>) or with the <i>n</i>&#39;th argument (when used with <b>-N</b>). The input will have the directory (if any) and extension removed.</p>
+<p><b>{</b><i>n</i>/.<b>}</b> is a combination of <b>{</b><i>n</i><b>}</b>, <b>{/}</b>, and <b>{.}</b>.</p>
 
-<p>To understand positional replacement strings see <b>{</b><i>n</i><b>}</b>.</p>
+<p>This positional replacement string will be replaced by the input from input source <i>n</i> (when used with <b>--arg-file</b> or <b>::::</b>) or with the <i>n</i>&#39;th argument (when used with <b>-N</b>). The input will have the directory (if any) and extension removed.</p>
+
+<p>See also: <b>{</b><i>n</i><b>}</b> <b>{/.}</b></p>
 
 </dd>
 <dt id="perl-expression"><b>{=</b><i>perl expression</i><b>=}</b></dt>
 <dd>
 
-<p>Replace with calculated <i>perl expression</i>. <b>$_</b> will contain the same as <b>{}</b>. After evaluating <i>perl expression</i> <b>$_</b> will be used as the value. It is recommended to only change $_ but you have full access to all of GNU <b>parallel</b>&#39;s internal functions and data structures.</p>
+<p>Replace with calculated <i>perl expression</i>.</p>
+
+<p><b>$_</b> will contain the same as <b>{}</b>. After evaluating <i>perl expression</i> <b>$_</b> will be used as the value. It is recommended to only change $_ but you have full access to all of GNU <b>parallel</b>&#39;s internal functions and data structures.</p>
 
 <p>The expression must give the same result if evaluated twice - otherwise the behaviour is undefined. E.g. this will not work as expected:</p>
 
@@ -452,6 +474,14 @@
 <dd>
 
 </dd>
+<dt id="hh_mm_ss"> <b>hh_mm_ss()</b></dt>
+<dd>
+
+</dd>
+<dt id="hh_mm"> <b>hh_mm()</b></dt>
+<dd>
+
+</dd>
 <dt id="yyyymmddhhmmss"> <b>yyyymmddhhmmss()</b></dt>
 <dd>
 
@@ -461,6 +491,14 @@
 
 </dd>
 <dt id="yyyymmdd"> <b>yyyymmdd()</b></dt>
+<dd>
+
+</dd>
+<dt id="hhmmss"> <b>hhmmss()</b></dt>
+<dd>
+
+</dd>
+<dt id="hhmm"> <b>hhmm()</b></dt>
 <dd>
 
 <p>time functions</p>
@@ -474,21 +512,25 @@
   parallel csh -c {= &#39;$_=&quot;mkdir &quot;.Q($_)&#39; =} ::: &#39;12&quot; dir&#39;
   seq 50 | parallel echo job {#} of {= &#39;$_=total_jobs()&#39; =}</code></pre>
 
-<p>See also: <b>--rpl</b> <b>--parens</b></p>
+<p>See also: <b>--rpl</b> <b>--parens</b> <b>{}</b> <b>{=</b><i>n</i> <i>perl expression</i><b>=}</b></p>
 
 </dd>
 <dt id="n-perl-expression"><b>{=</b><i>n</i> <i>perl expression</i><b>=}</b></dt>
 <dd>
 
-<p>Positional equivalent to <b>{=perl expression=}</b>. To understand positional replacement strings see <b>{</b><i>n</i><b>}</b>.</p>
+<p>Positional equivalent to <b>{=</b><i>perl expression</i><b>=}</b>.</p>
 
-<p>See also: <b>{=perl expression=}</b> <b>{</b><i>n</i><b>}</b>.</p>
+<p>To understand positional replacement strings see <b>{</b><i>n</i><b>}</b>.</p>
+
+<p>See also: <b>{=</b><i>perl expression</i><b>=}</b> <b>{</b><i>n</i><b>}</b></p>
 
 </dd>
 <dt id="arguments"><b>:::</b> <i>arguments</i></dt>
 <dd>
 
-<p>Use arguments from the command line as input source instead of stdin (standard input). Unlike other options for GNU <b>parallel</b> <b>:::</b> is placed after the <i>command</i> and before the arguments.</p>
+<p>Use arguments on the command line as input source.</p>
+
+<p>Unlike other options for GNU <b>parallel</b> <b>:::</b> is placed after the <i>command</i> and before the arguments.</p>
 
 <p>The following are equivalent:</p>
 
@@ -499,11 +541,11 @@
   parallel --arg-sep ,, gzip ,, file1 file2
   parallel ::: &quot;gzip file1&quot; &quot;gzip file2&quot;</code></pre>
 
-<p>To avoid treating <b>:::</b> as special use <b>--arg-sep</b> to set the argument separator to something else. See also <b>--arg-sep</b>.</p>
+<p>To avoid treating <b>:::</b> as special use <b>--arg-sep</b> to set the argument separator to something else.</p>
 
 <p>If multiple <b>:::</b> are given, each group will be treated as an input source, and all combinations of input sources will be generated. E.g. ::: 1 2 ::: a b c will result in the combinations (1,a) (1,b) (1,c) (2,a) (2,b) (2,c). This is useful for replacing nested for-loops.</p>
 
-<p><b>:::</b> and <b>::::</b> can be mixed. So these are equivalent:</p>
+<p><b>:::</b>, <b>::::</b>, and <b>--arg-file</b> can be mixed. So these are equivalent:</p>
 
 <pre><code>  parallel echo {1} {2} {3} ::: 6 7 ::: 4 5 ::: 1 2 3
   parallel echo {1} {2} {3} :::: &lt;(seq 6 7) &lt;(seq 4 5) \
@@ -517,6 +559,8 @@
   seq 4 5 | parallel echo {1} {2} {3} :::: &lt;(seq 6 7) - \
     ::: 1 2 3</code></pre>
 
+<p>See also: <b>--arg-sep</b> <b>--arg-file</b> <b>::::</b> <b>:::+</b> <b>::::+</b> <b>--link</b></p>
+
 </dd>
 <dt id="arguments1"><b>:::+</b> <i>arguments</i></dt>
 <dd>
@@ -529,15 +573,17 @@
 
 <pre><code>  parallel echo ::: a b c :::+ 1 2 3 ::: X Y :::+ 11 22</code></pre>
 
+<p>See also: <b>::::+</b> <b>--link</b></p>
+
 </dd>
 <dt id="argfiles"><b>::::</b> <i>argfiles</i></dt>
 <dd>
 
-<p>Another way to write <b>-a</b> <i>argfile1</i> <b>-a</b> <i>argfile2</i> ...</p>
+<p>Another way to write <b>--arg-file</b> <i>argfile1</i> <b>--arg-file</b> <i>argfile2</i> ...</p>
 
 <p><b>:::</b> and <b>::::</b> can be mixed.</p>
 
-<p>See <b>-a</b>, <b>:::</b> and <b>--link</b>.</p>
+<p>See also: <b>--arg-file</b> <b>:::</b> <b>::::+</b> <b>--link</b></p>
 
 </dd>
 <dt id="argfiles1"><b>::::+</b> <i>argfiles</i></dt>
@@ -547,6 +593,8 @@
 
 <p>Contrary to <b>--link</b>, values do not wrap: The shortest input source determines the length.</p>
 
+<p>See also: <b>--arg-file</b> <b>:::+</b> <b>--link</b></p>
+
 </dd>
 <dt id="null"><b>--null</b></dt>
 <dd>
@@ -555,7 +603,13 @@
 <dt id="pod-0"><b>-0</b></dt>
 <dd>
 
-<p>Use NUL as delimiter. Normally input lines will end in \n (newline). If they end in \0 (NUL), then use this option. It is useful for processing arguments that may contain \n (newline).</p>
+<p>Use NUL as delimiter.</p>
+
+<p>Normally input lines will end in \n (newline). If they end in \0 (NUL), then use this option. It is useful for processing arguments that may contain \n (newline).</p>
+
+<p>Shorthand for <b>--delimiter &#39;\0&#39;</b>.</p>
+
+<p>See also: <b>--delimiter</b></p>
 
 </dd>
 <dt id="arg-file-input-file"><b>--arg-file</b> <i>input-file</i></dt>
@@ -565,35 +619,43 @@
 <dt id="a-input-file"><b>-a</b> <i>input-file</i></dt>
 <dd>
 
-<p>Use <i>input-file</i> as input source. If you use this option, stdin (standard input) is given to the first process run. Otherwise, stdin (standard input) is redirected from /dev/null.</p>
+<p>Use <i>input-file</i> as input source.</p>
 
-<p>If multiple <b>-a</b> are given, each <i>input-file</i> will be treated as an input source, and all combinations of input sources will be generated. E.g. The file <b>foo</b> contains <b>1 2</b>, the file <b>bar</b> contains <b>a b c</b>. <b>-a foo</b> <b>-a bar</b> will result in the combinations (1,a) (1,b) (1,c) (2,a) (2,b) (2,c). This is useful for replacing nested for-loops.</p>
+<p>If you use this option, stdin (standard input) is given to the first process run. Otherwise, stdin (standard input) is redirected from /dev/null.</p>
 
-<p>See also: <b>--link</b> and <b>{</b><i>n</i><b>}</b>.</p>
+<p>If multiple <b>--arg-file</b> are given, each <i>input-file</i> will be treated as an input source, and all combinations of input sources will be generated. E.g. The file <b>foo</b> contains <b>1 2</b>, the file <b>bar</b> contains <b>a b c</b>. <b>-a foo</b> <b>-a bar</b> will result in the combinations (1,a) (1,b) (1,c) (2,a) (2,b) (2,c). This is useful for replacing nested for-loops.</p>
+
+<p>See also: <b>--link</b> <b>{</b><i>n</i><b>}</b> <b>::::</b> <b>::::+</b> <b>:::</b></p>
 
 </dd>
 <dt id="arg-file-sep-sep-str"><b>--arg-file-sep</b> <i>sep-str</i></dt>
 <dd>
 
-<p>Use <i>sep-str</i> instead of <b>::::</b> as separator string between command and argument files. Useful if <b>::::</b> is used for something else by the command.</p>
+<p>Use <i>sep-str</i> instead of <b>::::</b> as separator string between command and argument files.</p>
 
-<p>See also: <b>::::</b>.</p>
+<p>Useful if <b>::::</b> is used for something else by the command.</p>
+
+<p>See also: <b>::::</b></p>
 
 </dd>
 <dt id="arg-sep-sep-str"><b>--arg-sep</b> <i>sep-str</i></dt>
 <dd>
 
-<p>Use <i>sep-str</i> instead of <b>:::</b> as separator string. Useful if <b>:::</b> is used for something else by the command.</p>
+<p>Use <i>sep-str</i> instead of <b>:::</b> as separator string.</p>
+
+<p>Useful if <b>:::</b> is used for something else by the command.</p>
 
 <p>Also useful if you command uses <b>:::</b> but you still want to read arguments from stdin (standard input): Simply change <b>--arg-sep</b> to a string that is not in the command line.</p>
 
-<p>See also: <b>:::</b>.</p>
+<p>See also: <b>:::</b></p>
 
 </dd>
 <dt id="bar"><b>--bar</b></dt>
 <dd>
 
-<p>Show progress as a progress bar. In the bar is shown: % of jobs completed, estimated seconds left, and number of jobs started.</p>
+<p>Show progress as a progress bar.</p>
+
+<p>In the bar is shown: % of jobs completed, estimated seconds left, and number of jobs started.</p>
 
 <p>It is compatible with <b>zenity</b>:</p>
 
@@ -609,7 +671,11 @@
 <dt id="bf-file"><b>--bf</b> <i>file</i></dt>
 <dd>
 
-<p><i>file</i> will be transferred to each sshlogin before a job is started. It will be removed if <b>--cleanup</b> is active. The file may be a script to run or some common base data needed for the job. Multiple <b>--bf</b> can be specified to transfer more basefiles. The <i>file</i> will be transferred the same way as <b>--transferfile</b>.</p>
+<p><i>file</i> will be transferred to each sshlogin before first job is started.</p>
+
+<p>It will be removed if <b>--cleanup</b> is active. The file may be a script to run or some common base data needed for the job. Multiple <b>--bf</b> can be specified to transfer more basefiles. The <i>file</i> will be transferred the same way as <b>--transferfile</b>.</p>
+
+<p>See also: <b>--sshlogin</b> <b>--transfer</b> <b>--return</b> <b>--cleanup</b> <b>--workdir</b></p>
 
 </dd>
 <dt id="basenamereplace-replace-str"><b>--basenamereplace</b> <i>replace-str</i></dt>
@@ -621,6 +687,8 @@
 
 <p>Use the replacement string <i>replace-str</i> instead of <b>{/}</b> for basename of input line.</p>
 
+<p>See also: <b>{/}</b></p>
+
 </dd>
 <dt id="basenameextensionreplace-replace-str"><b>--basenameextensionreplace</b> <i>replace-str</i></dt>
 <dd>
@@ -631,13 +699,20 @@
 
 <p>Use the replacement string <i>replace-str</i> instead of <b>{/.}</b> for basename of input line without extension.</p>
 
+<p>See also: <b>{/.}</b></p>
+
 </dd>
 <dt id="bin-binexpr"><b>--bin</b> <i>binexpr</i></dt>
 <dd>
 
 <p>Use <i>binexpr</i> as binning key and bin input to the jobs.</p>
 
-<p><i>binexpr</i> is [column number|column name] [perlexpression] e.g. 3, Address, 3 $_%=100, Address s/\D//g.</p>
+<p><i>binexpr</i> is [column number|column name] [perlexpression] e.g.:</p>
+
+<pre><code>  3
+  Address
+  3 $_%=100
+  Address s/\D//g</code></pre>
 
 <p>Each input line is split using <b>--colsep</b>. The value of the column is put into $_, the perl expression is executed, the resulting value is is the job slot that will be given the line. If the value is bigger than the number of jobslots the value will be modulo number of jobslots.</p>
 
@@ -647,17 +722,21 @@
 
 <p><b>--bin</b> requires <b>--pipe</b> and a fixed numeric value for <b>--jobs</b>.</p>
 
-<p>See also: <b>--shard</b>, <b>--group-by</b>, <b>--roundrobin</b>.</p>
+<p>See also: SPREADING BLOCKS OF DATA <b>--group-by</b> <b>--round-robin</b> <b>--shard</b></p>
 
 </dd>
 <dt id="bg"><b>--bg</b></dt>
 <dd>
 
-<p>Run command in background thus GNU <b>parallel</b> will not wait for completion of the command before exiting. This is the default if <b>--semaphore</b> is set.</p>
+<p>Run command in background.</p>
 
-<p>See also: <b>--fg</b>, <b>man sem</b>.</p>
+<p>GNU <b>parallel</b> will normally wait for the completion of a job. With <b>--bg</b> GNU <b>parallel</b> will not wait for completion of the command before exiting.</p>
+
+<p>This is the default if <b>--semaphore</b> is set.</p>
 
 <p>Implies <b>--semaphore</b>.</p>
+
+<p>See also: <b>--fg</b> <b>man sem</b></p>
 
 </dd>
 <dt id="bibtex"><b>--bibtex</b></dt>
@@ -673,7 +752,7 @@
 
 <p>If you use <b>--will-cite</b> in scripts to be run by others you are making it harder for others to see the citation notice. The development of GNU <b>parallel</b> is indirectly financed through citations, so if your users do not know they should cite then you are making it harder to finance development. However, if you pay 10000 EUR, you have done your part to finance future development and should feel free to use <b>--will-cite</b> in scripts.</p>
 
-<p>If you do not want to help financing future development by letting other users see the citation notice or by paying, then please use another tool instead of GNU <b>parallel</b>. You can find some of the alternatives in <b>man parallel_alternatives</b>.</p>
+<p>If you do not want to help financing future development by letting other users see the citation notice or by paying, then please consider using another tool instead of GNU <b>parallel</b>. You can find some of the alternatives in <b>man parallel_alternatives</b>.</p>
 
 </dd>
 <dt id="block-size"><b>--block</b> <i>size</i></dt>
@@ -683,49 +762,59 @@
 <dt id="block-size-size"><b>--block-size</b> <i>size</i></dt>
 <dd>
 
-<p>Size of block in bytes to read at a time. The <i>size</i> can be postfixed with K, M, G, T, P, k, m, g, t, or p (see UNIT PREFIX).</p>
+<p>Size of block in bytes to read at a time.</p>
+
+<p>The <i>size</i> can be postfixed with K, M, G, T, P, k, m, g, t, or p.</p>
 
 <p>GNU <b>parallel</b> tries to meet the block size but can be off by the length of one record. For performance reasons <i>size</i> should be bigger than a two records. GNU <b>parallel</b> will warn you and automatically increase the size if you choose a <i>size</i> that is too small.</p>
 
-<p>If you use <b>-N</b>, <b>--block-size</b> should be bigger than N+1 records.</p>
+<p>If you use <b>-N</b>, <b>--block</b> should be bigger than N+1 records.</p>
 
 <p><i>size</i> defaults to 1M.</p>
 
-<p>When using <b>--pipepart</b> a negative block size is not interpreted as a blocksize but as the number of blocks each jobslot should have. So this will run 10*5 = 50 jobs in total:</p>
+<p>When using <b>--pipe-part</b> a negative block size is not interpreted as a blocksize but as the number of blocks each jobslot should have. So this will run 10*5 = 50 jobs in total:</p>
 
-<pre><code>  parallel --pipepart -a myfile --block -10 -j5 wc</code></pre>
+<pre><code>  parallel --pipe-part -a myfile --block -10 -j5 wc</code></pre>
 
-<p>This is an efficient alternative to <b>--roundrobin</b> because data is never read by GNU <b>parallel</b>, but you can still have very few jobslots process a large amount of data.</p>
+<p>This is an efficient alternative to <b>--round-robin</b> because data is never read by GNU <b>parallel</b>, but you can still have very few jobslots process large amounts of data.</p>
 
-<p>See <b>--pipe</b> and <b>--pipepart</b> for use of this.</p>
+<p>See also: UNIT PREFIX <b>-N</b> <b>--pipe</b> <b>--pipe-part</b> <b>--round-robin</b> <b>--block-timeout</b></p>
 
 </dd>
-<dt id="blocktimeout-duration"><b>--blocktimeout</b> <i>duration</i></dt>
+<dt id="block-timeout-duration"><b>--block-timeout</b> <i>duration</i></dt>
 <dd>
 
 </dd>
 <dt id="bt-duration"><b>--bt</b> <i>duration</i></dt>
 <dd>
 
-<p>Time out for reading block when using <b>--pipe</b>. If it takes longer than <i>duration</i> to read a full block, use the partial block read so far.</p>
+<p>Timeout for reading block when using <b>--pipe</b>.</p>
 
-<p><i>duration</i> must be in whole seconds, but can be expressed as floats postfixed with <b>s</b>, <b>m</b>, <b>h</b>, or <b>d</b> which would multiply the float by 1, 60, 3600, or 86400. Thus these are equivalent: <b>--blocktimeout 100000</b> and <b>--blocktimeout 1d3.5h16.6m4s</b>.</p>
+<p>If it takes longer than <i>duration</i> to read a full block, use the partial block read so far.</p>
+
+<p><i>duration</i> is in seconds, but can be postfixed with s, m, h, or d.</p>
+
+<p>See also: TIME POSTFIXES <b>--pipe</b> <b>--block</b></p>
 
 </dd>
 <dt id="cat"><b>--cat</b></dt>
 <dd>
 
-<p>Create a temporary file with content. Normally <b>--pipe</b>/<b>--pipepart</b> will give data to the program on stdin (standard input). With <b>--cat</b> GNU <b>parallel</b> will create a temporary file with the name in <b>{}</b>, so you can do: <b>parallel --pipe --cat wc {}</b>.</p>
+<p>Create a temporary file with content.</p>
 
-<p>Implies <b>--pipe</b> unless <b>--pipepart</b> is used.</p>
+<p>Normally <b>--pipe</b>/<b>--pipe-part</b> will give data to the program on stdin (standard input). With <b>--cat</b> GNU <b>parallel</b> will create a temporary file with the name in <b>{}</b>, so you can do: <b>parallel --pipe --cat wc {}</b>.</p>
 
-<p>See also: <b>--fifo</b>.</p>
+<p>Implies <b>--pipe</b> unless <b>--pipe-part</b> is used.</p>
+
+<p>See also: <b>--pipe</b> <b>--pipe-part</b> <b>--fifo</b></p>
 
 </dd>
 <dt id="cleanup"><b>--cleanup</b></dt>
 <dd>
 
-<p>Remove transferred files. <b>--cleanup</b> will remove the transferred files on the remote computer after processing is done.</p>
+<p>Remove transferred files.</p>
+
+<p><b>--cleanup</b> will remove the transferred files on the remote computer after processing is done.</p>
 
 <pre><code>  find log -name &#39;*gz&#39; | parallel \
     --sshlogin server.example.com --transferfile {} \
@@ -735,7 +824,9 @@
 
 <p>With <b>--return</b> the file transferred from the remote computer will be removed on the remote computer. Directories on the remote computer containing the file will be removed if they are empty.</p>
 
-<p><b>--cleanup</b> is ignored when not used with <b>--transferfile</b> or <b>--return</b>.</p>
+<p><b>--cleanup</b> is ignored when not used with <b>--basefile</b>, <b>--transfer</b>, <b>--transferfile</b> or <b>--return</b>.</p>
+
+<p>See also: <b>--basefile</b> <b>--transfer</b> <b>--transferfile</b> <b>--sshlogin</b> <b>--return</b></p>
 
 </dd>
 <dt id="colsep-regexp"><b>--colsep</b> <i>regexp</i></dt>
@@ -745,9 +836,11 @@
 <dt id="C-regexp"><b>-C</b> <i>regexp</i></dt>
 <dd>
 
-<p>Column separator. The input will be treated as a table with <i>regexp</i> separating the columns. The n&#39;th column can be accessed using <b>{</b><i>n</i><b>}</b> or <b>{</b><i>n</i>.<b>}</b>. E.g. <b>{3}</b> is the 3rd column.</p>
+<p>Column separator.</p>
 
-<p>If there are more input sources, each input source will be separated, but the columns from each input source will be linked (see <b>--link</b>).</p>
+<p>The input will be treated as a table with <i>regexp</i> separating the columns. The n&#39;th column can be accessed using <b>{</b><i>n</i><b>}</b> or <b>{</b><i>n</i>.<b>}</b>. E.g. <b>{3}</b> is the 3rd column.</p>
+
+<p>If there are more input sources, each input source will be separated, but the columns from each input source will be linked.</p>
 
 <pre><code>  parallel --colsep &#39;-&#39; echo {4} {3} {2} {1} \
     ::: A-B C-D ::: e-f g-h</code></pre>
@@ -756,13 +849,19 @@
 
 <p><i>regexp</i> is a Perl Regular Expression: https://perldoc.perl.org/perlre.html</p>
 
+<p>See also: <b>--csv</b> <b>{</b><i>n</i><b>}</b> <b>--trim</b> <b>--link</b></p>
+
 </dd>
 <dt id="compress"><b>--compress</b></dt>
 <dd>
 
-<p>Compress temporary files. If the output is big and very compressible this will take up less disk space in $TMPDIR and possibly be faster due to less disk I/O.</p>
+<p>Compress temporary files.</p>
+
+<p>If the output is big and very compressible this will take up less disk space in $TMPDIR and possibly be faster due to less disk I/O.</p>
 
 <p>GNU <b>parallel</b> will try <b>pzstd</b>, <b>lbzip2</b>, <b>pbzip2</b>, <b>zstd</b>, <b>pigz</b>, <b>lz4</b>, <b>lzop</b>, <b>plzip</b>, <b>lzip</b>, <b>lrz</b>, <b>gzip</b>, <b>pxz</b>, <b>lzma</b>, <b>bzip2</b>, <b>xz</b>, <b>clzip</b>, in that order, and use the first available.</p>
+
+<p>See also: <b>--compress-program</b></p>
 
 </dd>
 <dt id="compress-program-prg"><b>--compress-program</b> <i>prg</i></dt>
@@ -772,16 +871,25 @@
 <dt id="decompress-program-prg"><b>--decompress-program</b> <i>prg</i></dt>
 <dd>
 
-<p>Use <i>prg</i> for (de)compressing temporary files. It is assumed that <i>prg -dc</i> will decompress stdin (standard input) to stdout (standard output) unless <b>--decompress-program</b> is given.</p>
+<p>Use <i>prg</i> for (de)compressing temporary files.</p>
+
+<p>It is assumed that <i>prg -dc</i> will decompress stdin (standard input) to stdout (standard output) unless <b>--decompress-program</b> is given.</p>
+
+<p>See also: <b>--compress</b></p>
 
 </dd>
 <dt id="csv"><b>--csv</b></dt>
 <dd>
 
-<p>Treat input as CSV-format. <b>--colsep</b> sets the field delimiter. It works very much like <b>--colsep</b> except it deals correctly with quoting:</p>
+<p>Treat input as CSV-format.</p>
+
+<p><b>--colsep</b> sets the field delimiter. It works very much like <b>--colsep</b> except it deals correctly with quoting. Compare:</p>
 
 <pre><code>   echo &#39;&quot;1 big, 2 small&quot;,&quot;2&quot;&quot;x4&quot;&quot; plank&quot;,12.34&#39; |
-     parallel --csv echo {1} of {2} at {3}</code></pre>
+     parallel --csv echo {1} of {2} at {3}
+
+   echo &#39;&quot;1 big, 2 small&quot;,&quot;2&quot;&quot;x4&quot;&quot; plank&quot;,12.34&#39; |
+     parallel --colsep &#39;,&#39; echo {1} of {2} at {3}</code></pre>
 
 <p>Even quoted newlines are parsed correctly:</p>
 
@@ -791,25 +899,39 @@
 
 <p>When used with <b>--pipe</b> only pass full CSV-records.</p>
 
-</dd>
-<dt id="ctag-str-alpha-testing"><b>--ctag</b> <i>str</i> (alpha testing)</dt>
-<dd>
-
-<p>Color tag. See <b>--tag</b>.</p>
+<p>See also: <b>--pipe</b> <b>--link</b> <b>{</b><i>n</i><b>}</b> <b>--colsep</b> <b>--header</b></p>
 
 </dd>
-<dt id="ctagstring-str-alpha-testing"><b>--ctagstring</b> <i>str</i> (alpha testing)</dt>
+<dt id="ctag-str"><b>--ctag</b> <i>str</i></dt>
 <dd>
 
-<p>Color tagstring. See <b>--tagstring</b>.</p>
+<p>Color tag.</p>
+
+<p>If the values look very similar looking at the output it can be hard to tell when a new value is used. <b>--ctag</b> gives each value a random color.</p>
+
+<p>See also: <b>--tag</b></p>
 
 </dd>
-<dt id="delay-mytime"><b>--delay</b> <i>mytime</i></dt>
+<dt id="ctagstring-str"><b>--ctagstring</b> <i>str</i></dt>
 <dd>
 
-<p>Delay starting next job by <i>mytime</i>. GNU <b>parallel</b> will pause <i>mytime</i> after starting each job. <i>mytime</i> is normally in seconds, but can be floats postfixed with <b>s</b>, <b>m</b>, <b>h</b>, or <b>d</b> which would multiply the float by 1, 60, 3600, or 86400. Thus these are equivalent: <b>--delay 100000</b> and <b>--delay 1d3.5h16.6m4s</b>.</p>
+<p>Color tagstring.</p>
 
-<p>If you append &#39;auto&#39; to <i>mytime</i> (e.g. 13m3sauto) GNU <b>parallel</b> will automatically try to find the optimal value: If a job fails, <i>mytime</i> is doubled. If a job succeeds, <i>mytime</i> is decreased by 10%.</p>
+<p>See also: <b>--ctag</b> <b>--tagstring</b></p>
+
+</dd>
+<dt id="delay-duration"><b>--delay</b> <i>duration</i></dt>
+<dd>
+
+<p>Delay starting next job by <i>duration</i>.</p>
+
+<p>GNU <b>parallel</b> will not start another job for the next <i>duration</i>.</p>
+
+<p><i>duration</i> is in seconds, but can be postfixed with s, m, h, or d.</p>
+
+<p>If you append &#39;auto&#39; to <i>duration</i> (e.g. 13m3sauto) GNU <b>parallel</b> will automatically try to find the optimal value: If a job fails, <i>duration</i> is increased by 30%. If a job succeeds, <i>duration</i> is decreased by 10%.</p>
+
+<p>See also: TIME POSTFIXES <b>--retries</b> <b>--ssh-delay</b></p>
 
 </dd>
 <dt id="delimiter-delim"><b>--delimiter</b> <i>delim</i></dt>
@@ -819,7 +941,11 @@
 <dt id="d-delim"><b>-d</b> <i>delim</i></dt>
 <dd>
 
-<p>Input items are terminated by <i>delim</i>. Quotes and backslash are not special; every character in the input is taken literally. Disables the end-of-file string, which is treated like any other argument. The specified delimiter may be characters, C-style character escapes such as \n, or octal or hexadecimal escape codes. Octal and hexadecimal escape codes are understood as for the printf command. Multibyte characters are not supported.</p>
+<p>Input items are terminated by <i>delim</i>.</p>
+
+<p>The specified delimiter may be characters, C-style character escapes such as \n, or octal or hexadecimal escape codes. Octal and hexadecimal escape codes are understood as for the printf command.</p>
+
+<p>See also: <b>--colsep</b></p>
 
 </dd>
 <dt id="dirnamereplace-replace-str"><b>--dirnamereplace</b> <i>replace-str</i></dt>
@@ -831,17 +957,25 @@
 
 <p>Use the replacement string <i>replace-str</i> instead of <b>{//}</b> for dirname of input line.</p>
 
+<p>See also: <b>{//}</b></p>
+
 </dd>
 <dt id="dry-run"><b>--dry-run</b></dt>
 <dd>
 
-<p>Print the job to run on stdout (standard output), but do not run the job. Use <b>-v -v</b> to include the wrapping that GNU <b>parallel</b> generates (for remote jobs, <b>--tmux</b>, <b>--nice</b>, <b>--pipe</b>, <b>--pipepart</b>, <b>--fifo</b> and <b>--cat</b>). Do not count on this literally, though, as the job may be scheduled on another computer or the local computer if : is in the list.</p>
+<p>Print the job to run on stdout (standard output), but do not run the job.</p>
+
+<p>Use <b>-v -v</b> to include the wrapping that GNU <b>parallel</b> generates (for remote jobs, <b>--tmux</b>, <b>--nice</b>, <b>--pipe</b>, <b>--pipe-part</b>, <b>--fifo</b> and <b>--cat</b>). Do not count on this literally, though, as the job may be scheduled on another computer or the local computer if : is in the list.</p>
+
+<p>See also: <b>-v</b></p>
 
 </dd>
 <dt id="E-eof-str"><b>-E</b> <i>eof-str</i></dt>
 <dd>
 
-<p>Set the end of file string to <i>eof-str</i>. If the end of file string occurs as a line of input, the rest of the input is not read. If neither <b>-E</b> nor <b>-e</b> is used, no end of file string is used.</p>
+<p>Set the end of file string to <i>eof-str</i>.</p>
+
+<p>If the end of file string occurs as a line of input, the rest of the input is not read. If neither <b>-E</b> nor <b>-e</b> is used, no end of file string is used.</p>
 
 </dd>
 <dt id="eof-eof-str"><b>--eof</b>[=<i>eof-str</i>]</dt>
@@ -851,13 +985,17 @@
 <dt id="e-eof-str"><b>-e</b>[<i>eof-str</i>]</dt>
 <dd>
 
-<p>This option is a synonym for the <b>-E</b> option. Use <b>-E</b> instead, because it is POSIX compliant for <b>xargs</b> while this option is not. If <i>eof-str</i> is omitted, there is no end of file string. If neither <b>-E</b> nor <b>-e</b> is used, no end of file string is used.</p>
+<p>This option is a synonym for the <b>-E</b> option.</p>
+
+<p>Use <b>-E</b> instead, because it is POSIX compliant for <b>xargs</b> while this option is not. If <i>eof-str</i> is omitted, there is no end of file string. If neither <b>-E</b> nor <b>-e</b> is used, no end of file string is used.</p>
 
 </dd>
 <dt id="embed"><b>--embed</b></dt>
 <dd>
 
-<p>Embed GNU <b>parallel</b> in a shell script. If you need to distribute your script to someone who does not want to install GNU <b>parallel</b> you can embed GNU <b>parallel</b> in your own shell script:</p>
+<p>Embed GNU <b>parallel</b> in a shell script.</p>
+
+<p>If you need to distribute your script to someone who does not want to install GNU <b>parallel</b> you can embed GNU <b>parallel</b> in your own shell script:</p>
 
 <pre><code>  parallel --embed &gt; new_script</code></pre>
 
@@ -867,27 +1005,31 @@
 <dt id="env-var"><b>--env</b> <i>var</i></dt>
 <dd>
 
-<p>Copy environment variable <i>var</i>. This will copy <i>var</i> to the environment that the command is run in. This is especially useful for remote execution.</p>
+<p>Copy environment variable <i>var</i>.</p>
 
-<p>In Bash <i>var</i> can also be a Bash function - just remember to <b>export -f</b> the function, see <b>command</b>.</p>
+<p>This will copy <i>var</i> to the environment that the command is run in. This is especially useful for remote execution.</p>
+
+<p>In Bash <i>var</i> can also be a Bash function - just remember to <b>export -f</b> the function.</p>
 
 <p>The variable &#39;_&#39; is special. It will copy all exported environment variables except for the ones mentioned in ~/.parallel/ignored_vars.</p>
 
 <p>To copy the full environment (both exported and not exported variables, arrays, and functions) use <b>env_parallel</b>.</p>
 
-<p>See also: <b>--record-env</b>, <b>--session</b>.</p>
+<p>See also: <b>--record-env</b> <b>--session</b> <b>--sshlogin</b> <i>command</i> <b>env_parallel</b></p>
 
 </dd>
 <dt id="eta"><b>--eta</b></dt>
 <dd>
 
-<p>Show the estimated number of seconds before finishing. This forces GNU <b>parallel</b> to read all jobs before starting to find the number of jobs. GNU <b>parallel</b> normally only reads the next job to run.</p>
+<p>Show the estimated number of seconds before finishing.</p>
+
+<p>This forces GNU <b>parallel</b> to read all jobs before starting to find the number of jobs. GNU <b>parallel</b> normally only reads the next job to run.</p>
 
 <p>The estimate is based on the runtime of finished jobs, so the first estimate will only be shown when the first job has finished.</p>
 
 <p>Implies <b>--progress</b>.</p>
 
-<p>See also: <b>--bar</b>, <b>--progress</b>.</p>
+<p>See also: <b>--bar</b> <b>--progress</b></p>
 
 </dd>
 <dt id="fg"><b>--fg</b></dt>
@@ -897,65 +1039,86 @@
 
 <p>With <b>--tmux</b> and <b>--tmuxpane</b> GNU <b>parallel</b> will start <b>tmux</b> in the foreground.</p>
 
-<p>With <b>--semaphore</b> GNU <b>parallel</b> will run the command in the foreground (opposite <b>--bg</b>), and wait for completion of the command before exiting.</p>
+<p>With <b>--semaphore</b> GNU <b>parallel</b> will run the command in the foreground (opposite <b>--bg</b>), and wait for completion of the command before exiting. Exit code will be that of the command.</p>
 
-<p>See also: <b>--bg</b>, <b>man sem</b>.</p>
+<p>See also: <b>--bg</b> <b>man sem</b></p>
 
 </dd>
 <dt id="fifo"><b>--fifo</b></dt>
 <dd>
 
-<p>Create a temporary fifo with content. Normally <b>--pipe</b> and <b>--pipepart</b> will give data to the program on stdin (standard input). With <b>--fifo</b> GNU <b>parallel</b> will create a temporary fifo with the name in <b>{}</b>, so you can do: <b>parallel --pipe --fifo wc {}</b>.</p>
+<p>Create a temporary fifo with content.</p>
 
-<p>Beware: If data is not read from the fifo, the job will block forever.</p>
+<p>Normally <b>--pipe</b> and <b>--pipe-part</b> will give data to the program on stdin (standard input). With <b>--fifo</b> GNU <b>parallel</b> will create a temporary fifo with the name in <b>{}</b>, so you can do:</p>
 
-<p>Implies <b>--pipe</b> unless <b>--pipepart</b> is used.</p>
+<pre><code>  parallel --pipe --fifo wc {}</code></pre>
 
-<p>See also: <b>--cat</b>.</p>
+<p>Beware: If the fifo is never opened for reading, the job will block forever:</p>
+
+<pre><code>  seq 1000000 | parallel --fifo echo This will block
+  seq 1000000 | parallel --fifo &#39;echo This will not block &lt; {}&#39;</code></pre>
+
+<p>Implies <b>--pipe</b> unless <b>--pipe-part</b> is used.</p>
+
+<p>See also: <b>--cat</b> <b>--pipe</b> <b>--pipe-part</b></p>
 
 </dd>
 <dt id="filter-filter"><b>--filter</b> <i>filter</i></dt>
 <dd>
 
-<p>Only run jobs where <i>filter</i> is true. <i>filter</i> can contain replacement strings and Perl code. Example:</p>
+<p>Only run jobs where <i>filter</i> is true.</p>
+
+<p><i>filter</i> can contain replacement strings and Perl code. Example:</p>
 
 <pre><code>   parallel --filter &#39;{1} &lt; {2}+1&#39; echo ::: {1..3} ::: {1..3}</code></pre>
 
 <p>Outputs: 1,1 1,2 1,3 2,2 2,3 3,3</p>
 
+<p>See also: <b>skip()</b> <b>--no-run-if-empty</b></p>
+
 </dd>
 <dt id="filter-hosts"><b>--filter-hosts</b></dt>
 <dd>
 
-<p>Remove down hosts. For each remote host: check that login through ssh works. If not: do not use this host.</p>
+<p>Remove down hosts.</p>
+
+<p>For each remote host: check that login through ssh works. If not: do not use this host.</p>
 
 <p>For performance reasons, this check is performed only at the start and every time <b>--sshloginfile</b> is changed. If an host goes down after the first check, it will go undetected until <b>--sshloginfile</b> is changed; <b>--retries</b> can be used to mitigate this.</p>
 
 <p>Currently you can <i>not</i> put <b>--filter-hosts</b> in a profile, $PARALLEL, /etc/parallel/config or similar. This is because GNU <b>parallel</b> uses GNU <b>parallel</b> to compute this, so you will get an infinite loop. This will likely be fixed in a later release.</p>
 
+<p>See also: <b>--sshloginfile</b> <b>--sshlogin</b> <b>--retries</b></p>
+
 </dd>
 <dt id="gnu"><b>--gnu</b></dt>
 <dd>
 
-<p>Behave like GNU <b>parallel</b>. This option historically took precedence over <b>--tollef</b>. The <b>--tollef</b> option is now retired, and therefore may not be used. <b>--gnu</b> is kept for compatibility.</p>
+<p>Behave like GNU <b>parallel</b>.</p>
+
+<p>This option historically took precedence over <b>--tollef</b>. The <b>--tollef</b> option is now retired, and therefore may not be used. <b>--gnu</b> is kept for compatibility.</p>
 
 </dd>
 <dt id="group"><b>--group</b></dt>
 <dd>
 
-<p>Group output. Output from each job is grouped together and is only printed when the command is finished. Stdout (standard output) first followed by stderr (standard error).</p>
+<p>Group output.</p>
 
-<p>This takes in the order of 0.5ms per job and depends on the speed of your disk for larger output. It can be disabled with <b>-u</b>, but this means output from different commands can get mixed.</p>
+<p>Output from each job is grouped together and is only printed when the command is finished. Stdout (standard output) first followed by stderr (standard error).</p>
+
+<p>This takes in the order of 0.5ms CPU time per job and depends on the speed of your disk for larger output. It can be disabled with <b>-u</b>, but this means output from different commands can get mixed.</p>
 
 <p><b>--group</b> is the default. Can be reversed with <b>-u</b>.</p>
 
-<p>See also: <b>--line-buffer</b> <b>--ungroup</b></p>
+<p>See also: <b>--line-buffer</b> <b>--ungroup</b> <b>--tag</b></p>
 
 </dd>
 <dt id="group-by-val"><b>--group-by</b> <i>val</i></dt>
 <dd>
 
-<p>Group input by value. Combined with <b>--pipe</b>/<b>--pipepart</b> <b>--group-by</b> groups lines with the same value into a record.</p>
+<p>Group input by value.</p>
+
+<p>Combined with <b>--pipe</b>/<b>--pipe-part</b> <b>--group-by</b> groups lines with the same value into a record.</p>
 
 <p>The value can be computed from the full line or from a single column.</p>
 
@@ -974,7 +1137,7 @@
 
 <p>Treat the first line as a header and use the value in the column named.</p>
 
-<p>(Not supported with <b>--pipepart</b>).</p>
+<p>(Not supported with <b>--pipe-part</b>).</p>
 
 </dd>
 <dt id="perl-expression1"> perl expression</dt>
@@ -994,7 +1157,7 @@
 
 <p>Put the value of the column put in $_, run the perl expression, and use $_ as the value.</p>
 
-<p>(Not supported with <b>--pipepart</b>).</p>
+<p>(Not supported with <b>--pipe-part</b>).</p>
 
 </dd>
 </dl>
@@ -1029,7 +1192,7 @@
 <pre><code>  cat table.csv | parallel --pipe --colsep , --header : \
     --group-by &#39;UserID s/\D//g&#39; -kN1 wc</code></pre>
 
-<p>See also: <b>--shard</b>, <b>--roundrobin</b>.</p>
+<p>See also: SPREADING BLOCKS OF DATA <b>--pipe</b> <b>--pipe-part</b> <b>--bin</b> <b>--shard</b> <b>--round-robin</b></p>
 
 </dd>
 <dt id="help"><b>--help</b></dt>
@@ -1049,7 +1212,9 @@
 <dt id="halt-val"><b>--halt</b> <i>val</i></dt>
 <dd>
 
-<p>When should GNU <b>parallel</b> terminate? In some situations it makes no sense to run all jobs. GNU <b>parallel</b> should simply give up as soon as a condition is met.</p>
+<p>When should GNU <b>parallel</b> terminate?</p>
+
+<p>In some situations it makes no sense to run all jobs. GNU <b>parallel</b> should simply stop as soon as a condition is met.</p>
 
 <p><i>val</i> defaults to <b>never</b>, which runs all jobs no matter what.</p>
 
@@ -1165,13 +1330,17 @@
 <dt id="header-regexp"><b>--header</b> <i>regexp</i></dt>
 <dd>
 
-<p>Use regexp as header. For normal usage the matched header (typically the first line: <b>--header &#39;.*\n&#39;</b>) will be split using <b>--colsep</b> (which will default to &#39;\t&#39;) and column names can be used as replacement variables: <b>{column name}</b>, <b>{column name/}</b>, <b>{column name//}</b>, <b>{column name/.}</b>, <b>{column name.}</b>, <b>{=column name perl expression =}</b>, ..</p>
+<p>Use regexp as header.</p>
+
+<p>For normal usage the matched header (typically the first line: <b>--header &#39;.*\n&#39;</b>) will be split using <b>--colsep</b> (which will default to &#39;\t&#39;) and column names can be used as replacement variables: <b>{column name}</b>, <b>{column name/}</b>, <b>{column name//}</b>, <b>{column name/.}</b>, <b>{column name.}</b>, <b>{=column name perl expression =}</b>, ..</p>
 
 <p>For <b>--pipe</b> the matched header will be prepended to each output.</p>
 
 <p><b>--header :</b> is an alias for <b>--header &#39;.*\n&#39;</b>.</p>
 
 <p>If <i>regexp</i> is a number, it is a fixed number of lines.</p>
+
+<p>See also: <b>--colsep</b> <b>--pipe</b> <b>--pipe-part</b></p>
 
 </dd>
 <dt id="hostgroups"><b>--hostgroups</b></dt>
@@ -1181,7 +1350,9 @@
 <dt id="hgrp"><b>--hgrp</b></dt>
 <dd>
 
-<p>Enable hostgroups on arguments. If an argument contains &#39;@&#39; the string after &#39;@&#39; will be removed and treated as a list of hostgroups on which this job is allowed to run. If there is no <b>--sshlogin</b> with a corresponding group, the job will run on any hostgroup.</p>
+<p>Enable hostgroups on arguments.</p>
+
+<p>If an argument contains &#39;@&#39; the string after &#39;@&#39; will be removed and treated as a list of hostgroups on which this job is allowed to run. If there is no <b>--sshlogin</b> with a corresponding group, the job will run on any hostgroup.</p>
 
 <p>Example:</p>
 
@@ -1192,7 +1363,7 @@
 
 <p><b>my_grp1_arg</b> may be run on either <b>myserver1</b> or <b>myserver2</b>, <b>third</b> may be run on either <b>myserver1</b> or <b>myserver3</b>, but <b>arg_for_grp2</b> will only be run on <b>myserver2</b>.</p>
 
-<p>See also: <b>--sshlogin</b>, <b>$PARALLEL_HOSTGROUPS</b>, <b>$PARALLEL_ARGHOSTGROUPS</b>.</p>
+<p>See also: <b>--sshlogin</b> <b>$PARALLEL_HOSTGROUPS</b> <b>$PARALLEL_ARGHOSTGROUPS</b></p>
 
 </dd>
 <dt id="I-replace-str"><b>-I</b> <i>replace-str</i></dt>
@@ -1200,21 +1371,29 @@
 
 <p>Use the replacement string <i>replace-str</i> instead of <b>{}</b>.</p>
 
+<p>See also: <b>{}</b></p>
+
 </dd>
-<dt id="replace-replace-str"><b>--replace</b>[=<i>replace-str</i>]</dt>
+<dt id="replace-replace-str"><b>--replace</b> [<i>replace-str</i>]</dt>
 <dd>
 
 </dd>
-<dt id="i-replace-str"><b>-i</b>[<i>replace-str</i>]</dt>
+<dt id="i-replace-str"><b>-i</b> [<i>replace-str</i>]</dt>
 <dd>
 
-<p>This option is a synonym for <b>-I</b><i>replace-str</i> if <i>replace-str</i> is specified, and for <b>-I {}</b> otherwise. This option is deprecated; use <b>-I</b> instead.</p>
+<p>This option is deprecated; use <b>-I</b> instead.</p>
+
+<p>This option is a synonym for <b>-I</b><i>replace-str</i> if <i>replace-str</i> is specified, and for <b>-I {}</b> otherwise.</p>
+
+<p>See also: <b>{}</b></p>
 
 </dd>
 <dt id="joblog-logfile"><b>--joblog</b> <i>logfile</i></dt>
 <dd>
 
-<p>Logfile for executed jobs. Save a list of the executed jobs to <i>logfile</i> in the following TAB separated format: sequence number, sshlogin, start time as seconds since epoch, run time in seconds, bytes in files transferred, bytes in files returned, exit status, signal, and command run.</p>
+<p>Logfile for executed jobs.</p>
+
+<p>Save a list of the executed jobs to <i>logfile</i> in the following TAB separated format: sequence number, sshlogin, start time as seconds since epoch, run time in seconds, bytes in files transferred, bytes in files returned, exit status, signal, and command run.</p>
 
 <p>For <b>--pipe</b> bytes transferred and bytes returned are number of input and output of bytes.</p>
 
@@ -1229,7 +1408,7 @@
 
 <pre><code>  cat joblog | column -t</code></pre>
 
-<p>See also: <b>--resume</b> <b>--resume-failed</b>.</p>
+<p>See also: <b>--resume</b> <b>--resume-failed</b></p>
 
 </dd>
 <dt id="jobs-N"><b>--jobs</b> <i>N</i></dt>
@@ -1247,7 +1426,16 @@
 <dt id="P-N"><b>-P</b> <i>N</i></dt>
 <dd>
 
-<p>Number of jobslots on each machine. Run up to N jobs in parallel. 0 means as many as possible. Default is 100% which will run one job per CPU on each machine.</p>
+<p>Number of jobslots on each machine.</p>
+
+<p>Run up to N jobs in parallel. 0 means as many as possible (this can take a while to determine). Default is 100% which will run one job per CPU on each machine.</p>
+
+<p>Due to a bug <b>-j 0</b> will also evaluate replacement strings twice up to the number of joblots:</p>
+
+<pre><code>  # This will not count from 1 but from number-of-jobslots
+  seq 10000 | parallel -j0   echo &#39;{= $_ = $foo++; =}&#39; | head
+  # This will count from 1
+  seq 10000 | parallel -j100 echo &#39;{= $_ = $foo++; =}&#39; | head</code></pre>
 
 <p>If <b>--semaphore</b> is set, the default is 1 thus making a mutex.</p>
 
@@ -1267,7 +1455,11 @@
 <dt id="P-N1"><b>-P</b> <i>+N</i></dt>
 <dd>
 
-<p>Add N to the number of CPUs. Run this many jobs in parallel. See also <b>--use-cores-instead-of-threads</b> and <b>--use-sockets-instead-of-threads</b>.</p>
+<p>Add N to the number of CPU threads.</p>
+
+<p>Run this many jobs in parallel.</p>
+
+<p>See also: <b>--number-of-threads</b> <b>--number-of-cores</b> <b>--number-of-sockets</b></p>
 
 </dd>
 <dt id="jobs--N"><b>--jobs</b> <i>-N</i></dt>
@@ -1285,7 +1477,11 @@
 <dt id="P--N"><b>-P</b> <i>-N</i></dt>
 <dd>
 
-<p>Subtract N from the number of CPUs. Run this many jobs in parallel. If the evaluated number is less than 1 then 1 will be used. See also <b>--use-cores-instead-of-threads</b> and <b>--use-sockets-instead-of-threads</b>.</p>
+<p>Subtract N from the number of CPU threads.</p>
+
+<p>Run this many jobs in parallel. If the evaluated number is less than 1 then 1 will be used.</p>
+
+<p>See also: <b>--number-of-threads</b> <b>--number-of-cores</b> <b>--number-of-sockets</b></p>
 
 </dd>
 <dt id="jobs-N2"><b>--jobs</b> <i>N</i>%</dt>
@@ -1303,7 +1499,11 @@
 <dt id="P-N2"><b>-P</b> <i>N</i>%</dt>
 <dd>
 
-<p>Multiply N% with the number of CPUs. Run this many jobs in parallel. See also <b>--use-cores-instead-of-threads</b> and <b>--use-sockets-instead-of-threads</b>.</p>
+<p>Multiply N% with the number of CPU threads.</p>
+
+<p>Run this many jobs in parallel.</p>
+
+<p>See also: <b>--number-of-threads</b> <b>--number-of-cores</b> <b>--number-of-sockets</b></p>
 
 </dd>
 <dt id="jobs-procfile"><b>--jobs</b> <i>procfile</i></dt>
@@ -1321,7 +1521,9 @@
 <dt id="P-procfile"><b>-P</b> <i>procfile</i></dt>
 <dd>
 
-<p>Read parameter from file. Use the content of <i>procfile</i> as parameter for <i>-j</i>. E.g. <i>procfile</i> could contain the string 100% or +2 or 10. If <i>procfile</i> is changed when a job completes, <i>procfile</i> is read again and the new number of jobs is computed. If the number is lower than before, running jobs will be allowed to finish but new jobs will not be started until the wanted number of jobs has been reached. This makes it possible to change the number of simultaneous running jobs while GNU <b>parallel</b> is running.</p>
+<p>Read parameter from file.</p>
+
+<p>Use the content of <i>procfile</i> as parameter for <i>-j</i>. E.g. <i>procfile</i> could contain the string 100% or +2 or 10. If <i>procfile</i> is changed when a job completes, <i>procfile</i> is read again and the new number of jobs is computed. If the number is lower than before, running jobs will be allowed to finish but new jobs will not be started until the wanted number of jobs has been reached. This makes it possible to change the number of simultaneous running jobs while GNU <b>parallel</b> is running.</p>
 
 </dd>
 <dt id="keep-order"><b>--keep-order</b></dt>
@@ -1331,16 +1533,23 @@
 <dt id="k"><b>-k</b></dt>
 <dd>
 
-<p>Keep sequence of output same as the order of input. Normally the output of a job will be printed as soon as the job completes. Try this to see the difference:</p>
+<p>Keep sequence of output same as the order of input.</p>
+
+<p>Normally the output of a job will be printed as soon as the job completes. Try this to see the difference:</p>
 
 <pre><code>  parallel -j4 sleep {}\; echo {} ::: 2 1 4 3
   parallel -j4 -k sleep {}\; echo {} ::: 2 1 4 3</code></pre>
 
 <p>If used with <b>--onall</b> or <b>--nonall</b> the output will grouped by sshlogin in sorted order.</p>
 
-<p>If used with <b>--pipe --roundrobin</b> and the same input, the jobslots will get the same blocks in the same order in every run.</p>
+<p><b>--keep-order</b> cannot keep the output order when used with <b>--pipe --round-robin</b>. Here it instead means, that the jobslots will get the same blocks as input in the same order in every run if the input is kept the same. Run each of these twice and compare:</p>
+
+<pre><code>  seq 10000000 | parallel --pipe --round-robin &#39;sleep 0.$RANDOM; wc&#39;
+  seq 10000000 | parallel --pipe -k --round-robin &#39;sleep 0.$RANDOM; wc&#39;</code></pre>
 
 <p><b>-k</b> only affects the order in which the output is printed - not the order in which jobs are run.</p>
+
+<p>See also: <b>--group</b> <b>--line-buffer</b></p>
 
 </dd>
 <dt id="L-recsize"><b>-L</b> <i>recsize</i></dt>
@@ -1352,12 +1561,14 @@
 
 <p><b>-L 0</b> means read one line, but insert 0 arguments on the command line.</p>
 
-<p><i>recsize</i> can be postfixed with K, M, G, T, P, k, m, g, t, or p (see UNIT PREFIX).</p>
+<p><i>recsize</i> can be postfixed with K, M, G, T, P, k, m, g, t, or p.</p>
 
 <p>Implies <b>-X</b> unless <b>-m</b>, <b>--xargs</b>, or <b>--pipe</b> is set.</p>
 
+<p>See also: UNIT PREFIX <b>-N</b> <b>--max-lines</b> <b>--block</b> <b>-X</b> <b>-m</b> <b>--xargs</b> <b>--pipe</b></p>
+
 </dd>
-<dt id="max-lines-recsize"><b>--max-lines</b>[=<i>recsize</i>]</dt>
+<dt id="max-lines-recsize"><b>--max-lines</b> [<i>recsize</i>]</dt>
 <dd>
 
 </dd>
@@ -1372,11 +1583,15 @@
 
 <p>Implies <b>-X</b> unless <b>-m</b>, <b>--xargs</b>, or <b>--pipe</b> is set.</p>
 
+<p>See also: UNIT PREFIX <b>-N</b> <b>--block</b> <b>-X</b> <b>-m</b> <b>--xargs</b> <b>--pipe</b></p>
+
 </dd>
 <dt id="limit-command-args"><b>--limit</b> &quot;<i>command</i> <i>args</i>&quot;</dt>
 <dd>
 
-<p>Dynamic job limit. Before starting a new job run <i>command</i> with <i>args</i>. The exit value of <i>command</i> determines what GNU <b>parallel</b> will do:</p>
+<p>Dynamic job limit.</p>
+
+<p>Before starting a new job run <i>command</i> with <i>args</i>. The exit value of <i>command</i> determines what GNU <b>parallel</b> will do:</p>
 
 <dl>
 
@@ -1424,6 +1639,8 @@
 </dd>
 </dl>
 
+<p>See also: <b>--memfree</b> <b>--load</b></p>
+
 </dd>
 <dt id="line-buffer"><b>--line-buffer</b></dt>
 <dd>
@@ -1432,7 +1649,9 @@
 <dt id="lb"><b>--lb</b></dt>
 <dd>
 
-<p>Buffer output on line basis. <b>--group</b> will keep the output together for a whole job. <b>--ungroup</b> allows output to mixup with half a line coming from one job and half a line coming from another job. <b>--line-buffer</b> fits between these two: GNU <b>parallel</b> will print a full line, but will allow for mixing lines of different jobs.</p>
+<p>Buffer output on line basis.</p>
+
+<p><b>--group</b> will keep the output together for a whole job. <b>--ungroup</b> allows output to mixup with half a line coming from one job and half a line coming from another job. <b>--line-buffer</b> fits between these two: GNU <b>parallel</b> will print a full line, but will allow for mixing lines of different jobs.</p>
 
 <p><b>--line-buffer</b> takes more CPU power than both <b>--group</b> and <b>--ungroup</b>, but can be much faster than <b>--group</b> if the CPU is not the limiting factor.</p>
 
@@ -1444,17 +1663,19 @@
   parallel -j0 --lb &#39;echo {};sleep {};echo {}&#39; ::: 1 3 2 4
   parallel -j0 -k --lb &#39;echo {};sleep {};echo {}&#39; ::: 1 3 2 4</code></pre>
 
-<p>See also: <b>--group</b> <b>--ungroup</b></p>
-
-</dd>
-<dt id="xapply"><b>--xapply</b></dt>
-<dd>
+<p>See also: <b>--group</b> <b>--ungroup</b> <b>--keep-order</b> <b>--tag</b></p>
 
 </dd>
 <dt id="link"><b>--link</b></dt>
 <dd>
 
-<p>Link input sources. Read multiple input sources like <b>xapply</b>. If multiple input sources are given, one argument will be read from each of the input sources. The arguments can be accessed in the command as <b>{1}</b> .. <b>{</b><i>n</i><b>}</b>, so <b>{1}</b> will be a line from the first input source, and <b>{6}</b> will refer to the line with the same line number from the 6th input source.</p>
+</dd>
+<dt id="xapply"><b>--xapply</b></dt>
+<dd>
+
+<p>Link input sources.</p>
+
+<p>Read multiple input sources like the command <b>xapply</b>. If multiple input sources are given, one argument will be read from each of the input sources. The arguments can be accessed in the command as <b>{1}</b> .. <b>{</b><i>n</i><b>}</b>, so <b>{1}</b> will be a line from the first input source, and <b>{6}</b> will refer to the line with the same line number from the 6th input source.</p>
 
 <p>Compare these two:</p>
 
@@ -1466,13 +1687,17 @@
 <pre><code>  parallel --link echo {1} {2} {3} \
     ::: 1 2 ::: I II III ::: a b c d e f g</code></pre>
 
-<p>See also <b>--header</b>, <b>:::+</b>, <b>::::+</b>.</p>
+<p>See also: <b>--header</b> <b>:::+</b> <b>::::+</b></p>
 
 </dd>
 <dt id="load-max-load"><b>--load</b> <i>max-load</i></dt>
 <dd>
 
+<p>Only start jobs if load is less than max-load.</p>
+
 <p>Do not start new jobs on a given computer unless the number of running processes on the computer is less than <i>max-load</i>. <i>max-load</i> uses the same syntax as <b>--jobs</b>, so <i>100%</i> for one per CPU is a valid setting. Only difference is 0 which is interpreted as 0.01.</p>
+
+<p>See also: <b>--limit</b> <b>--jobs</b></p>
 
 </dd>
 <dt id="controlmaster"><b>--controlmaster</b></dt>
@@ -1482,37 +1707,47 @@
 <dt id="M"><b>-M</b></dt>
 <dd>
 
-<p>Use ssh&#39;s ControlMaster to make ssh connections faster. Useful if jobs run remote and are very fast to run. This is disabled for sshlogins that specify their own ssh command.</p>
+<p>Use ssh&#39;s ControlMaster to make ssh connections faster.</p>
+
+<p>Useful if jobs run remote and are very fast to run. This is disabled for sshlogins that specify their own ssh command.</p>
+
+<p>See also: <b>--ssh</b> <b>--sshlogin</b></p>
 
 </dd>
 <dt id="m"><b>-m</b></dt>
 <dd>
 
-<p>Multiple arguments. Insert as many arguments as the command line length permits. If multiple jobs are being run in parallel: distribute the arguments evenly among the jobs. Use <b>-j1</b> or <b>--xargs</b> to avoid this.</p>
+<p>Multiple arguments.</p>
+
+<p>Insert as many arguments as the command line length permits. If multiple jobs are being run in parallel: distribute the arguments evenly among the jobs. Use <b>-j1</b> or <b>--xargs</b> to avoid this.</p>
 
 <p>If <b>{}</b> is not used the arguments will be appended to the line. If <b>{}</b> is used multiple times each <b>{}</b> will be replaced with all the arguments.</p>
 
 <p>Support for <b>-m</b> with <b>--sshlogin</b> is limited and may fail.</p>
 
-<p>See also <b>-X</b> for context replace. If in doubt use <b>-X</b> as that will most likely do what is needed.</p>
+<p>If in doubt use <b>-X</b> as that will most likely do what is needed.</p>
+
+<p>See also: <b>-X</b> <b>--xargs</b></p>
 
 </dd>
 <dt id="memfree-size"><b>--memfree</b> <i>size</i></dt>
 <dd>
 
-<p>Minimum memory free when starting another job. The <i>size</i> can be postfixed with K, M, G, T, P, k, m, g, t, or p (see UNIT PREFIX).</p>
+<p>Minimum memory free when starting another job.</p>
 
-<p>If the jobs take up very different amount of RAM, GNU <b>parallel</b> will only start as many as there is memory for. If less than <i>size</i> bytes are free, no more jobs will be started. If less than 50% <i>size</i> bytes are free, the youngest job will be killed, and put back on the queue to be run later.</p>
+<p>The <i>size</i> can be postfixed with K, M, G, T, P, k, m, g, t, or p.</p>
+
+<p>If the jobs take up very different amount of RAM, GNU <b>parallel</b> will only start as many as there is memory for. If less than <i>size</i> bytes are free, no more jobs will be started. If less than 50% <i>size</i> bytes are free, the youngest job will be killed (as per <b>--term-seq</b>), and put back on the queue to be run later.</p>
 
 <p><b>--retries</b> must be set to determine how many times GNU <b>parallel</b> should retry a given job.</p>
 
-<p>See also: <b>--memsuspend</b></p>
+<p>See also: UNIT PREFIX <b>--term-seq</b> <b>--retries</b> <b>--memsuspend</b></p>
 
 </dd>
 <dt id="memsuspend-size"><b>--memsuspend</b> <i>size</i></dt>
 <dd>
 
-<p>Suspend jobs when there is less than 2 * <i>size</i> memory free. The <i>size</i> can be postfixed with K, M, G, T, P, k, m, g, t, or p (see UNIT PREFIX).</p>
+<p>Suspend jobs when there is less memory available.</p>
 
 <p>If the available memory falls below 2 * <i>size</i>, GNU <b>parallel</b> will suspend some of the running jobs. If the available memory falls below <i>size</i>, only one job will be running.</p>
 
@@ -1522,25 +1757,37 @@
 
 <p><b>--memsuspend</b> only works on local jobs because there is no obvious way to suspend remote jobs.</p>
 
-<p>See also: <b>--memfree</b></p>
+<p><i>size</i> can be postfixed with K, M, G, T, P, k, m, g, t, or p.</p>
+
+<p>See also: UNIT PREFIX <b>--memfree</b></p>
 
 </dd>
 <dt id="minversion-version"><b>--minversion</b> <i>version</i></dt>
 <dd>
 
-<p>Print the version GNU <b>parallel</b> and exit. If the current version of GNU <b>parallel</b> is less than <i>version</i> the exit code is 255. Otherwise it is 0.</p>
+<p>Print the version GNU <b>parallel</b> and exit.</p>
 
-<p>This is useful for scripts that depend on features only available from a certain version of GNU <b>parallel</b>.</p>
+<p>If the current version of GNU <b>parallel</b> is less than <i>version</i> the exit code is 255. Otherwise it is 0.</p>
+
+<p>This is useful for scripts that depend on features only available from a certain version of GNU <b>parallel</b>:</p>
+
+<pre><code>   parallel --minversion 20170422 &amp;&amp;
+     echo halt done=50% supported from version 20170422 &amp;&amp;
+     parallel --halt now,done=50% echo ::: {1..100}</code></pre>
+
+<p>See also: <b>--version</b></p>
 
 </dd>
-<dt id="max-args-max-args"><b>--max-args</b>=<i>max-args</i></dt>
+<dt id="max-args-max-args"><b>--max-args</b> <i>max-args</i></dt>
 <dd>
 
 </dd>
 <dt id="n-max-args"><b>-n</b> <i>max-args</i></dt>
 <dd>
 
-<p>Use at most <i>max-args</i> arguments per command line. Fewer than <i>max-args</i> arguments will be used if the size (see the <b>-s</b> option) is exceeded, unless the <b>-x</b> option is given, in which case GNU <b>parallel</b> will exit.</p>
+<p>Use at most <i>max-args</i> arguments per command line.</p>
+
+<p>Fewer than <i>max-args</i> arguments will be used if the size (see the <b>-s</b> option) is exceeded, unless the <b>-x</b> option is given, in which case GNU <b>parallel</b> will exit.</p>
 
 <p><b>-n 0</b> means read one argument, but insert 0 arguments on the command line.</p>
 
@@ -1548,15 +1795,19 @@
 
 <p>Implies <b>-X</b> unless <b>-m</b> is set.</p>
 
+<p>See also: <b>-X</b> <b>-m</b> <b>--xargs</b> <b>--max-replace-args</b></p>
+
 </dd>
-<dt id="max-replace-args-max-args"><b>--max-replace-args</b>=<i>max-args</i></dt>
+<dt id="max-replace-args-max-args"><b>--max-replace-args</b> <i>max-args</i></dt>
 <dd>
 
 </dd>
 <dt id="N-max-args"><b>-N</b> <i>max-args</i></dt>
 <dd>
 
-<p>Use at most <i>max-args</i> arguments per command line. Like <b>-n</b> but also makes replacement strings <b>{1}</b> .. <b>{</b><i>max-args</i><b>}</b> that represents argument 1 .. <i>max-args</i>. If too few args the <b>{</b><i>n</i><b>}</b> will be empty.</p>
+<p>Use at most <i>max-args</i> arguments per command line.</p>
+
+<p>Like <b>-n</b> but also makes replacement strings <b>{1}</b> .. <b>{</b><i>max-args</i><b>}</b> that represents argument 1 .. <i>max-args</i>. If too few args the <b>{</b><i>n</i><b>}</b> will be empty.</p>
 
 <p><b>-N 0</b> means read one argument, but insert 0 arguments on the command line.</p>
 
@@ -1566,27 +1817,37 @@
 
 <p>Implies <b>-X</b> unless <b>-m</b> or <b>--pipe</b> is set.</p>
 
-<p><i>max-args</i> can be postfixed with K, M, G, T, P, k, m, g, t, or p (see UNIT PREFIX).</p>
+<p><i>max-args</i> can be postfixed with K, M, G, T, P, k, m, g, t, or p.</p>
 
 <p>When used with <b>--pipe</b> <b>-N</b> is the number of records to read. This is somewhat slower than <b>--block</b>.</p>
+
+<p>See also: UNIT PREFIX <b>--pipe</b> <b>--block</b> <b>-m</b> <b>-X</b> <b>--max-args</b></p>
 
 </dd>
 <dt id="nonall"><b>--nonall</b></dt>
 <dd>
 
-<p><b>--onall</b> with no arguments. Run the command on all computers given with <b>--sshlogin</b> but take no arguments. GNU <b>parallel</b> will log into <b>--jobs</b> number of computers in parallel and run the job on the computer. <b>-j</b> adjusts how many computers to log into in parallel.</p>
+<p><b>--onall</b> with no arguments.</p>
+
+<p>Run the command on all computers given with <b>--sshlogin</b> but take no arguments. GNU <b>parallel</b> will log into <b>--jobs</b> number of computers in parallel and run the job on the computer. <b>-j</b> adjusts how many computers to log into in parallel.</p>
 
 <p>This is useful for running the same command (e.g. uptime) on a list of servers.</p>
+
+<p>See also: <b>--onall</b> <b>--sshlogin</b></p>
 
 </dd>
 <dt id="onall"><b>--onall</b></dt>
 <dd>
 
-<p>Run all the jobs on all computers given with <b>--sshlogin</b>. GNU <b>parallel</b> will log into <b>--jobs</b> number of computers in parallel and run one job at a time on the computer. The order of the jobs will not be changed, but some computers may finish before others.</p>
+<p>Run all the jobs on all computers given with <b>--sshlogin</b>.</p>
+
+<p>GNU <b>parallel</b> will log into <b>--jobs</b> number of computers in parallel and run one job at a time on the computer. The order of the jobs will not be changed, but some computers may finish before others.</p>
 
 <p>When using <b>--group</b> the output will be grouped by each server, so all the output from one server will be grouped together.</p>
 
 <p><b>--joblog</b> will contain an entry for each job on each server, so there will be several job sequence 1.</p>
+
+<p>See also: <b>--nonall</b> <b>--sshlogin</b></p>
 
 </dd>
 <dt id="output-as-files"><b>--output-as-files</b></dt>
@@ -1600,6 +1861,8 @@
 <dt id="files"><b>--files</b></dt>
 <dd>
 
+<p>Save output to files.</p>
+
 <p>Instead of printing the output to stdout (standard output) the output of each job is saved in a file and the filename is then printed.</p>
 
 <p>See also: <b>--results</b></p>
@@ -1612,35 +1875,37 @@
 <dt id="spreadstdin"><b>--spreadstdin</b></dt>
 <dd>
 
-<p>Spread input to jobs on stdin (standard input). Read a block of data from stdin (standard input) and give one block of data as input to one job.</p>
+<p>Spread input to jobs on stdin (standard input).</p>
 
-<p>The block size is determined by <b>--block</b>. The strings <b>--recstart</b> and <b>--recend</b> tell GNU <b>parallel</b> how a record starts and/or ends. The block read will have the final partial record removed before the block is passed on to the job. The partial record will be prepended to next block.</p>
+<p>Read a block of data from stdin (standard input) and give one block of data as input to one job.</p>
 
-<p>If <b>--recstart</b> is given this will be used to split at record start.</p>
+<p>The block size is determined by <b>--block</b> (default: 1M). The strings <b>--recstart</b> and <b>--recend</b> tell GNU <b>parallel</b> how a record starts and/or ends. The block read will have the final partial record removed before the block is passed on to the job. The partial record will be prepended to next block.</p>
 
-<p>If <b>--recend</b> is given this will be used to split at record end.</p>
+<p>You can limit the number of records to be passed with <b>-N</b>, and set the record size with <b>-L</b>.</p>
 
-<p>If both <b>--recstart</b> and <b>--recend</b> are given both will have to match to find a split position.</p>
+<p><b>--pipe</b> maxes out at around 1 GB/s input, and 100 MB/s output. If performance is important use <b>--pipe-part</b>.</p>
 
-<p>If neither <b>--recstart</b> nor <b>--recend</b> are given <b>--recend</b> defaults to &#39;\n&#39;. To have no record separator use <b>--recend &quot;&quot;</b>.</p>
+<p><b>--fifo</b> and <b>--cat</b> will give stdin (standard input) on a fifo or a temporary file.</p>
 
-<p><b>--files</b> is often used with <b>--pipe</b>.</p>
+<p>If data is arriving slowly, you can use <b>--block-timeout</b> to finish reading a block early.</p>
 
-<p><b>--pipe</b> maxes out at around 1 GB/s input, and 100 MB/s output. If performance is important use <b>--pipepart</b>.</p>
+<p>The data can be spread between the jobs in specific ways using <b>--round-robin</b>, <b>--bin</b>, <b>--shard</b>, <b>--group-by</b>. See the section: SPREADING BLOCKS OF DATA</p>
 
-<p>See also: <b>--recstart</b>, <b>--recend</b>, <b>--fifo</b>, <b>--cat</b>, <b>--pipepart</b>, <b>--files</b>.</p>
+<p>See also: <b>--block</b> <b>--block-timeout</b> <b>--recstart</b> <b>--recend</b> <b>--fifo</b> <b>--cat</b> <b>--pipe-part</b> <b>-N</b> <b>-L</b> <b>--round-robin</b></p>
 
 </dd>
-<dt id="pipepart"><b>--pipepart</b></dt>
+<dt id="pipe-part"><b>--pipe-part</b></dt>
 <dd>
 
-<p>Pipe parts of a physical file. <b>--pipepart</b> works similar to <b>--pipe</b>, but is much faster.</p>
+<p>Pipe parts of a physical file.</p>
 
-<p><b>--pipepart</b> has a few limitations:</p>
+<p><b>--pipe-part</b> works similar to <b>--pipe</b>, but is much faster.</p>
+
+<p><b>--pipe-part</b> has a few limitations:</p>
 
 <ul>
 
-<li><p>The file must be a normal file or a block device (technically it must be seekable) and must be given using <b>-a</b> or <b>::::</b>. The file cannot be a pipe, a fifo, or a stream as they are not seekable.</p>
+<li><p>The file must be a normal file or a block device (technically it must be seekable) and must be given using <b>--arg-file</b> or <b>::::</b>. The file cannot be a pipe, a fifo, or a stream as they are not seekable.</p>
 
 <p>If using a block device with lot of NUL bytes, remember to set <b>--recend &#39;&#39;</b>.</p>
 
@@ -1650,15 +1915,23 @@
 </li>
 </ul>
 
+<p>See also: <b>--pipe</b> <b>--recstart</b> <b>--recend</b> <b>--arg-file</b> <b>::::</b></p>
+
 </dd>
 <dt id="plain"><b>--plain</b></dt>
 <dd>
 
+<p>Ignore <b>--profile</b>, $PARALLEL, and ~/.parallel/config.</p>
+
 <p>Ignore any <b>--profile</b>, $PARALLEL, and ~/.parallel/config to get full control on the command line (used by GNU <b>parallel</b> internally when called with <b>--sshlogin</b>).</p>
+
+<p>See also: <b>--profile</b></p>
 
 </dd>
 <dt id="plus"><b>--plus</b></dt>
 <dd>
+
+<p>Add more replacement strings.</p>
 
 <p>Activate additional replacement strings: {+/} {+.} {+..} {+...} {..} {...} {/..} {/...} {##}. The idea being that &#39;{+foo}&#39; matches the opposite of &#39;{foo}&#39; and {} = {+/}/{/} = {.}.{+.} = {+/}/{/.}.{+.} = {..}.{+..} = {+/}/{/..}.{+..} = {...}.{+...} = {+/}/{/...}.{+...}</p>
 
@@ -1669,6 +1942,8 @@
 <p><b>{0#}</b> zero-padded sequence number.</p>
 
 <p><b>{choose_k}</b> is inspired by n choose k: Given a list of n elements, choose k. k is the number of input sources and n is the number of arguments in an input source. The content of the input sources must be the same and the arguments must be unique.</p>
+
+<p><b>{uniq}</b> skips jobs where values from two input sources are the same.</p>
 
 <p>Shorthands for variables:</p>
 
@@ -1682,7 +1957,7 @@
 
 <pre><code>  {:-str}       str if the value is empty
   {:num}        remove the first num characters
-  {:num1:num2}  characters from num1 to num2
+  {:pos:len}    substring from position pos length len
   {#regexp}     remove prefix regexp (non-greedy)
   {##regexp}    remove prefix regexp (greedy)
   {%regexp}     remove postfix regexp (non-greedy)
@@ -1693,21 +1968,29 @@
   {,str}        lowercase str if found at the start
   {,,str}       lowercase str</code></pre>
 
+<p>See also: <b>--rpl</b> <b>{}</b></p>
+
 </dd>
 <dt id="progress"><b>--progress</b></dt>
 <dd>
 
-<p>Show progress of computations. List the computers involved in the task with number of CPUs detected and the max number of jobs to run. After that show progress for each computer: number of running jobs, number of completed jobs, and percentage of all jobs done by this computer. The percentage will only be available after all jobs have been scheduled as GNU <b>parallel</b> only read the next job when ready to schedule it - this is to avoid wasting time and memory by reading everything at startup.</p>
+<p>Show progress of computations.</p>
+
+<p>List the computers involved in the task with number of CPUs detected and the max number of jobs to run. After that show progress for each computer: number of running jobs, number of completed jobs, and percentage of all jobs done by this computer. The percentage will only be available after all jobs have been scheduled as GNU <b>parallel</b> only read the next job when ready to schedule it - this is to avoid wasting time and memory by reading everything at startup.</p>
 
 <p>By sending GNU <b>parallel</b> SIGUSR2 you can toggle turning on/off <b>--progress</b> on a running GNU <b>parallel</b> process.</p>
 
-<p>See also: <b>--eta</b> and <b>--bar</b>.</p>
+<p>See also: <b>--eta</b> <b>--bar</b></p>
 
 </dd>
 <dt id="max-line-length-allowed"><b>--max-line-length-allowed</b></dt>
 <dd>
 
+<p>Print maximal command line length.</p>
+
 <p>Print the maximal number of characters allowed on the command line and exit (used by GNU <b>parallel</b> itself to determine the line length on remote computers).</p>
+
+<p>See also: <b>--show-limits</b></p>
 
 </dd>
 <dt id="number-of-cpus-obsolete"><b>--number-of-cpus</b> (obsolete)</dt>
@@ -1721,17 +2004,23 @@
 
 <p>Print the number of physical CPU cores and exit (used by GNU <b>parallel</b> itself to determine the number of physical CPU cores on remote computers).</p>
 
+<p>See also: <b>--number-of-sockets</b> <b>--number-of-threads</b> <b>--use-cores-instead-of-threads</b> <b>--jobs</b></p>
+
 </dd>
 <dt id="number-of-sockets"><b>--number-of-sockets</b></dt>
 <dd>
 
 <p>Print the number of filled CPU sockets and exit (used by GNU <b>parallel</b> itself to determine the number of filled CPU sockets on remote computers).</p>
 
+<p>See also: <b>--number-of-cores</b> <b>--number-of-threads</b> <b>--use-sockets-instead-of-threads</b> <b>--jobs</b></p>
+
 </dd>
 <dt id="number-of-threads"><b>--number-of-threads</b></dt>
 <dd>
 
 <p>Print the number of hyperthreaded CPU cores and exit (used by GNU <b>parallel</b> itself to determine the number of hyperthreaded CPU cores on remote computers).</p>
+
+<p>See also: <b>--number-of-cores</b> <b>--number-of-sockets</b> <b>--jobs</b></p>
 
 </dd>
 <dt id="no-keep-order"><b>--no-keep-order</b></dt>
@@ -1757,19 +2046,23 @@
 <dt id="p"><b>-p</b></dt>
 <dd>
 
+<p>Ask user before running a job.</p>
+
 <p>Prompt the user about whether to run each command line and read a line from the terminal. Only run the command line if the response starts with &#39;y&#39; or &#39;Y&#39;. Implies <b>-t</b>.</p>
 
 </dd>
 <dt id="parens-parensstring"><b>--parens</b> <i>parensstring</i></dt>
 <dd>
 
-<p>Define start and end parenthesis for <b>{= perl expression =}</b>. The left and the right parenthesis can be multiple characters and are assumed to be the same length. The default is <b>{==}</b> giving <b>{=</b> as the start parenthesis and <b>=}</b> as the end parenthesis.</p>
+<p>Use <i>parensstring</i> instead of <b>{==}</b>.</p>
+
+<p>Define start and end parenthesis for <b>{=perl expression=}</b>. The left and the right parenthesis can be multiple characters and are assumed to be the same length. The default is <b>{==}</b> giving <b>{=</b> as the start parenthesis and <b>=}</b> as the end parenthesis.</p>
 
 <p>Another useful setting is <b>,,,,</b> which would make both parenthesis <b>,,</b>:</p>
 
 <pre><code>  parallel --parens ,,,, echo foo is ,,s/I/O/g,, ::: FII</code></pre>
 
-<p>See also: <b>--rpl</b> <b>{= perl expression =}</b></p>
+<p>See also: <b>--rpl</b> <b>{=</b><i>perl expression</i><b>=}</b></p>
 
 </dd>
 <dt id="profile-profilename"><b>--profile</b> <i>profilename</i></dt>
@@ -1779,13 +2072,17 @@
 <dt id="J-profilename"><b>-J</b> <i>profilename</i></dt>
 <dd>
 
-<p>Use profile <i>profilename</i> for options. This is useful if you want to have multiple profiles. You could have one profile for running jobs in parallel on the local computer and a different profile for running jobs on remote computers. See the section PROFILE FILES for examples.</p>
+<p>Use profile <i>profilename</i> for options.</p>
+
+<p>This is useful if you want to have multiple profiles. You could have one profile for running jobs in parallel on the local computer and a different profile for running jobs on remote computers.</p>
 
 <p><i>profilename</i> corresponds to the file ~/.parallel/<i>profilename</i>.</p>
 
 <p>You can give multiple profiles by repeating <b>--profile</b>. If parts of the profiles conflict, the later ones will be used.</p>
 
-<p>Default: config</p>
+<p>Default: ~/.parallel/config</p>
+
+<p>See also: PROFILE FILES</p>
 
 </dd>
 <dt id="quote"><b>--quote</b></dt>
@@ -1795,9 +2092,13 @@
 <dt id="q"><b>-q</b></dt>
 <dd>
 
-<p>Quote <i>command</i>. If your command contains special characters that should not be interpreted by the shell (e.g. ; \ | *), use <b>--quote</b> to escape these. The command must be a simple command (see <b>man bash</b>) without redirections and without variable assignments.</p>
+<p>Quote <i>command</i>.</p>
 
-<p>See the section QUOTING. Most people will not need this. Quoting is disabled by default.</p>
+<p>If your command contains special characters that should not be interpreted by the shell (e.g. ; \ | *), use <b>--quote</b> to escape these. The command must be a simple command (see <b>man bash</b>) without redirections and without variable assignments.</p>
+
+<p>Most people will not need this. Quoting is disabled by default.</p>
+
+<p>See also: QUOTING <i>command</i> <b>--shell-quote</b> <b>uq()</b> <b>Q()</b></p>
 
 </dd>
 <dt id="no-run-if-empty"><b>--no-run-if-empty</b></dt>
@@ -1807,13 +2108,19 @@
 <dt id="r"><b>-r</b></dt>
 <dd>
 
+<p>Do not run empty input.</p>
+
 <p>If the stdin (standard input) only contains whitespace, do not run the command.</p>
 
 <p>If used with <b>--pipe</b> this is slow.</p>
 
+<p>See also: <i>command</i> <b>--pipe</b> <b>--interactive</b></p>
+
 </dd>
 <dt id="noswap"><b>--noswap</b></dt>
 <dd>
+
+<p>Do not start job is computer is swapping.</p>
 
 <p>Do not start new jobs on a given computer if there is both swap-in and swap-out activity.</p>
 
@@ -1823,13 +2130,17 @@
 
 <p><b>--memfree</b> and <b>--memsuspend</b> may give better results, so try using those first.</p>
 
+<p>See also: <b>--memfree</b> <b>--memsuspend</b></p>
+
 </dd>
 <dt id="record-env"><b>--record-env</b></dt>
 <dd>
 
+<p>Record environment.</p>
+
 <p>Record current environment variables in ~/.parallel/ignored_vars. This is useful before using <b>--env _</b>.</p>
 
-<p>See also: <b>--env</b>, <b>--session</b>.</p>
+<p>See also: <b>--env</b> <b>--session</b> <b>env_parallel</b></p>
 
 </dd>
 <dt id="recstart-startstring"><b>--recstart</b> <i>startstring</i></dt>
@@ -1839,23 +2150,31 @@
 <dt id="recend-endstring"><b>--recend</b> <i>endstring</i></dt>
 <dd>
 
+<p>Split record between <i>endstring</i> and <i>startstring</i>.</p>
+
 <p>If <b>--recstart</b> is given <i>startstring</i> will be used to split at record start.</p>
 
 <p>If <b>--recend</b> is given <i>endstring</i> will be used to split at record end.</p>
 
 <p>If both <b>--recstart</b> and <b>--recend</b> are given the combined string <i>endstring</i><i>startstring</i> will have to match to find a split position. This is useful if either <i>startstring</i> or <i>endstring</i> match in the middle of a record.</p>
 
-<p>If neither <b>--recstart</b> nor <b>--recend</b> are given then <b>--recend</b> defaults to &#39;\n&#39;. To have no record separator use <b>--recend &quot;&quot;</b>.</p>
+<p>If neither <b>--recstart</b> nor <b>--recend</b> are given, then <b>--recend</b> defaults to &#39;\n&#39;. To have no record separator (e.g. for binary files) use <b>--recend &quot;&quot;</b>.</p>
 
 <p><b>--recstart</b> and <b>--recend</b> are used with <b>--pipe</b>.</p>
 
 <p>Use <b>--regexp</b> to interpret <b>--recstart</b> and <b>--recend</b> as regular expressions. This is slow, however.</p>
+
+<p>Use <b>--remove-rec-sep</b> to remove <b>--recstart</b> and <b>--recend</b> before passing the block to the job.</p>
+
+<p>See also: <b>--pipe</b> <b>--regexp</b> <b>--remove-rec-sep</b></p>
 
 </dd>
 <dt id="regexp"><b>--regexp</b></dt>
 <dd>
 
 <p>Use <b>--regexp</b> to interpret <b>--recstart</b> and <b>--recend</b> as regular expressions. This is slow, however.</p>
+
+<p>See also: <b>--pipe</b> <b>--regexp</b> <b>--remove-rec-sep</b> <b>--recstart</b> <b>--recend</b></p>
 
 </dd>
 <dt id="remove-rec-sep"><b>--remove-rec-sep</b></dt>
@@ -1869,16 +2188,20 @@
 <dt id="rrs"><b>--rrs</b></dt>
 <dd>
 
+<p>Remove record separator.</p>
+
 <p>Remove the text matched by <b>--recstart</b> and <b>--recend</b> before piping it to the command.</p>
 
-<p>Only used with <b>--pipe</b>.</p>
+<p>Only used with <b>--pipe</b>/<b>--pipe-part</b>.</p>
+
+<p>See also: <b>--pipe</b> <b>--regexp</b> <b>--pipe-part</b> <b>--recstart</b> <b>--recend</b></p>
 
 </dd>
-<dt id="results-name-beta-testing"><b>--results</b> <i>name</i> (beta testing)</dt>
+<dt id="results-name"><b>--results</b> <i>name</i></dt>
 <dd>
 
 </dd>
-<dt id="res-name-beta-testing"><b>--res</b> <i>name</i> (beta testing)</dt>
+<dt id="res-name"><b>--res</b> <i>name</i></dt>
 <dd>
 
 <p>Save the output into files.</p>
@@ -1980,29 +2303,35 @@
   my_foo/stderr
   my_foo/stdout</code></pre>
 
-<p>See also: <b>--files</b>, <b>--tag</b>, <b>--header</b>, <b>--joblog</b>.</p>
+<p>See also: <b>--files</b> <b>--tag</b> <b>--header</b> <b>--joblog</b></p>
 
 </dd>
 <dt id="resume"><b>--resume</b></dt>
 <dd>
 
-<p>Resumes from the last unfinished job. By reading <b>--joblog</b> or the <b>--results</b> dir GNU <b>parallel</b> will figure out the last unfinished job and continue from there. As GNU <b>parallel</b> only looks at the sequence numbers in <b>--joblog</b> then the input, the command, and <b>--joblog</b> all have to remain unchanged; otherwise GNU <b>parallel</b> may run wrong commands.</p>
+<p>Resumes from the last unfinished job.</p>
 
-<p>See also: <b>--joblog</b>, <b>--results</b>, <b>--resume-failed</b>, <b>--retries</b>.</p>
+<p>By reading <b>--joblog</b> or the <b>--results</b> dir GNU <b>parallel</b> will figure out the last unfinished job and continue from there. As GNU <b>parallel</b> only looks at the sequence numbers in <b>--joblog</b> then the input, the command, and <b>--joblog</b> all have to remain unchanged; otherwise GNU <b>parallel</b> may run wrong commands.</p>
+
+<p>See also: <b>--joblog</b> <b>--results</b> <b>--resume-failed</b> <b>--retries</b></p>
 
 </dd>
 <dt id="resume-failed"><b>--resume-failed</b></dt>
 <dd>
 
-<p>Retry all failed and resume from the last unfinished job. By reading <b>--joblog</b> GNU <b>parallel</b> will figure out the failed jobs and run those again. After that it will resume last unfinished job and continue from there. As GNU <b>parallel</b> only looks at the sequence numbers in <b>--joblog</b> then the input, the command, and <b>--joblog</b> all have to remain unchanged; otherwise GNU <b>parallel</b> may run wrong commands.</p>
+<p>Retry all failed and resume from the last unfinished job.</p>
 
-<p>See also: <b>--joblog</b>, <b>--resume</b>, <b>--retry-failed</b>, <b>--retries</b>.</p>
+<p>By reading <b>--joblog</b> GNU <b>parallel</b> will figure out the failed jobs and run those again. After that it will resume last unfinished job and continue from there. As GNU <b>parallel</b> only looks at the sequence numbers in <b>--joblog</b> then the input, the command, and <b>--joblog</b> all have to remain unchanged; otherwise GNU <b>parallel</b> may run wrong commands.</p>
+
+<p>See also: <b>--joblog</b> <b>--resume</b> <b>--retry-failed</b> <b>--retries</b></p>
 
 </dd>
 <dt id="retry-failed"><b>--retry-failed</b></dt>
 <dd>
 
-<p>Retry all failed jobs in joblog. By reading <b>--joblog</b> GNU <b>parallel</b> will figure out the failed jobs and run those again.</p>
+<p>Retry all failed jobs in joblog.</p>
+
+<p>By reading <b>--joblog</b> GNU <b>parallel</b> will figure out the failed jobs and run those again.</p>
 
 <p><b>--retry-failed</b> ignores the command and arguments on the command line: It only looks at the joblog.</p>
 
@@ -2058,19 +2387,25 @@
   6     [...]   2       0       echo 5;sleep .5; exit 2
   4     [...]   1       0       echo 7;sleep .7; exit 1</code></pre>
 
-<p>See also: <b>--joblog</b>, <b>--resume</b>, <b>--resume-failed</b>, <b>--retries</b>.</p>
+<p>See also: <b>--joblog</b> <b>--resume</b> <b>--resume-failed</b> <b>--retries</b></p>
 
 </dd>
 <dt id="retries-n"><b>--retries</b> <i>n</i></dt>
 <dd>
 
+<p>Try failing jobs <i>n</i> times.</p>
+
 <p>If a job fails, retry it on another computer on which it has not failed. Do this <i>n</i> times. If there are fewer than <i>n</i> computers in <b>--sshlogin</b> GNU <b>parallel</b> will re-use all the computers. This is useful if some jobs fail for no apparent reason (such as network failure).</p>
+
+<p>See also: <b>--term-seq</b> <b>--sshlogin</b></p>
 
 </dd>
 <dt id="return-filename"><b>--return</b> <i>filename</i></dt>
 <dd>
 
-<p>Transfer files from remote computers. <b>--return</b> is used with <b>--sshlogin</b> when the arguments are files on the remote computers. When processing is done the file <i>filename</i> will be transferred from the remote computer using <b>rsync</b> and will be put relative to the default login dir. E.g.</p>
+<p>Transfer files from remote computers.</p>
+
+<p><b>--return</b> is used with <b>--sshlogin</b> when the arguments are files on the remote computers. When processing is done the file <i>filename</i> will be transferred from the remote computer using <b>rsync</b> and will be put relative to the default login dir. E.g.</p>
 
 <pre><code>  echo foo/bar.txt | parallel --return {.}.out \
     --sshlogin server.example.com touch {.}.out</code></pre>
@@ -2092,11 +2427,11 @@
     --sshlogin server.example.com \
     --return {.}.out --return {.}.out2 touch {.}.out {.}.out2</code></pre>
 
-<p><b>--return</b> is often used with <b>--transferfile</b> and <b>--cleanup</b>.</p>
-
 <p><b>--return</b> is ignored when used with <b>--sshlogin :</b> or when not used with <b>--sshlogin</b>.</p>
 
 <p>For details on transferring see <b>--transferfile</b>.</p>
+
+<p>See also: <b>--transfer</b> <b>--transferfile</b> <b>--sshlogin</b> <b>--cleanup</b> <b>--workdir</b></p>
 
 </dd>
 <dt id="round-robin"><b>--round-robin</b></dt>
@@ -2106,17 +2441,23 @@
 <dt id="round"><b>--round</b></dt>
 <dd>
 
-<p>Normally <b>--pipe</b> will give a single block to each instance of the command. With <b>--roundrobin</b> all blocks will at random be written to commands already running. This is useful if the command takes a long time to initialize.</p>
+<p>Distribute chunks of standard input in a round robin fashion.</p>
 
-<p><b>--keep-order</b> will not work with <b>--roundrobin</b> as it is impossible to track which input block corresponds to which output.</p>
+<p>Normally <b>--pipe</b> will give a single block to each instance of the command. With <b>--round-robin</b> all blocks will at random be written to commands already running. This is useful if the command takes a long time to initialize.</p>
 
-<p><b>--roundrobin</b> implies <b>--pipe</b>, except if <b>--pipepart</b> is given.</p>
+<p><b>--keep-order</b> will not work with <b>--round-robin</b> as it is impossible to track which input block corresponds to which output.</p>
 
-<p>See also: <b>--group-by</b>, <b>--shard</b>.</p>
+<p><b>--round-robin</b> implies <b>--pipe</b>, except if <b>--pipe-part</b> is given.</p>
+
+<p>See the section: SPREADING BLOCKS OF DATA.</p>
+
+<p>See also: <b>--bin</b> <b>--group-by</b> <b>--shard</b></p>
 
 </dd>
 <dt id="rpl-tag-perl-expression"><b>--rpl</b> &#39;<i>tag</i> <i>perl expression</i>&#39;</dt>
 <dd>
+
+<p>Define replacement string.</p>
 
 <p>Use <i>tag</i> as a replacement string for <i>perl expression</i>. This makes it possible to define your own replacement strings. GNU <b>parallel</b>&#39;s 7 replacement strings are implemented as:</p>
 
@@ -2125,31 +2466,48 @@
   --rpl &#39;{%} 1 $_=$job-&gt;slot()&#39;
   --rpl &#39;{/} s:.*/::&#39;
   --rpl &#39;{//} $Global::use{&quot;File::Basename&quot;} ||=
-    eval &quot;use File::Basename; 1;&quot;; $_ = dirname($_);&#39;
+              eval &quot;use File::Basename; 1;&quot;; $_ = dirname($_);&#39;
   --rpl &#39;{/.} s:.*/::; s:\.[^/.]+$::;&#39;
   --rpl &#39;{.} s:\.[^/.]+$::&#39;</code></pre>
 
 <p>The <b>--plus</b> replacement strings are implemented as:</p>
 
-<pre><code>  --rpl &#39;{+/} s:/[^/]*$::&#39;
-  --rpl &#39;{+.} s:.*\.::&#39;
-  --rpl &#39;{+..} s:.*\.([^.]*\.):$1:&#39;
-  --rpl &#39;{+...} s:.*\.([^.]*\.[^.]*\.):$1:&#39;
-  --rpl &#39;{..} s:\.[^/.]+$::; s:\.[^/.]+$::&#39;
-  --rpl &#39;{...} s:\.[^/.]+$::; s:\.[^/.]+$::; s:\.[^/.]+$::&#39;
-  --rpl &#39;{/..} s:.*/::; s:\.[^/.]+$::; s:\.[^/.]+$::&#39;
-  --rpl &#39;{/...} s:.*/::;s:\.[^/.]+$::;s:\.[^/.]+$::;s:\.[^/.]+$::&#39;
-  --rpl &#39;{##} $_=total_jobs()&#39;
-  --rpl &#39;{:-(.+?)} $_ ||= $$1&#39;
+<pre><code>  --rpl &#39;{+/} s:/[^/]*$:: || s:.*$::&#39;
+  --rpl &#39;{+.} s:.*\.:: || s:.*$::&#39;
+  --rpl &#39;{+..} s:.*\.([^/.]+\.[^/.]+)$:$1: || s:.*$::&#39;
+  --rpl &#39;{+...} s:.*\.([^/.]+\.[^/.]+\.[^/.]+)$:$1: || s:.*$::&#39;
+  --rpl &#39;{..} s:\.[^/.]+\.[^/.]+$::&#39;
+  --rpl &#39;{...} s:\.[^/.]+\.[^/.]+\.[^/.]+$::&#39;
+  --rpl &#39;{/..} s:.*/::; s:\.[^/.]+\.[^/.]+$::&#39;
+  --rpl &#39;{/...} s:.*/::; s:\.[^/.]+\.[^/.]+\.[^/.]+$::&#39;
+  --rpl &#39;{choose_k}
+         for $t (2..$#arg){ if($arg[$t-1] ge $arg[$t]) { skip() } }&#39;
+  --rpl &#39;{##} 1 $_=total_jobs()&#39;
+  --rpl &#39;{0%} 1 $f=1+int((log($Global::max_jobs_running||1)/
+                          log(10))); $_=sprintf(&quot;%0${f}d&quot;,slot())&#39;
+  --rpl &#39;{0#} 1 $f=1+int((log(total_jobs())/log(10)));
+              $_=sprintf(&quot;%0${f}d&quot;,seq())&#39;
+
+  --rpl &#39;{:-([^}]+?)} $_ ||= $$1&#39;
   --rpl &#39;{:(\d+?)} substr($_,0,$$1) = &quot;&quot;&#39;
   --rpl &#39;{:(\d+?):(\d+?)} $_ = substr($_,$$1,$$2);&#39;
-  --rpl &#39;{#([^#].*?)} s/^$$1//;&#39;
-  --rpl &#39;{%(.+?)} s/$$1$//;&#39;
-  --rpl &#39;{/(.+?)/(.*?)} s/$$1/$$2/;&#39;
-  --rpl &#39;{^(.+?)} s/^($$1)/uc($1)/e;&#39;
-  --rpl &#39;{^^(.+?)} s/($$1)/uc($1)/eg;&#39;
-  --rpl &#39;{,(.+?)} s/^($$1)/lc($1)/e;&#39;
-  --rpl &#39;{,,(.+?)} s/($$1)/lc($1)/eg;&#39;</code></pre>
+  --rpl &#39;{#([^#}][^}]*?)} $nongreedy=::make_regexp_ungreedy($$1);
+                          s/^$nongreedy(.*)/$1/;&#39;
+  --rpl &#39;{##([^#}][^}]*?)} s/^$$1//;&#39;
+  --rpl &#39;{%([^}]+?)} $nongreedy=::make_regexp_ungreedy($$1);
+                     s/(.*)$nongreedy$/$1/;&#39;
+  --rpl &#39;{%%([^}]+?)} s/$$1$//;&#39;
+  --rpl &#39;{/([^}]+?)/([^}]*?)} s/$$1/$$2/;&#39;
+  --rpl &#39;{^([^}]+?)} s/^($$1)/uc($1)/e;&#39;
+  --rpl &#39;{^^([^}]+?)} s/($$1)/uc($1)/eg;&#39;
+  --rpl &#39;{,([^}]+?)} s/^($$1)/lc($1)/e;&#39;
+  --rpl &#39;{,,([^}]+?)} s/($$1)/lc($1)/eg;&#39;
+
+  --rpl &#39;{slot} 1 $_=&quot;\${PARALLEL_JOBSLOT}&quot;;uq()&#39;
+  --rpl &#39;{host} 1 $_=&quot;\${PARALLEL_SSHHOST}&quot;;uq()&#39;
+  --rpl &#39;{sshlogin} 1 $_=&quot;\${PARALLEL_SSHLOGIN}&quot;;uq()&#39;
+  --rpl &#39;{hgrp} 1 $_=&quot;\${PARALLEL_HOSTGROUPS}&quot;;uq()&#39;
+  --rpl &#39;{agrp} 1 $_=&quot;\${PARALLEL_ARGHOSTGROUPS}&quot;;uq()&#39;</code></pre>
 
 <p>If the user defined replacement string starts with &#39;{&#39; it can also be used as a positional replacement string (like <b>{2.}</b>).</p>
 
@@ -2185,59 +2543,69 @@
   parallel --rpl &#39;{(.*?)/(.*?)} $_=&quot;$$2$_$$1&quot;&#39; \
     echo {swap/these} ::: -middle-</code></pre>
 
-<p>See also: <b>{= perl expression =}</b> <b>--parens</b></p>
+<p>See also: <b>{=</b><i>perl expression</i><b>=}</b> <b>--parens</b></p>
 
 </dd>
 <dt id="rsync-opts-options"><b>--rsync-opts</b> <i>options</i></dt>
 <dd>
 
-<p>Options to pass on to <b>rsync</b>. Setting <b>--rsync-opts</b> takes precedence over setting the environment variable $PARALLEL_RSYNC_OPTS.</p>
+<p>Options to pass on to <b>rsync</b>.</p>
+
+<p>Setting <b>--rsync-opts</b> takes precedence over setting the environment variable $PARALLEL_RSYNC_OPTS.</p>
 
 </dd>
-<dt id="max-chars-max-chars"><b>--max-chars</b>=<i>max-chars</i></dt>
+<dt id="max-chars-max-chars"><b>--max-chars</b> <i>max-chars</i></dt>
 <dd>
 
 </dd>
 <dt id="s-max-chars"><b>-s</b> <i>max-chars</i></dt>
 <dd>
 
+<p>Limit length of command.</p>
+
 <p>Use at most <i>max-chars</i> characters per command line, including the command and initial-arguments and the terminating nulls at the ends of the argument strings. The largest allowed value is system-dependent, and is calculated as the argument length limit for exec, less the size of your environment. The default value is the maximum.</p>
 
 <p><i>max-chars</i> can be postfixed with K, M, G, T, P, k, m, g, t, or p (see UNIT PREFIX).</p>
 
-<p>Implies <b>-X</b> unless <b>-m</b> is set.</p>
+<p>Implies <b>-X</b> unless <b>-m</b> or <b>--xargs</b> is set.</p>
+
+<p>See also: <b>-X</b> <b>-m</b> <b>--xargs</b> <b>--max-line-length-allowed</b> <b>--show-limits</b></p>
 
 </dd>
 <dt id="show-limits"><b>--show-limits</b></dt>
 <dd>
 
+<p>Display limits given by the operating system.</p>
+
 <p>Display the limits on the command-line length which are imposed by the operating system and the <b>-s</b> option. Pipe the input from /dev/null (and perhaps specify --no-run-if-empty) if you don&#39;t want GNU <b>parallel</b> to do anything.</p>
+
+<p>See also: <b>--max-chars</b> <b>--max-line-length-allowed</b> <b>--version</b></p>
 
 </dd>
 <dt id="semaphore"><b>--semaphore</b></dt>
 <dd>
 
-<p>Work as a counting semaphore. <b>--semaphore</b> will cause GNU <b>parallel</b> to start <i>command</i> in the background. When the number of jobs given by <b>--jobs</b> is reached, GNU <b>parallel</b> will wait for one of these to complete before starting another command.</p>
+<p>Work as a counting semaphore.</p>
+
+<p><b>--semaphore</b> will cause GNU <b>parallel</b> to start <i>command</i> in the background. When the number of jobs given by <b>--jobs</b> is reached, GNU <b>parallel</b> will wait for one of these to complete before starting another command.</p>
 
 <p><b>--semaphore</b> implies <b>--bg</b> unless <b>--fg</b> is specified.</p>
 
-<p><b>--semaphore</b> implies <b>--semaphorename `tty`</b> unless <b>--semaphorename</b> is specified.</p>
-
-<p>Used with <b>--fg</b>, <b>--wait</b>, and <b>--semaphorename</b>.</p>
-
 <p>The command <b>sem</b> is an alias for <b>parallel --semaphore</b>.</p>
 
-<p>See also: <b>man sem</b>.</p>
+<p>See also: <b>man sem</b> <b>--bg</b> <b>--fg</b> <b>--semaphore-name</b> <b>--semaphore-timeout</b> <b>--wait</b></p>
 
 </dd>
-<dt id="semaphorename-name"><b>--semaphorename</b> <i>name</i></dt>
+<dt id="semaphore-name-name"><b>--semaphore-name</b> <i>name</i></dt>
 <dd>
 
 </dd>
 <dt id="id-name"><b>--id</b> <i>name</i></dt>
 <dd>
 
-<p>Use <b>name</b> as the name of the semaphore. Default is the name of the controlling tty (output from <b>tty</b>).</p>
+<p>Use <b>name</b> as the name of the semaphore.</p>
+
+<p>The default is the name of the controlling tty (output from <b>tty</b>).</p>
 
 <p>The default normally works as expected when used interactively, but when used in a script <i>name</i> should be set. <i>$$</i> or <i>my_task_name</i> are often a good value.</p>
 
@@ -2245,10 +2613,10 @@
 
 <p>Implies <b>--semaphore</b>.</p>
 
-<p>See also: <b>man sem</b>.</p>
+<p>See also: <b>man sem</b> <b>--semaphore</b></p>
 
 </dd>
-<dt id="semaphoretimeout-secs"><b>--semaphoretimeout</b> <i>secs</i></dt>
+<dt id="semaphore-timeout-secs"><b>--semaphore-timeout</b> <i>secs</i></dt>
 <dd>
 
 </dd>
@@ -2259,15 +2627,19 @@
 
 <p>If <i>secs</i> &lt; 0: If the semaphore is not released within <i>secs</i> seconds, exit.</p>
 
+<p><i>secs</i> is in seconds, but can be postfixed with s, m, h, or d (see the section TIME POSTFIXES).</p>
+
 <p>Implies <b>--semaphore</b>.</p>
 
-<p>See also: <b>man sem</b>.</p>
+<p>See also: <b>man sem</b></p>
 
 </dd>
 <dt id="seqreplace-replace-str"><b>--seqreplace</b> <i>replace-str</i></dt>
 <dd>
 
 <p>Use the replacement string <i>replace-str</i> instead of <b>{#}</b> for job sequence number.</p>
+
+<p>See also: <b>{#}</b></p>
 
 </dd>
 <dt id="session"><b>--session</b></dt>
@@ -2277,7 +2649,7 @@
 
 <p>Only supported in <b>Ash, Bash, Dash, Ksh, Sh, and Zsh</b>.</p>
 
-<p>See also: <b>--env</b>, <b>--record-env</b>.</p>
+<p>See also: <b>--env</b> <b>--record-env</b> <b>env_parallel</b></p>
 
 </dd>
 <dt id="shard-shardexpr"><b>--shard</b> <i>shardexpr</i></dt>
@@ -2285,7 +2657,12 @@
 
 <p>Use <i>shardexpr</i> as shard key and shard input to the jobs.</p>
 
-<p><i>shardexpr</i> is [column number|column name] [perlexpression] e.g. 3, Address, 3 $_%=100, Address s/\d//g.</p>
+<p><i>shardexpr</i> is [column number|column name] [perlexpression] e.g.:</p>
+
+<pre><code>  3
+  Address
+  3 $_%=100
+  Address s/\d//g</code></pre>
 
 <p>Each input line is split using <b>--colsep</b>. The value of the column is put into $_, the perl expression is executed, the resulting value is hashed so that all lines of a given value is given to the same job slot.</p>
 
@@ -2295,7 +2672,9 @@
 
 <p><b>--shard</b> requires <b>--pipe</b> and a fixed numeric value for <b>--jobs</b>.</p>
 
-<p>See also: <b>--bin</b>, <b>--group-by</b>, <b>--roundrobin</b>.</p>
+<p>See the section: SPREADING BLOCKS OF DATA.</p>
+
+<p>See also: <b>--bin</b> <b>--group-by</b> <b>--round-robin</b></p>
 
 </dd>
 <dt id="shebang"><b>--shebang</b></dt>
@@ -2327,6 +2706,8 @@
 
 <p>There are many limitations of shebang (#!) depending on your operating system. See details on https://www.in-ulm.de/~mascheck/various/shebang/</p>
 
+<p>See also: <b>--shebang-wrap</b></p>
+
 </dd>
 <dt id="shebang-wrap"><b>--shebang-wrap</b></dt>
 <dd>
@@ -2357,19 +2738,31 @@
 
 <p><b>--shebang-wrap</b> must be set as the first option.</p>
 
+<p>See also: <b>--shebang</b></p>
+
 </dd>
-<dt id="shellquote"><b>--shellquote</b></dt>
+<dt id="shell-quote"><b>--shell-quote</b></dt>
 <dd>
 
 <p>Does not run the command but quotes it. Useful for making quoted composed commands for GNU <b>parallel</b>.</p>
 
-<p>Multiple <b>--shellquote</b> with quote the string multiple times, so <b>parallel --shellquote | parallel --shellquote</b> can be written as <b>parallel --shellquote --shellquote</b>.</p>
+<p>Multiple <b>--shell-quote</b> with quote the string multiple times, so <b>parallel --shell-quote | parallel --shell-quote</b> can be written as <b>parallel --shell-quote --shell-quote</b>.</p>
+
+<p>See also: <b>--quote</b></p>
 
 </dd>
 <dt id="shuf"><b>--shuf</b></dt>
 <dd>
 
-<p>Shuffle jobs. When having multiple input sources it is hard to randomize jobs. --shuf will generate all jobs, and shuffle them before running them. This is useful to get a quick preview of the results before running the full batch.</p>
+<p>Shuffle jobs.</p>
+
+<p>When having multiple input sources it is hard to randomize jobs. <b>--shuf</b> will generate all jobs, and shuffle them before running them. This is useful to get a quick preview of the results before running the full batch.</p>
+
+<p>Combined with <b>--halt soon,done=1%</b> you can run a random 1% sample of all jobs:</p>
+
+<pre><code>  parallel --shuf --halt soon,done=1% echo ::: {1..100} ::: {1..100}</code></pre>
+
+<p>See also: <b>--halt</b></p>
 
 </dd>
 <dt id="skip-first-line"><b>--skip-first-line</b></dt>
@@ -2381,10 +2774,10 @@
 <dt id="sql-DBURL-obsolete"><b>--sql</b> <i>DBURL</i> (obsolete)</dt>
 <dd>
 
-<p>Use <b>--sqlmaster</b> instead.</p>
+<p>Use <b>--sql-master</b> instead.</p>
 
 </dd>
-<dt id="sqlmaster-DBURL"><b>--sqlmaster</b> <i>DBURL</i></dt>
+<dt id="sql-master-DBURL"><b>--sql-master</b> <i>DBURL</i></dt>
 <dd>
 
 <p>Submit jobs via SQL server. <i>DBURL</i> must point to a table, which will contain the same information as <b>--joblog</b>, the values from the input sources (stored in columns V1 .. Vn), and the output (stored in columns Stdout and Stderr).</p>
@@ -2417,14 +2810,18 @@
 
 <pre><code>  :myalias mysql:///mydb/paralleljobs</code></pre>
 
+<p>See also: <b>--sql-and-worker</b> <b>--sql-worker</b> <b>--joblog</b></p>
+
 </dd>
-<dt id="sqlandworker-DBURL"><b>--sqlandworker</b> <i>DBURL</i></dt>
+<dt id="sql-and-worker-DBURL"><b>--sql-and-worker</b> <i>DBURL</i></dt>
 <dd>
 
-<p>Shorthand for: <b>--sqlmaster</b> <i>DBURL</i> <b>--sqlworker</b> <i>DBURL</i>.</p>
+<p>Shorthand for: <b>--sql-master</b> <i>DBURL</i> <b>--sql-worker</b> <i>DBURL</i>.</p>
+
+<p>See also: <b>--sql-master</b> <b>--sql-worker</b></p>
 
 </dd>
-<dt id="sqlworker-DBURL"><b>--sqlworker</b> <i>DBURL</i></dt>
+<dt id="sql-worker-DBURL"><b>--sql-worker</b> <i>DBURL</i></dt>
 <dd>
 
 <p>Execute jobs via SQL server. Read the input sources variables from the table pointed to by <i>DBURL</i>. The <i>command</i> on the command line should be the same as given by <b>--sqlmaster</b>.</p>
@@ -2433,27 +2830,27 @@
 
 <p>If <b>--sqlworker</b> runs on the local machine, the hostname in the SQL table will not be &#39;:&#39; but instead the hostname of the machine.</p>
 
+<p>See also: <b>--sql-master</b> <b>--sql-and-worker</b></p>
+
 </dd>
 <dt id="ssh-sshcommand"><b>--ssh</b> <i>sshcommand</i></dt>
 <dd>
 
-<p>GNU <b>parallel</b> defaults to using <b>ssh</b> for remote access. This can be overridden with <b>--ssh</b>. It can also be set on a per server basis (see <b>--sshlogin</b>).</p>
+<p>GNU <b>parallel</b> defaults to using <b>ssh</b> for remote access. This can be overridden with <b>--ssh</b>. It can also be set on a per server basis with <b>--sshlogin</b>.</p>
+
+<p>See also: <b>--sshlogin</b></p>
 
 </dd>
-<dt id="sshdelay-mytime"><b>--sshdelay</b> <i>mytime</i></dt>
+<dt id="ssh-delay-duration"><b>--ssh-delay</b> <i>duration</i></dt>
 <dd>
 
-<p>Delay starting next ssh by <i>mytime</i>. GNU <b>parallel</b> will not start another ssh for the next <i>mytime</i>.</p>
+<p>Delay starting next ssh by <i>duration</i>.</p>
 
-<p>For details on <i>mytime</i> see <b>--delay</b>.</p>
+<p>GNU <b>parallel</b> will not start another ssh for the next <i>duration</i>.</p>
 
-</dd>
-<dt id="S-hostgroups-ncpus-sshlogin-hostgroups-ncpus-sshlogin"><b>-S</b> <i>[@hostgroups/][ncpus/]sshlogin[,[@hostgroups/][ncpus/]sshlogin[,...]]</i></dt>
-<dd>
+<p><i>duration</i> is in seconds, but can be postfixed with s, m, h, or d.</p>
 
-</dd>
-<dt id="S-hostgroup"><b>-S</b> <i>@hostgroup</i></dt>
-<dd>
+<p>See also: TIME POSTFIXES <b>--sshlogin</b> <b>--delay</b></p>
 
 </dd>
 <dt id="sshlogin-hostgroups-ncpus-sshlogin-hostgroups-ncpus-sshlogin"><b>--sshlogin</b> <i>[@hostgroups/][ncpus/]sshlogin[,[@hostgroups/][ncpus/]sshlogin[,...]]</i></dt>
@@ -2463,7 +2860,17 @@
 <dt id="sshlogin-hostgroup"><b>--sshlogin</b> <i>@hostgroup</i></dt>
 <dd>
 
-<p>Distribute jobs to remote computers. The jobs will be run on a list of remote computers.</p>
+</dd>
+<dt id="S-hostgroups-ncpus-sshlogin-hostgroups-ncpus-sshlogin"><b>-S</b> <i>[@hostgroups/][ncpus/]sshlogin[,[@hostgroups/][ncpus/]sshlogin[,...]]</i></dt>
+<dd>
+
+</dd>
+<dt id="S-hostgroup"><b>-S</b> <i>@hostgroup</i></dt>
+<dd>
+
+<p>Distribute jobs to remote computers.</p>
+
+<p>The jobs will be run on a list of remote computers.</p>
 
 <p>If <i>hostgroups</i> is given, the <i>sshlogin</i> will be added to that hostgroup. Multiple hostgroups are separated by &#39;+&#39;. The <i>sshlogin</i> will always be added to a hostgroup named the same as <i>sshlogin</i>.</p>
 
@@ -2473,9 +2880,9 @@
 
 <p>An <i>sshlogin</i> is of the form:</p>
 
-<pre><code>  [sshcommand [options]] [username@]hostname</code></pre>
+<pre><code>  [sshcommand [options]] [username[:password]@]hostname</code></pre>
 
-<p>The sshlogin must not require a password (<b>ssh-agent</b>, <b>ssh-copy-id</b>, and <b>sshpass</b> may help with that).</p>
+<p>If <i>password</i> is given, <b>sshpass</b> will be used. Otherwise the sshlogin must not require a password (<b>ssh-agent</b> and <b>ssh-copy-id</b> may help with that).</p>
 
 <p>The sshlogin &#39;:&#39; is special, it means &#39;no ssh&#39; and will therefore run on the local computer.</p>
 
@@ -2491,7 +2898,7 @@
 
 <p><b>--sshlogin</b> is known to cause problems with <b>-m</b> and <b>-X</b>.</p>
 
-<p><b>--sshlogin</b> is often used with <b>--transferfile</b>, <b>--return</b>, <b>--cleanup</b>, and <b>--trc</b>.</p>
+<p>See also: <b>--basefile</b> <b>--transferfile</b> <b>--return</b> <b>--cleanup</b> <b>--trc</b> <b>--sshloginfile</b> <b>--workdir</b> <b>--filter-hosts</b> <b>--ssh</b></p>
 
 </dd>
 <dt id="sshloginfile-filename"><b>--sshloginfile</b> <i>filename</i></dt>
@@ -2552,17 +2959,25 @@
     done &amp;
     parallel --slf tmp2.slf ...</code></pre>
 
+<p>See also: <b>--filter-hosts</b></p>
+
 </dd>
 <dt id="slotreplace-replace-str"><b>--slotreplace</b> <i>replace-str</i></dt>
 <dd>
 
 <p>Use the replacement string <i>replace-str</i> instead of <b>{%}</b> for job slot number.</p>
 
+<p>See also: <b>{%}</b></p>
+
 </dd>
 <dt id="silent"><b>--silent</b></dt>
 <dd>
 
-<p>Silent. The job to be run will not be printed. This is the default. Can be reversed with <b>-v</b>.</p>
+<p>Silent.</p>
+
+<p>The job to be run will not be printed. This is the default. Can be reversed with <b>-v</b>.</p>
+
+<p>See also: <b>-v</b></p>
 
 </dd>
 <dt id="template-file-repl"><b>--template</b> <i>file</i>=<i>repl</i></dt>
@@ -2572,7 +2987,9 @@
 <dt id="tmpl-file-repl"><b>--tmpl</b> <i>file</i>=<i>repl</i></dt>
 <dd>
 
-<p>Copy <i>file</i> to <i>repl</i>. All replacement strings in the contents of <i>file</i> will be replaced. All replacement strings in the name <i>repl</i> will be replaced.</p>
+<p>Replace replacement strings in <i>file</i> and save it in <i>repl</i>.</p>
+
+<p>All replacement strings in the contents of <i>file</i> will be replaced. All replacement strings in the name <i>repl</i> will be replaced.</p>
 
 <p>With <b>--cleanup</b> the new file will be removed when the job is done.</p>
 
@@ -2593,41 +3010,53 @@
   parallel --cleanup --header : --tmpl my.tmpl={#}.t myprog {#}.t \
     ::: x 1.234 2.345 3.45678 ::: y 1 2 3</code></pre>
 
+<p>See also: <b>{}</b> <b>--cleanup</b></p>
+
 </dd>
 <dt id="tty"><b>--tty</b></dt>
 <dd>
 
-<p>Open terminal tty. If GNU <b>parallel</b> is used for starting a program that accesses the tty (such as an interactive program) then this option may be needed. It will default to starting only one job at a time (i.e. <b>-j1</b>), not buffer the output (i.e. <b>-u</b>), and it will open a tty for the job.</p>
+<p>Open terminal tty.</p>
+
+<p>If GNU <b>parallel</b> is used for starting a program that accesses the tty (such as an interactive program) then this option may be needed. It will default to starting only one job at a time (i.e. <b>-j1</b>), not buffer the output (i.e. <b>-u</b>), and it will open a tty for the job.</p>
 
 <p>You can of course override <b>-j1</b> and <b>-u</b>.</p>
 
 <p>Using <b>--tty</b> unfortunately means that GNU <b>parallel</b> cannot kill the jobs (with <b>--timeout</b>, <b>--memfree</b>, or <b>--halt</b>). This is due to GNU <b>parallel</b> giving each child its own process group, which is then killed. Process groups are dependant on the tty.</p>
 
+<p>See also: <b>--ungroup</b></p>
+
 </dd>
-<dt id="tag-alpha-testing"><b>--tag</b> (alpha testing)</dt>
+<dt id="tag"><b>--tag</b></dt>
 <dd>
 
-<p>Tag lines with arguments. Each output line will be prepended with the arguments and TAB (\t). When combined with <b>--onall</b> or <b>--nonall</b> the lines will be prepended with the sshlogin instead.</p>
+<p>Tag lines with arguments.</p>
+
+<p>Each output line will be prepended with the arguments and TAB (\t). When combined with <b>--onall</b> or <b>--nonall</b> the lines will be prepended with the sshlogin instead.</p>
 
 <p><b>--tag</b> is ignored when using <b>-u</b>.</p>
 
-<p><b>--ctag</b> gives the tag a color.</p>
+<p>See also: <b>--tagstring</b> <b>--ctag</b></p>
 
 </dd>
-<dt id="tagstring-str-alpha-testing"><b>--tagstring</b> <i>str</i> (alpha testing)</dt>
+<dt id="tagstring-str"><b>--tagstring</b> <i>str</i></dt>
 <dd>
 
-<p>Tag lines with a string. Each output line will be prepended with <i>str</i> and TAB (\t). <i>str</i> can contain replacement strings such as <b>{}</b>.</p>
+<p>Tag lines with a string.</p>
+
+<p>Each output line will be prepended with <i>str</i> and TAB (\t). <i>str</i> can contain replacement strings such as <b>{}</b>.</p>
 
 <p><b>--tagstring</b> is ignored when using <b>-u</b>, <b>--onall</b>, and <b>--nonall</b>.</p>
 
-<p><b>--ctagstring</b> gives the tag a color.</p>
+<p>See also: <b>--tag</b> <b>--ctagstring</b></p>
 
 </dd>
 <dt id="tee"><b>--tee</b></dt>
 <dd>
 
-<p>Pipe all data to all jobs. Used with <b>--pipe</b>/<b>--pipepart</b> and <b>:::</b>.</p>
+<p>Pipe all data to all jobs.</p>
+
+<p>Used with <b>--pipe</b>/<b>--pipe-part</b> and <b>:::</b>.</p>
 
 <pre><code>  seq 1000 | parallel --pipe --tee -v wc {} ::: -w -l -c</code></pre>
 
@@ -2638,24 +3067,34 @@
 
 <p>How many words contain a..z and how many bytes do they fill?</p>
 
-<pre><code>  parallel -a /usr/share/dict/words --pipepart --tee --tag \
+<pre><code>  parallel -a /usr/share/dict/words --pipe-part --tee --tag \
     &#39;grep {1} | wc {2}&#39; ::: {a..z} ::: -l -c</code></pre>
 
+<p>See also: <b>:::</b> <b>--pipe</b> <b>--pipe-part</b></p>
+
 </dd>
-<dt id="termseq-sequence"><b>--termseq</b> <i>sequence</i></dt>
+<dt id="term-seq-sequence"><b>--term-seq</b> <i>sequence</i></dt>
 <dd>
 
-<p>Termination sequence. When a job is killed due to <b>--timeout</b>, <b>--memfree</b>, <b>--halt</b>, or abnormal termination of GNU <b>parallel</b>, <i>sequence</i> determines how the job is killed. The default is:</p>
+<p>Termination sequence.</p>
+
+<p>When a job is killed due to <b>--timeout</b>, <b>--memfree</b>, <b>--halt</b>, or abnormal termination of GNU <b>parallel</b>, <i>sequence</i> determines how the job is killed. The default is:</p>
 
 <pre><code>    TERM,200,TERM,100,TERM,50,KILL,25</code></pre>
 
 <p>which sends a TERM signal, waits 200 ms, sends another TERM signal, waits 100 ms, sends another TERM signal, waits 50 ms, sends a KILL signal, waits 25 ms, and exits. GNU <b>parallel</b> detects if a process dies before the waiting time is up.</p>
 
+<p>See also: <b>--halt</b> <b>--timeout</b> <b>--memfree</b></p>
+
 </dd>
 <dt id="tmpdir-dirname"><b>--tmpdir</b> <i>dirname</i></dt>
 <dd>
 
-<p>Directory for temporary files. GNU <b>parallel</b> normally buffers output into temporary files in /tmp. By setting <b>--tmpdir</b> you can use a different dir for the files. Setting <b>--tmpdir</b> is equivalent to setting $TMPDIR.</p>
+<p>Directory for temporary files.</p>
+
+<p>GNU <b>parallel</b> normally buffers output into temporary files in /tmp. By setting <b>--tmpdir</b> you can use a different dir for the files. Setting <b>--tmpdir</b> is equivalent to setting $TMPDIR.</p>
+
+<p>See also: <b>--compress</b> <b>$TMPDIR</b> <b>$PARALLEL_REMOTE_TMPDIR</b></p>
 
 </dd>
 <dt id="tmux-Long-beta-testing"><b>--tmux</b> (Long beta testing)</dt>
@@ -2663,21 +3102,27 @@
 
 <p>Use <b>tmux</b> for output. Start a <b>tmux</b> session and run each job in a window in that session. No other output will be produced.</p>
 
+<p>See also: <b>--tmuxpane</b></p>
+
 </dd>
 <dt id="tmuxpane-Long-beta-testing"><b>--tmuxpane</b> (Long beta testing)</dt>
 <dd>
 
 <p>Use <b>tmux</b> for output but put output into panes in the first window. Useful if you want to monitor the progress of less than 100 concurrent jobs.</p>
 
+<p>See also: <b>--tmux</b></p>
+
 </dd>
 <dt id="timeout-duration"><b>--timeout</b> <i>duration</i></dt>
 <dd>
 
-<p>Time out for command. If the command runs for longer than <i>duration</i> seconds it will get killed as per <b>--termseq</b>.</p>
+<p>Time out for command. If the command runs for longer than <i>duration</i> seconds it will get killed as per <b>--term-seq</b>.</p>
 
 <p>If <i>duration</i> is followed by a % then the timeout will dynamically be computed as a percentage of the median average runtime of successful jobs. Only values &gt; 100% will make sense.</p>
 
-<p><i>duration</i> is normally in seconds, but can be floats postfixed with <b>s</b>, <b>m</b>, <b>h</b>, or <b>d</b> which would multiply the float by 1, 60, 3600, or 86400. Thus these are equivalent: <b>--timeout 100000</b> and <b>--timeout 1d3.5h16.6m4s</b>.</p>
+<p><i>duration</i> is in seconds, but can be postfixed with s, m, h, or d.</p>
+
+<p>See also: TIME POSTFIXES <b>--term-seq</b> <b>--retries</b></p>
 
 </dd>
 <dt id="verbose"><b>--verbose</b></dt>
@@ -2689,13 +3134,17 @@
 
 <p>Print the job to be run on stderr (standard error).</p>
 
-<p>See also: <b>-v</b>, <b>-p</b>.</p>
+<p>See also: <b>-v</b> <b>--interactive</b></p>
 
 </dd>
 <dt id="transfer"><b>--transfer</b></dt>
 <dd>
 
-<p>Transfer files to remote computers. Shorthand for: <b>--transferfile {}</b>.</p>
+<p>Transfer files to remote computers.</p>
+
+<p>Shorthand for: <b>--transferfile {}</b>.</p>
+
+<p>See also: <b>--transferfile</b>.</p>
 
 </dd>
 <dt id="transferfile-filename"><b>--transferfile</b> <i>filename</i></dt>
@@ -2705,7 +3154,9 @@
 <dt id="tf-filename"><b>--tf</b> <i>filename</i></dt>
 <dd>
 
-<p><b>--transferfile</b> is used with <b>--sshlogin</b> to transfer files to the remote computers. The files will be transferred using <b>rsync</b> and will be put relative to the work dir (see <b>--workdir</b>).</p>
+<p>Transfer <i>filename</i> to remote computers.</p>
+
+<p><b>--transferfile</b> is used with <b>--sshlogin</b> to transfer files to the remote computers. The files will be transferred using <b>rsync</b> and will be put relative to the work dir.</p>
 
 <p>The <i>filename</i> will normally contain a replacement string.</p>
 
@@ -2737,13 +3188,15 @@
 
 <p><b>--transferfile</b> is ignored when used with <b>--sshlogin :</b> or when not used with <b>--sshlogin</b>.</p>
 
+<p>See also: <b>--workdir</b> <b>--sshlogin</b> <b>--basefile</b> <b>--return</b> <b>--cleanup</b></p>
+
 </dd>
 <dt id="trc-filename"><b>--trc</b> <i>filename</i></dt>
 <dd>
 
-<p>Transfer, Return, Cleanup. Shorthand for:</p>
+<p>Transfer, Return, Cleanup. Shorthand for: <b>--transfer</b> <b>--return</b> <i>filename</i> <b>--cleanup</b></p>
 
-<p><b>--transferfile {}</b> <b>--return</b> <i>filename</i> <b>--cleanup</b></p>
+<p>See also: <b>--transfer</b> <b>--return</b> <b>--cleanup</b></p>
 
 </dd>
 <dt id="trim-n-l-r-lr-rl"><b>--trim</b> &lt;n|l|r|lr|rl&gt;</dt>
@@ -2783,6 +3236,8 @@
 </dd>
 </dl>
 
+<p>See also: <b>--no-run-if-empty</b> <b>{}</b> <b>--colsep</b></p>
+
 </dd>
 <dt id="ungroup"><b>--ungroup</b></dt>
 <dd>
@@ -2791,7 +3246,9 @@
 <dt id="u"><b>-u</b></dt>
 <dd>
 
-<p>Ungroup output. Output is printed as soon as possible and bypasses GNU <b>parallel</b> internal processing. This may cause output from different commands to be mixed thus should only be used if you do not care about the output. Compare these:</p>
+<p>Ungroup output.</p>
+
+<p>Output is printed as soon as possible and bypasses GNU <b>parallel</b> internal processing. This may cause output from different commands to be mixed thus should only be used if you do not care about the output. Compare these:</p>
 
 <pre><code>  seq 4 | parallel -j0 \
     &#39;sleep {};echo -n start{};sleep {};echo {}end&#39;
@@ -2818,9 +3275,13 @@
 
 <p>Use the replacement string <i>replace-str</i> instead of <b>{.}</b> for input line without extension.</p>
 
+<p>See also: <b>{.}</b></p>
+
 </dd>
 <dt id="use-sockets-instead-of-threads"><b>--use-sockets-instead-of-threads</b></dt>
 <dd>
+
+<p>See also: <b>--use-cores-instead-of-threads</b></p>
 
 </dd>
 <dt id="use-cores-instead-of-threads"><b>--use-cores-instead-of-threads</b></dt>
@@ -2830,7 +3291,9 @@
 <dt id="use-cpus-instead-of-cores-obsolete"><b>--use-cpus-instead-of-cores</b> (obsolete)</dt>
 <dd>
 
-<p>Determine how GNU <b>parallel</b> counts the number of CPUs. GNU <b>parallel</b> uses this number when the number of jobslots is computed relative to the number of CPUs (e.g. 100% or +1).</p>
+<p>Determine how GNU <b>parallel</b> counts the number of CPUs.</p>
+
+<p>GNU <b>parallel</b> uses this number when the number of jobslots is computed relative to the number of CPUs (e.g. 100% or +1).</p>
 
 <p>CPUs can be counted in three different ways:</p>
 
@@ -2862,13 +3325,19 @@
 
 <p><b>--use-cpus-instead-of-cores</b> is a (misleading) alias for <b>--use-sockets-instead-of-threads</b> and is kept for backwards compatibility.</p>
 
+<p>See also: <b>--number-of-threads</b> <b>--number-of-cores</b> <b>--number-of-sockets</b></p>
+
 </dd>
 <dt id="v"><b>-v</b></dt>
 <dd>
 
-<p>Verbose. Print the job to be run on stdout (standard output). Can be reversed with <b>--silent</b>. See also <b>-t</b>.</p>
+<p>Verbose.</p>
+
+<p>Print the job to be run on stdout (standard output). Can be reversed with <b>--silent</b>.</p>
 
 <p>Use <b>-v</b> <b>-v</b> to print the wrapping ssh command when running remotely.</p>
+
+<p>See also: <b>-t</b></p>
 
 </dd>
 <dt id="version"><b>--version</b></dt>
@@ -2912,7 +3381,7 @@
 
 <p>Used with <b>--semaphore</b> or <b>--sqlmaster</b>.</p>
 
-<p>See also: <b>man sem</b>.</p>
+<p>See also: <b>man sem</b></p>
 
 </dd>
 <dt id="X"><b>-X</b></dt>
@@ -2926,7 +3395,7 @@
 
 <p>Support for <b>-X</b> with <b>--sshlogin</b> is limited and may fail.</p>
 
-<p>See also: <b>-m</b>.</p>
+<p>See also: <b>-m</b></p>
 
 </dd>
 <dt id="exit"><b>--exit</b></dt>
@@ -2948,7 +3417,7 @@
 
 <p>Support for <b>--xargs</b> with <b>--sshlogin</b> is limited and may fail.</p>
 
-<p>See also <b>-X</b> for context replace. If in doubt use <b>-X</b> as that will most likely do what is needed.</p>
+<p>See also: <b>-X</b></p>
 
 </dd>
 </dl>
@@ -3476,6 +3945,11 @@
 
 <pre><code>  parallel --plus echo {choose_k} ::: A B C D ::: A B C D ::: A B C D</code></pre>
 
+<p>Where <b>{choose_k}</b> does not care about order, <b>{uniq}</b> cares about order. It simply skips jobs where values from different input sources are the same:</p>
+
+<pre><code>  parallel --plus echo {uniq} ::: A B C  ::: A B C  ::: A B C
+  parallel --plus echo {1uniq}+{2uniq}+{3uniq} ::: A B C  ::: A B C  ::: A B C</code></pre>
+
 <h2 id="EXAMPLE:-From-a-to-b-and-b-to-c">EXAMPLE: From a to b and b to c</h2>
 
 <p>Assume you have input like:</p>
@@ -3708,7 +4182,7 @@
 
 <p>If it still does not fit in memory you can do this:</p>
 
-<pre><code>  parallel --pipepart -a regexps.txt --block 1M grep -F -f - -n bigfile | \
+<pre><code>  parallel --pipe-part -a regexps.txt --block 1M grep -F -f - -n bigfile | \
     sort -un | perl -pe &#39;s/^\d+://&#39;</code></pre>
 
 <p>The 1M should be your free memory divided by the number of CPU threads and divided by 200 for <b>grep -F</b> and by 1000 for normal <b>grep</b>. On GNU/Linux you can do:</p>
@@ -3717,20 +4191,20 @@
               END { print sum }&#39; /proc/meminfo)
   percpu=$((free / 200 / $(parallel --number-of-threads)))k
 
-  parallel --pipepart -a regexps.txt --block $percpu --compress \
+  parallel --pipe-part -a regexps.txt --block $percpu --compress \
     grep -F -f - -n bigfile | \
     sort -un | perl -pe &#39;s/^\d+://&#39;</code></pre>
 
 <p>If you can live with duplicated lines and wrong order, it is faster to do:</p>
 
-<pre><code>  parallel --pipepart -a regexps.txt --block $percpu --compress \
+<pre><code>  parallel --pipe-part -a regexps.txt --block $percpu --compress \
     grep -F -f - bigfile</code></pre>
 
 <h3 id="Limiting-factor:-CPU">Limiting factor: CPU</h3>
 
 <p>If the CPU is the limiting factor parallelization should be done on the regexps:</p>
 
-<pre><code>  cat regexps.txt | parallel --pipe -L1000 --roundrobin --compress \
+<pre><code>  cat regexps.txt | parallel --pipe -L1000 --round-robin --compress \
     grep -f - -n bigfile | \
     sort -un | perl -pe &#39;s/^\d+://&#39;</code></pre>
 
@@ -3738,13 +4212,13 @@
 
 <p>Some storage systems perform better when reading multiple chunks in parallel. This is true for some RAID systems and for some network file systems. To parallelize the reading of <i>bigfile</i>:</p>
 
-<pre><code>  parallel --pipepart --block 100M -a bigfile -k --compress \
+<pre><code>  parallel --pipe-part --block 100M -a bigfile -k --compress \
     grep -f regexps.txt</code></pre>
 
 <p>This will split <i>bigfile</i> into 100MB chunks and run <b>grep</b> on each of these chunks. To parallelize both reading of <i>bigfile</i> and <i>regexps.txt</i> combine the two using <b>--cat</b>:</p>
 
-<pre><code>  parallel --pipepart --block 100M -a bigfile --cat cat regexps.txt \
-    \| parallel --pipe -L1000 --roundrobin grep -f - {}</code></pre>
+<pre><code>  parallel --pipe-part --block 100M -a bigfile --cat cat regexps.txt \
+    \| parallel --pipe -L1000 --round-robin grep -f - {}</code></pre>
 
 <p>If a line matches multiple regexps, the line may be duplicated.</p>
 
@@ -3973,13 +4447,29 @@
 
 <p>See more <b>ssh</b> tricks on https://en.wikibooks.org/wiki/OpenSSH/Cookbook/Proxies_and_Jump_Hosts</p>
 
+<h2 id="EXAMPLE:-Use-sshpass-with-ssh">EXAMPLE: Use sshpass with ssh</h2>
+
+<p>If you cannot use passwordless login, you may be able to use <b>sshpass</b>:</p>
+
+<pre><code>  export SSHPASS=MyPa$$w0rd
+  seq 10 |
+    parallel -S &#39;4/sshpass -e ssh user-with-password@server&#39; echo
+  seq 10 |
+    parallel --ssh &#39;sshpass -e ssh&#39; -S 4/user-with-password@server&#39; echo</code></pre>
+
+<p>Currently the remote detection of CPU cores is incompatible with <b>sshpass</b> so use the &#39;4/&#39; syntax to tell the server has 4 cores.</p>
+
 <h2 id="EXAMPLE:-Use-outrun-instead-of-ssh">EXAMPLE: Use outrun instead of ssh</h2>
 
 <p><b>outrun</b> lets you run a command on a remote server. <b>outrun</b> sets up a connection to access files at the source server, and automatically transfers files. <b>outrun</b> must be installed on the remote system.</p>
 
 <p>You can use <b>outrun</b> in an sshlogin this way:</p>
 
-<pre><code>  parallel -S &#39;outrun user@server eval&#39; command</code></pre>
+<pre><code>  parallel -S &#39;outrun user@server&#39; command</code></pre>
+
+<p>or:</p>
+
+<pre><code>  parallel --ssh outrun -S server command</code></pre>
 
 <h2 id="EXAMPLE:-Slurm-cluster">EXAMPLE: Slurm cluster</h2>
 
@@ -4189,7 +4679,7 @@
 
 <p>This will cut big.fq into one chunk per CPU core and pass it on stdin (standard input) to the program fastq-reader:</p>
 
-<pre><code>  parallel --pipepart -a big.fq --block -1 --regexp \
+<pre><code>  parallel --pipe-part -a big.fq --block -1 --regexp \
     --recend &#39;\n&#39; --recstart &#39;@.*(/1| 1:.*)\n[A-Za-z\n\.~]&#39; \
     fastq-reader</code></pre>
 
@@ -4212,7 +4702,7 @@
 
 <p>GNU <b>parallel</b>&#39;s <b>--pipe</b> maxes out at around 100 MB/s because every byte has to be copied through GNU <b>parallel</b>. But if <b>bigfile</b> is a real (seekable) file GNU <b>parallel</b> can by-pass the copying and send the parts directly to the program:</p>
 
-<pre><code>  parallel --pipepart --block 100m -a bigfile --files sort |\
+<pre><code>  parallel --pipe-part --block 100m -a bigfile --files sort |\
     parallel -Xj1 sort -m {} &#39;;&#39; rm {} &gt;bigfile.sort</code></pre>
 
 <h2 id="EXAMPLE:-Grouping-input-lines">EXAMPLE: Grouping input lines</h2>
@@ -4252,12 +4742,12 @@
 <p>If you need to run a massive amount of jobs in parallel, then you will likely hit the filehandle limit which is often around 250 jobs. If you are super user you can raise the limit in /etc/security/limits.conf but you can also use this workaround. The filehandle limit is per process. That means that if you just spawn more GNU <b>parallel</b>s then each of them can run 250 jobs. This will spawn up to 2500 jobs:</p>
 
 <pre><code>  cat myinput |\
-    parallel --pipe -N 50 --roundrobin -j50 parallel -j50 your_prg</code></pre>
+    parallel --pipe -N 50 --round-robin -j50 parallel -j50 your_prg</code></pre>
 
 <p>This will spawn up to 62500 jobs (use with caution - you need 64 GB RAM to do this, and you may need to increase /proc/sys/kernel/pid_max):</p>
 
 <pre><code>  cat myinput |\
-    parallel --pipe -N 250 --roundrobin -j250 parallel -j250 your_prg</code></pre>
+    parallel --pipe -N 250 --round-robin -j250 parallel -j250 your_prg</code></pre>
 
 <h2 id="EXAMPLE:-Working-as-mutex-and-counting-semaphore">EXAMPLE: Working as mutex and counting semaphore</h2>
 
@@ -4352,6 +4842,8 @@
 
 <pre><code>  true &gt;jobqueue; tail -n+0 -f jobqueue | parallel -S ..</code></pre>
 
+<p>Output only will be printed when reading the next input after a job has finished: So you need to submit a job after the first has finished to see the output from the first job.</p>
+
 <p>If you keep this running for a long time, jobqueue will grow. A way of removing the jobs already run is by making GNU <b>parallel</b> stop when it hits a special value and then restart. To use <b>--eof</b> to make GNU <b>parallel</b> exit, <b>tail</b> also needs to be forced to exit:</p>
 
 <pre><code>  true &gt;jobqueue;
@@ -4376,12 +4868,6 @@
   tail -n+0 -f jobqueue | parallel --jobs jobfile -S ..</code></pre>
 
 <p>GNU <b>parallel</b> discovers if <b>jobfile</b> or <b>~/.parallel/sshloginfile</b> changes.</p>
-
-<p>There is a a small issue when using GNU <b>parallel</b> as queue system/batch manager: You have to submit JobSlot number of jobs before they will start, and after that you can submit one at a time, and job will start immediately if free slots are available.</p>
-
-<p>Output from the running or completed jobs are held back and will only be printed when the next job is started (unless you use --ungroup or --line-buffer, in which case the output from the jobs are printed immediately).</p>
-
-<p>E.g. if you have 10 jobslots then the output from the first completed job will only be printed when job 11 has started, and the output of second completed job will only be printed when job 12 has started.</p>
 
 <h2 id="EXAMPLE:-GNU-Parallel-as-dir-processor">EXAMPLE: GNU Parallel as dir processor</h2>
 
@@ -4422,7 +4908,7 @@
 
 <p><b>--pipe</b> starts one job per chunk. It reads blocks from stdin (standard input). It finds a record end near a block border and passes a chunk to the program.</p>
 
-<p><b>--pipe-part</b> starts one job per chunk - just like normal <b>--pipe</b>. It first finds record endings near all block borders in the file and then starts the jobs. By using <b>--block -1</b> it will set the block size to 1/<i>n</i> * size-of-file. Used this way it will start <i>n</i> jobs in total.</p>
+<p><b>--pipe-part</b> starts one job per chunk - just like normal <b>--pipe</b>. It first finds record endings near all block borders in the file and then starts the jobs. By using <b>--block -1</b> it will set the block size to size-of-file/<i>n</i>. Used this way it will start <i>n</i> jobs in total.</p>
 
 <p><b>--round-robin</b> starts <i>n</i> jobs in total. It reads a block and passes a chunk to whichever job is ready to read. It does not parse the content except for identifying where a record ends to make sure it only passes full records.</p>
 
@@ -4433,6 +4919,10 @@
 <p><b>--group-by</b> starts one job per chunk. Record borders are not given by <b>--recend</b>/<b>--recstart</b>. Instead a record is defined by a number of lines having the same value in a given column. So the value of a given column changes at a chunk border. With <b>--pipe</b> every line is parsed, with <b>--pipe-part</b> only a few lines are parsed to find the chunk border.</p>
 
 <p><b>--group-by</b> can be combined with <b>--round-robin</b> or <b>--pipe-part</b>.</p>
+
+<h1 id="TIME-POSTFIXES">TIME POSTFIXES</h1>
+
+<p>Arguments that give a duration are given in seconds, but can be expressed as floats postfixed with <b>s</b>, <b>m</b>, <b>h</b>, or <b>d</b> which would multiply the float by 1, 60, 60*60, or 60*60*24. Thus these are equivalent: 100000 and 1d3.5h16.6m4s.</p>
 
 <h1 id="UNIT-PREFIX">UNIT PREFIX</h1>
 
@@ -4550,7 +5040,7 @@
 <pre><code>  ls | parallel -q bash -c \
     &#39;tar c {} | tee &gt;(gzip &gt;{}.tar.gz) | bzip2 &gt;{}.tar.bz2&#39;</code></pre>
 
-<p><b>Conclusion</b>: To avoid dealing with the quoting problems it may be easier just to write a small script or a function (remember to <b>export -f</b> the function) and have GNU <b>parallel</b> call that.</p>
+<p><b>Conclusion</b>: If this is confusing consider avoiding having to deal with quoting by writing a small script or a function (remember to <b>export -f</b> the function) and have GNU <b>parallel</b> call that.</p>
 
 <h1 id="LIST-RUNNING-JOBS">LIST RUNNING JOBS</h1>
 
@@ -4698,7 +5188,17 @@
 <dt id="TMPDIR">$TMPDIR</dt>
 <dd>
 
-<p>Directory for temporary files. See: <b>--tmpdir</b>.</p>
+<p>Directory for temporary files.</p>
+
+<p>See also: <b>--tmpdir</b></p>
+
+</dd>
+<dt id="PARALLEL_REMOTE_TMPDIR">$PARALLEL_REMOTE_TMPDIR</dt>
+<dd>
+
+<p>Directory for temporary files on remote servers.</p>
+
+<p>See also: <b>--tmpdir</b></p>
 
 </dd>
 <dt id="PARALLEL">$PARALLEL</dt>
@@ -4718,6 +5218,8 @@
     parallel echo</code></pre>
 
 <p>Notice the \ after &#39;myssh&#39; is needed because &#39;myssh&#39; and &#39;user@server&#39; must be one argument.</p>
+
+<p>See also: <b>--profile</b></p>
 
 </dd>
 </dl>
@@ -4891,7 +5393,7 @@
 
 <h1 id="REPORTING-BUGS">REPORTING BUGS</h1>
 
-<p>Report bugs to &lt;bug-parallel@gnu.org&gt; or https://savannah.gnu.org/bugs/?func=additem&amp;group=parallel</p>
+<p>Report bugs to &lt;parallel@gnu.org&gt; or https://savannah.gnu.org/bugs/?func=additem&amp;group=parallel</p>
 
 <p>When you write your report, please keep in mind, that you must give the reader enough information to be able to run exactly what you run. So you need to include all data and programs that you use to show the problem.</p>
 
@@ -4934,7 +5436,7 @@
 
 <p>Specifying the name of your distribution is not enough as you may have installed software that is not in the VirtualBox images.</p>
 
-<p>If you cannot reproduce the error on any of the VirtualBox images above, see if you can build a VirtualBox image on which you can reproduce the error. If not you should assume the debugging will be done through you. That will put more burden on you and it is extra important you give any information that help. In general the problem will be fixed faster and with less work for you if you can reproduce the error on a VirtualBox.</p>
+<p>If you cannot reproduce the error on any of the VirtualBox images above, see if you can build a VirtualBox image on which you can reproduce the error. If not you should assume the debugging will be done through you. That will put a lot more burden on you and it is extra important you give any information that help. In general the problem will be fixed faster and with much less work for you if you can reproduce the error on a VirtualBox - even if you have to build a VirtualBox image.</p>
 
 <h2 id="In-summary">In summary</h2>
 
@@ -4968,7 +5470,7 @@
 
 <p>Copyright (C) 2008-2010 Ole Tange, http://ole.tange.dk</p>
 
-<p>Copyright (C) 2010-2021 Ole Tange, http://ole.tange.dk and Free Software Foundation, Inc.</p>
+<p>Copyright (C) 2010-2022 Ole Tange, http://ole.tange.dk and Free Software Foundation, Inc.</p>
 
 <p>Parts of the manual concerning <b>xargs</b> compatibility is inspired by the manual of <b>xargs</b> from GNU findutils 4.4.2.</p>
 

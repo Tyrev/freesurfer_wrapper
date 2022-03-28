@@ -133,7 +133,7 @@
 .\" ========================================================================
 .\"
 .IX Title "PARALLEL_ALTERNATIVES 7"
-.TH PARALLEL_ALTERNATIVES 7 "2021-08-03" "20210722" "parallel"
+.TH PARALLEL_ALTERNATIVES 7 "2022-01-22" "20211222" "parallel"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -142,11 +142,13 @@
 parallel_alternatives \- Alternatives to GNU parallel
 .SH "DIFFERENCES BETWEEN GNU Parallel AND ALTERNATIVES"
 .IX Header "DIFFERENCES BETWEEN GNU Parallel AND ALTERNATIVES"
-There are a lot programs with some of the functionality of \s-1GNU\s0
-\&\fBparallel\fR. \s-1GNU\s0 \fBparallel\fR strives to include the best of the
-functionality without sacrificing ease of use.
+There are a lot programs that share functionality with \s-1GNU\s0
+\&\fBparallel\fR. Some of these are specialized tools, and while \s-1GNU\s0
+\&\fBparallel\fR can emulate many of them, a specialized tool can be better
+at a given task. \s-1GNU\s0 \fBparallel\fR strives to include the best of the
+general functionality without sacrificing ease of use.
 .PP
-\&\fBparallel\fR has existed since 2002 and as \s-1GNU\s0 \fBparallel\fR since
+\&\fBparallel\fR has existed since 2002\-01\-06 and as \s-1GNU\s0 \fBparallel\fR since
 2010. A lot of the alternatives have not had the vitality to survive
 that long, but have come and gone during that time.
 .PP
@@ -409,6 +411,9 @@ contain space, " or ').
 \&  ls | xargs \-d "\en" \-P8 \-I {} bash \-c "wc {} >{}.wc"
 \&  ls | xargs \-d "\en" \-P8 \-I {} bash \-c "echo {}; ls {}|wc"
 .Ve
+.PP
+A more extreme example can be found on:
+https://unix.stackexchange.com/q/405552/
 .PP
 https://www.gnu.org/software/findutils/
 .SS "\s-1DIFFERENCES BETWEEN\s0 find \-exec \s-1AND GNU\s0 Parallel"
@@ -3853,7 +3858,7 @@ Copyright (C) 2007\-10\-18 Ole Tange, http://ole.tange.dk
 .PP
 Copyright (C) 2008\-2010 Ole Tange, http://ole.tange.dk
 .PP
-Copyright (C) 2010\-2021 Ole Tange, http://ole.tange.dk and Free
+Copyright (C) 2010\-2022 Ole Tange, http://ole.tange.dk and Free
 Software Foundation, Inc.
 .PP
 Parts of the manual concerning \fBxargs\fR compatibility is inspired by

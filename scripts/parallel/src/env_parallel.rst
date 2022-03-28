@@ -21,17 +21,13 @@ DESCRIPTION
 ***********
 
 
-\ **env_parallel**\  is a shell function that exports the current
-environment to GNU \ **parallel**\ .
+\ **env_parallel**\  is a shell function that exports the current environment to GNU \ **parallel**\ .
 
-If the shell function is not loaded, a dummy script will be run
-instead that explains how to install the function.
+If the shell function is not loaded, a dummy script will be run instead that explains how to install the function.
 
-\ **env_parallel**\  is 100 ms slower at startup than pure GNU
-\ **parallel**\ , and takes up to 30% longer to start a job (typically 15 ms).
+\ **env_parallel**\  is 100 ms slower at startup than pure GNU \ **parallel**\ , and takes up to 30% longer to start a job (typically 15 ms).
 
-Due to the problem with environment space (see below) the recommended
-usage is either:
+Due to the problem with environment space (see below) the recommended usage is either:
 
 
 .. code-block:: perl
@@ -89,24 +85,13 @@ Environment space
 =================
 
 
-By default \ **env_parallel**\  will export all environment variables,
-arrays, aliases, functions and shell options (see details for the
-individual shells below).
+By default \ **env_parallel**\  will export all environment variables, arrays, aliases, functions and shell options (see details for the individual shells below).
 
-But this only works if the size of the current environment is smaller
-than the maximal length of a command and smaller than half of the max
-if running remotely. E.g. The max size of Bash's command is 128 KB, so
-\ **env_parallel**\  will fail if '\ **set | wc -c**\ ' is bigger than 128
-KB. Technically the limit is in execve(1) which IPC::open3 uses.
+But this only works if the size of the current environment is smaller than the maximal length of a command and smaller than half of the max if running remotely. E.g. The max size of Bash's command is 128 KB, so \ **env_parallel**\  will fail if '\ **set | wc -c**\ ' is bigger than 128 KB. Technically the limit is in execve(1) which IPC::open3 uses.
 
-Bash completion functions are well-known for taking up well over 128
-KB of environment space and the primary reason for causing
-\ **env_parallel**\  to fail.
+Bash completion functions are well-known for taking up well over 128 KB of environment space and the primary reason for causing \ **env_parallel**\  to fail.
 
-Instead you can use \ **--env**\  to specify which variables, arrays,
-aliases and functions to export as this will only export those with
-the given name. Or follow the recommended usage in shown in
-DESCRIPTION.
+Instead you can use \ **--env**\  to specify which variables, arrays, aliases and functions to export as this will only export those with the given name. Or follow the recommended usage in shown in DESCRIPTION.
 
 
 
@@ -126,21 +111,17 @@ Same as GNU \ **parallel**\  in addition to these:
 
 - \ **--record-env**\ 
  
- Record all names currently defined to be ignored every time running
- \ **env_parallel**\  in the future.
+ Record all names currently defined to be ignored every time running \ **env_parallel**\  in the future.
  
 
 
 - \ **--session**\ 
  
- Ignore all names currently defined. Aliases, variables, arrays, and
- functions currently defined will not be transferred.
+ Ignore all names currently defined. Aliases, variables, arrays, and functions currently defined will not be transferred.
  
- But names defined \ *after*\  running \ **parallel --session**\  \ *will*\  be
- transferred.
+ But names defined \ *after*\  running \ **parallel --session**\  \ *will*\  be transferred.
  
- This is only valid in the running shell, and can be undone with
- \ **parallel --end-session**\ .
+ This is only valid in the running shell, and can be undone with \ **parallel --end-session**\ .
  
  You can run multiple \ **--session**\  inside each other:
  
@@ -196,8 +177,7 @@ Supported use
 -------------
 
 
-\ **--env**\  is supported to export only the variable, or alias with the
-given name. Multiple \ **--env**\ s can be given.
+\ **--env**\  is supported to export only the variable, or alias with the given name. Multiple \ **--env**\ s can be given.
 
 \ **--session**\  is supported.
 
@@ -284,8 +264,7 @@ Supported use
 -------------
 
 
-\ **--env**\  is supported to export only the variable, alias, function, or
-array with the given name. Multiple \ **--env**\ s can be given.
+\ **--env**\  is supported to export only the variable, alias, function, or array with the given name. Multiple \ **--env**\ s can be given.
 
 \ **--session**\  is supported.
 
@@ -363,9 +342,7 @@ BUGS
 ----
 
 
-Due to a bug in Bash, aliases containing newlines must be followed by
-a newline in the command. Some systems are not affected by this bug,
-but will print a warning anyway.
+Due to a bug in Bash, aliases containing newlines must be followed by a newline in the command. Some systems are not affected by this bug, but will print a warning anyway.
 
 
 
@@ -373,8 +350,7 @@ csh
 ===
 
 
-\ **env_parallel**\  for \ **csh**\  breaks \ **$PARALLEL**\ , so do not use
-\ **$PARALLEL**\ .
+\ **env_parallel**\  for \ **csh**\  breaks \ **$PARALLEL**\ , so do not use \ **$PARALLEL**\ .
 
 Installation
 ------------
@@ -401,8 +377,7 @@ Supported use
 -------------
 
 
-\ **--env**\  is supported to export only the variable, alias, or
-array with the given name. Multiple \ **--env**\ s can be given.
+\ **--env**\  is supported to export only the variable, alias, or array with the given name. Multiple \ **--env**\ s can be given.
 
 
 - aliases
@@ -485,8 +460,7 @@ Supported use
 -------------
 
 
-\ **--env**\  is supported to export only the variable, or alias with the
-given name. Multiple \ **--env**\ s can be given.
+\ **--env**\  is supported to export only the variable, or alias with the given name. Multiple \ **--env**\ s can be given.
 
 \ **--session**\  is supported.
 
@@ -578,8 +552,7 @@ Supported use
 -------------
 
 
-\ **--env**\  is supported to export only the variable, alias, function, or
-array with the given name. Multiple \ **--env**\ s can be given.
+\ **--env**\  is supported to export only the variable, alias, function, or array with the given name. Multiple \ **--env**\ s can be given.
 
 \ **--session**\  is supported.
 
@@ -674,8 +647,7 @@ Supported use
 -------------
 
 
-\ **--env**\  is supported to export only the variable, alias, function, or
-array with the given name. Multiple \ **--env**\ s can be given.
+\ **--env**\  is supported to export only the variable, alias, function, or array with the given name. Multiple \ **--env**\ s can be given.
 
 \ **--session**\  is supported.
 
@@ -775,8 +747,7 @@ Supported use
 -------------
 
 
-\ **--env**\  is supported to export only the variable, alias, function, or
-array with the given name. Multiple \ **--env**\ s can be given.
+\ **--env**\  is supported to export only the variable, alias, function, or array with the given name. Multiple \ **--env**\ s can be given.
 
 \ **--session**\  is supported.
 
@@ -876,8 +847,7 @@ Supported use
 -------------
 
 
-\ **--env**\  is supported to export only the variable, alias, function, or
-array with the given name. Multiple \ **--env**\ s can be given.
+\ **--env**\  is supported to export only the variable, alias, function, or array with the given name. Multiple \ **--env**\ s can be given.
 
 \ **--session**\  is supported.
 
@@ -970,8 +940,7 @@ Supported use
 -------------
 
 
-\ **--env**\  is supported to export only the variable, or alias with the
-given name. Multiple \ **--env**\ s can be given.
+\ **--env**\  is supported to export only the variable, or alias with the given name. Multiple \ **--env**\ s can be given.
 
 \ **--session**\  is supported.
 
@@ -1030,8 +999,7 @@ tcsh
 ====
 
 
-\ **env_parallel**\  for \ **tcsh**\  breaks \ **$PARALLEL**\ , so do not use
-\ **$PARALLEL**\ .
+\ **env_parallel**\  for \ **tcsh**\  breaks \ **$PARALLEL**\ , so do not use \ **$PARALLEL**\ .
 
 Installation
 ------------
@@ -1058,8 +1026,7 @@ Supported use
 -------------
 
 
-\ **--env**\  is supported to export only the variable, alias, or
-array with the given name. Multiple \ **--env**\ s can be given.
+\ **--env**\  is supported to export only the variable, alias, or array with the given name. Multiple \ **--env**\ s can be given.
 
 
 - aliases
@@ -1142,8 +1109,7 @@ Supported use
 -------------
 
 
-\ **--env**\  is supported to export only the variable, alias, function, or
-array with the given name. Multiple \ **--env**\ s can be given.
+\ **--env**\  is supported to export only the variable, alias, function, or array with the given name. Multiple \ **--env**\ s can be given.
 
 \ **--session**\  is supported.
 
@@ -1230,18 +1196,15 @@ AUTHOR
 
 When using GNU \ **env_parallel**\  for a publication please cite:
 
-O. Tange (2018): GNU Parallel 2018, March 2018, ISBN 9781387509881,
-DOI: 10.5281/zenodo.1146014.
+O. Tange (2018): GNU Parallel 2018, March 2018, ISBN 9781387509881, DOI: 10.5281/zenodo.1146014.
 
-This helps funding further development; and it won't cost you a cent.
-If you pay 10000 EUR you should feel free to use GNU Parallel without citing.
+This helps funding further development; and it won't cost you a cent. If you pay 10000 EUR you should feel free to use GNU Parallel without citing.
 
 Copyright (C) 2007-10-18 Ole Tange, http://ole.tange.dk
 
 Copyright (C) 2008-2010 Ole Tange, http://ole.tange.dk
 
-Copyright (C) 2010-2021 Ole Tange, http://ole.tange.dk and Free
-Software Foundation, Inc.
+Copyright (C) 2010-2022 Ole Tange, http://ole.tange.dk and Free Software Foundation, Inc.
 
 
 *******
@@ -1249,29 +1212,17 @@ LICENSE
 *******
 
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 3 of the License, or
-at your option any later version.
+This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or at your option any later version.
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
+You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 Documentation license I
 =======================
 
 
-Permission is granted to copy, distribute and/or modify this
-documentation under the terms of the GNU Free Documentation License,
-Version 1.3 or any later version published by the Free Software
-Foundation; with no Invariant Sections, with no Front-Cover Texts, and
-with no Back-Cover Texts.  A copy of the license is included in the
-file LICENSES/GFDL-1.3-or-later.txt.
+Permission is granted to copy, distribute and/or modify this documentation under the terms of the GNU Free Documentation License, Version 1.3 or any later version published by the Free Software Foundation; with no Invariant Sections, with no Front-Cover Texts, and with no Back-Cover Texts.  A copy of the license is included in the file LICENSES/GFDL-1.3-or-later.txt.
 
 
 Documentation license II
@@ -1298,17 +1249,13 @@ Under the following conditions:
 
 - \ **Attribution**\ 
  
- You must attribute the work in the manner specified by the author or
- licensor (but not in any way that suggests that they endorse you or
- your use of the work).
+ You must attribute the work in the manner specified by the author or licensor (but not in any way that suggests that they endorse you or your use of the work).
  
 
 
 - \ **Share Alike**\ 
  
- If you alter, transform, or build upon this work, you may distribute
- the resulting work only under the same, similar or a compatible
- license.
+ If you alter, transform, or build upon this work, you may distribute the resulting work only under the same, similar or a compatible license.
  
 
 
@@ -1317,15 +1264,13 @@ With the understanding that:
 
 - \ **Waiver**\ 
  
- Any of the above conditions can be waived if you get permission from
- the copyright holder.
+ Any of the above conditions can be waived if you get permission from the copyright holder.
  
 
 
 - \ **Public Domain**\ 
  
- Where the work or any of its elements is in the public domain under
- applicable law, that status is in no way affected by the license.
+ Where the work or any of its elements is in the public domain under applicable law, that status is in no way affected by the license.
  
 
 
@@ -1334,23 +1279,21 @@ With the understanding that:
  In no way are any of the following rights affected by the license:
  
  
- - \*
+ - 
   
-  Your fair dealing or fair use rights, or other applicable
-  copyright exceptions and limitations;
+  Your fair dealing or fair use rights, or other applicable copyright exceptions and limitations;
   
  
  
- - \*
+ - 
   
   The author's moral rights;
   
  
  
- - \*
+ - 
   
-  Rights other persons may have either in the work itself or in
-  how the work is used, such as publicity or privacy rights.
+  Rights other persons may have either in the work itself or in how the work is used, such as publicity or privacy rights.
   
  
  
@@ -1359,13 +1302,11 @@ With the understanding that:
 
 - \ **Notice**\ 
  
- For any reuse or distribution, you must make clear to others the
- license terms of this work.
+ For any reuse or distribution, you must make clear to others the license terms of this work.
  
 
 
-A copy of the full license is included in the file as
-LICENCES/CC-BY-SA-4.0.txt
+A copy of the full license is included in the file as LICENCES/CC-BY-SA-4.0.txt
 
 
 
@@ -1382,6 +1323,5 @@ SEE ALSO
 ********
 
 
-\ **parallel**\ (1), \ **ash**\ (1), \ **bash**\ (1), \ **csh**\ (1), \ **dash**\ (1),
-\ **fish**\ (1), \ **ksh**\ (1), \ **pdksh**\ (1) \ **tcsh**\ (1), \ **zsh**\ (1).
+\ **parallel**\ (1), \ **ash**\ (1), \ **bash**\ (1), \ **csh**\ (1), \ **dash**\ (1), \ **fish**\ (1), \ **ksh**\ (1), \ **pdksh**\ (1) \ **tcsh**\ (1), \ **zsh**\ (1).
 

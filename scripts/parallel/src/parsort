@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 
-# SPDX-FileCopyrightText: 2021 Ole Tange, http://ole.tange.dk and Free Software and Foundation, Inc.
+# SPDX-FileCopyrightText: 2021-2022 Ole Tange, http://ole.tange.dk and Free Software and Foundation, Inc.
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 =pod
@@ -45,7 +45,7 @@ On a 48 core machine you should see a speedup of 3x over B<sort>.
 
 =head1 AUTHOR
 
-Copyright (C) 2020-2021 Ole Tange,
+Copyright (C) 2020-2022 Ole Tange,
 http://ole.tange.dk and Free Software Foundation, Inc.
 
 
@@ -122,9 +122,9 @@ GetOptions(
     "help" => \$opt::dummy,
     ) || exit(255);
 $Global::progname = ($0 =~ m:(^|/)([^/]+)$:)[1];
-$Global::version = 20210822;
+$Global::version = 20220322;
 if($opt::version) { version(); exit 0; }
-@Global::sortoptions =
+@Global::sortoptions = grep { ! /^-D$/ }
     shell_quote(@ARGV_before[0..($#ARGV_before-$#ARGV-1)]);
 #if($opt::zero_terminated) { $/ = "\0"; }
 
@@ -160,6 +160,7 @@ sub sort_files {
 	 @Global::sortoptions, '::::', @files) || die;
     my @cmd = merge(<$par>);
     close $par;
+    debug(@cmd);
     # The command uses <(...) so it is incompatible with /bin/sh
     open(my $bash,"|-","bash") || die;
     print $bash @cmd;
@@ -220,12 +221,19 @@ sub tmpfifo {
     return $tmpfifo;
 }
 
+sub debug {
+    # Returns: N/A
+    $opt::D or return;
+    @_ = grep { defined $_ ? $_ : "" } @_;
+    print STDERR @_[1..$#_];
+}
+
 sub version() {
     # Returns: N/A
     print join
 	("\n",
 	 "GNU $Global::progname $Global::version",
-	 "Copyright (C) 2020-2021 Ole Tange, http://ole.tange.dk and Free Software",
+	 "Copyright (C) 2020-2022 Ole Tange, http://ole.tange.dk and Free Software",
 	 "Foundation, Inc.",
 	 "License GPLv3+: GNU GPL version 3 or later <https://gnu.org/licenses/gpl.html>",
 	 "This is free software: you are free to change and redistribute it.",
@@ -394,7 +402,7 @@ sub version() {
     print join
 	("\n",
 	 "GNU $Global::progname $Global::version",
-	 "Copyright (C) 2007-2021 Ole Tange, http://ole.tange.dk and Free Software",
+	 "Copyright (C) 2007-2022 Ole Tange, http://ole.tange.dk and Free Software",
 	 "Foundation, Inc.",
 	 "License GPLv3+: GNU GPL version 3 or later <https://gnu.org/licenses/gpl.html>",
 	 "This is free software: you are free to change and redistribute it.",

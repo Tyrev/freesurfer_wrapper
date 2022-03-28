@@ -22,23 +22,15 @@ DESCRIPTION
 ***********
 
 
-\ **parset**\  is a shell function that puts the output from GNU
-\ **parallel**\  into shell variables.
+\ **parset**\  is a shell function that puts the output from GNU \ **parallel**\  into shell variables.
 
-\ **env_parset**\  is a shell function that puts the output from
-\ **env_parallel**\  into shell variables.
+\ **env_parset**\  is a shell function that puts the output from \ **env_parallel**\  into shell variables.
 
-The \ **parset**\  and \ **env_parset**\  functions are defined as part of
-\ **env_parallel**\ .
+The \ **parset**\  and \ **env_parset**\  functions are defined as part of \ **env_parallel**\ .
 
-If \ *variablename*\  is a single variable name, this will be treated as
-the destination variable. If the variable is defined as an associative
-array (using \ **typeset -A myassoc**\ ), this will be used. Otherwise the
-variable will be made into a normal array.
+If \ *variablename*\  is a single variable name, this will be treated as the destination variable. If the variable is defined as an associative array (using \ **typeset -A myassoc**\ ), this will be used. Otherwise the variable will be made into a normal array.
 
-If \ *variablename*\  contains multiple names separated by ',' or space,
-the names will be the destination variables. The number of names must
-be at least the number of jobs.
+If \ *variablename*\  contains multiple names separated by ',' or space, the names will be the destination variables. The number of names must be at least the number of jobs.
 
 
 *******
@@ -46,8 +38,7 @@ OPTIONS
 *******
 
 
-Same as GNU \ **parallel**\ , but they are put \ *after*\  the destination
-variable.
+Same as GNU \ **parallel**\ , but they are put \ *after*\  the destination variable.
 
 
 ****************
@@ -120,8 +111,7 @@ The commands to run can be an array:
    parset res echo < parallel_input_file
 
 
-but \ **parset**\  can \ *not*\  be part of a pipe. In particular this means
-it cannot read from a pipe or write to a pipe:
+but \ **parset**\  can \ *not*\  be part of a pipe. In particular this means it cannot read from a pipe or write to a pipe:
 
 
 .. code-block:: perl
@@ -224,8 +214,7 @@ Put output into vars \ **$seq, $pwd, $ls**\ :
    parset res1,res2,res3 echo < parallel_input_file
 
 
-but \ **parset**\  can not be part of a pipe. In particular this means it
-cannot read from a pipe or write to a pipe:
+but \ **parset**\  can not be part of a pipe. In particular this means it cannot read from a pipe or write to a pipe:
 
 
 .. code-block:: perl
@@ -307,18 +296,15 @@ AUTHOR
 
 When using GNU \ **parallel**\  for a publication please cite:
 
-O. Tange (2011): GNU Parallel - The Command-Line Power Tool, ;login:
-The USENIX Magazine, February 2011:42-47.
+O. Tange (2011): GNU Parallel - The Command-Line Power Tool, ;login: The USENIX Magazine, February 2011:42-47.
 
-This helps funding further development; and it won't cost you a cent.
-If you pay 10000 EUR you should feel free to use GNU Parallel without citing.
+This helps funding further development; and it won't cost you a cent. If you pay 10000 EUR you should feel free to use GNU Parallel without citing.
 
 Copyright (C) 2007-10-18 Ole Tange, http://ole.tange.dk
 
 Copyright (C) 2008-2010 Ole Tange, http://ole.tange.dk
 
-Copyright (C) 2010-2021 Ole Tange, http://ole.tange.dk and Free
-Software Foundation, Inc.
+Copyright (C) 2010-2022 Ole Tange, http://ole.tange.dk and Free Software Foundation, Inc.
 
 
 *******
@@ -326,29 +312,17 @@ LICENSE
 *******
 
 
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 3 of the License, or
-at your option any later version.
+This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or at your option any later version.
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
+You should have received a copy of the GNU General Public License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 Documentation license I
 =======================
 
 
-Permission is granted to copy, distribute and/or modify this
-documentation under the terms of the GNU Free Documentation License,
-Version 1.3 or any later version published by the Free Software
-Foundation; with no Invariant Sections, with no Front-Cover Texts, and
-with no Back-Cover Texts.  A copy of the license is included in the
-file LICENSES/GFDL-1.3-or-later.txt.
+Permission is granted to copy, distribute and/or modify this documentation under the terms of the GNU Free Documentation License, Version 1.3 or any later version published by the Free Software Foundation; with no Invariant Sections, with no Front-Cover Texts, and with no Back-Cover Texts.  A copy of the license is included in the file LICENSES/GFDL-1.3-or-later.txt.
 
 
 Documentation license II
@@ -375,17 +349,13 @@ Under the following conditions:
 
 - \ **Attribution**\ 
  
- You must attribute the work in the manner specified by the author or
- licensor (but not in any way that suggests that they endorse you or
- your use of the work).
+ You must attribute the work in the manner specified by the author or licensor (but not in any way that suggests that they endorse you or your use of the work).
  
 
 
 - \ **Share Alike**\ 
  
- If you alter, transform, or build upon this work, you may distribute
- the resulting work only under the same, similar or a compatible
- license.
+ If you alter, transform, or build upon this work, you may distribute the resulting work only under the same, similar or a compatible license.
  
 
 
@@ -394,15 +364,13 @@ With the understanding that:
 
 - \ **Waiver**\ 
  
- Any of the above conditions can be waived if you get permission from
- the copyright holder.
+ Any of the above conditions can be waived if you get permission from the copyright holder.
  
 
 
 - \ **Public Domain**\ 
  
- Where the work or any of its elements is in the public domain under
- applicable law, that status is in no way affected by the license.
+ Where the work or any of its elements is in the public domain under applicable law, that status is in no way affected by the license.
  
 
 
@@ -411,23 +379,21 @@ With the understanding that:
  In no way are any of the following rights affected by the license:
  
  
- - \*
+ - 
   
-  Your fair dealing or fair use rights, or other applicable
-  copyright exceptions and limitations;
+  Your fair dealing or fair use rights, or other applicable copyright exceptions and limitations;
   
  
  
- - \*
+ - 
   
   The author's moral rights;
   
  
  
- - \*
+ - 
   
-  Rights other persons may have either in the work itself or in
-  how the work is used, such as publicity or privacy rights.
+  Rights other persons may have either in the work itself or in how the work is used, such as publicity or privacy rights.
   
  
  
@@ -436,13 +402,11 @@ With the understanding that:
 
 - \ **Notice**\ 
  
- For any reuse or distribution, you must make clear to others the
- license terms of this work.
+ For any reuse or distribution, you must make clear to others the license terms of this work.
  
 
 
-A copy of the full license is included in the file as
-LICENCES/CC-BY-SA-4.0.txt
+A copy of the full license is included in the file as LICENCES/CC-BY-SA-4.0.txt
 
 
 

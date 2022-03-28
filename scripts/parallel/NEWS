@@ -1,3 +1,145 @@
+202203022
+
+New in this release:
+
+* --sshlogin user:password@host is now supported by using sshpass.
+
+* Bug fixes and man page updates: Many options now have a 'See also' section.
+
+News about GNU Parallel:
+
+* Bash: GNU Parallel with Curl https://gist.github.com/CMCDragonkai/5914e02df62137e47f32?permalink_comment_id=2617456
+
+* The Pipe Operator Explained https://medium.com/geekculture/the-pipe-operator-explained-cbd41e23775a
+
+
+20220222
+
+New in this release:
+
+* Encoding of remote commands has changed. This limits the length of
+  remote commands to less than half. It also requires $REMOTE_TMPDIR
+  to be writable. It makes this release beta quality.
+
+* Time functions hh_mm_ss() hhmmss() hh_mm() hhmm() are now available
+  for {= =}.
+
+* Many options in the man page for parallel now has 'see also' for
+  related options.
+
+* parallel_options_map.pdf is a map showing which options other
+  options relate to.
+
+* {uniq} added to --plus to only run jobs with unique values.
+
+* sem --fg exits with the exit code of the job.
+
+* Bug fixes and man page updates.
+
+
+20220122
+
+New in this release:
+
+* GNU Parallel turned 20 on the 2022-01-06
+  https://www.gnu.org/software/parallel/20th-birthday.html
+
+* Bug fixes and man page updates.
+
+News about GNU Parallel:
+
+* Save Time with Modern Search Techniques
+  https://www.eventbrite.com/e/ohio-information-security-forum-january-2022-monthly-meeting-tickets-240632737997
+
+* Bash "Fail immediately if any fails"
+  https://morioh.com/p/a01b883dc57c
+
+* Re-encoding the EmacsConf videos with FFmpeg and GNU Parallel
+  https://sachachua.com/blog/2021/12/re-encoding-the-emacsconf-videos-with-ffmpeg-and-gnu-parallel/
+
+* Bash 平行 https://learntutorials.net/ja/bash/topic/10778/%E5%B9%B3%E8%A1%8C
+
+
+20211222
+
+New in this release:
+
+* Bug fixes and man page updates.
+
+News about GNU Parallel:
+
+* The first version of Parallel will be 20 years on 2022-01-06
+
+* HerrComp Intro HPC gnu parallel
+  https://www.youtube.com/watch?v=tcgjKWfgWQY
+
+* 多数のファイルを処理する場合の工夫
+  https://qiita.com/toramili/items/44a770cfb9ef1edc9e26
+
+* How To Install parallel on Ubuntu 20.04
+  https://installati.one/ubuntu/20.04/parallel/
+
+* Distributing embarrassingly parallel tasks GNU Parallel
+  https://ulhpc-tutorials.readthedocs.io/en/latest/sequential/gnu-parallel/
+
+
+20211122
+
+New in this release:
+
+* Bug fixes and man page updates.
+
+News about GNU Parallel:
+
+* Otimizando o seu Hacking com o GNU Parallel - Mateus Buogo
+  https://www.youtube.com/watch?v=xIpPPZXDKGU
+
+* SMACK 12 - Do it faster! Simple ways to use all those cores (and
+  GPUs) efficiently. https://www.youtube.com/watch?v=lXDGY7NvOYk
+
+
+20211022
+
+New in this release:
+
+* Don't postpone output until $jobslots jobs have been started.
+
+* Bug fixes and man page updates.
+
+News about GNU Parallel:
+
+* How to Install GNU Parallel using Anaconda | Linux
+  https://www.youtube.com/watch?v=UwDNVP-L0qA
+
+* Install GNU Parallel from source code | Linux
+  https://www.youtube.com/watch?v=PIyJH4ben5o
+
+* Compiling GNU Parallel on CentOS-7
+  https://thelinuxcluster.com/2021/10/19/compiling-gnu-parallel-on-centos-7/
+
+
+20210922
+
+New in this release:
+
+* Bug fixes and man page updates.
+
+News about GNU Parallel:
+
+* 3 Programs that will Level Up your Bash Game
+  https://medium.com/codex/3-programs-that-will-level-up-your-bash-game-bf14e17e2291
+
+* I Summarized 100+ Command-Line Tools for Data Scientists in 15
+  Minutes
+  https://towardsdatascience.com/i-summarized-100-command-line-tools-for-data-scientists-in-15-minutes-976def544ffe
+
+* Speed up Your Builds by Parallelizing
+  https://www.incredibuild.com/blog/speed-up-your-builds-by-parallelizing
+
+* Bash: GNU Parallel with Curl
+  https://gist.github.com/dinh/93b936a55de9a331199d6582bc2921d2
+
+
 20210822
 
 New in this release:
@@ -2914,7 +3056,7 @@ New in this release:
 
 20140922
 
-* If the file give as --sshloginfile is changed it will be re-read
+* If the file given as --sshloginfile is changed it will be re-read
   when a job finishes though at most once per second. This makes it
   possible to add and remove hosts while running.
 
@@ -3609,7 +3751,8 @@ New in this release:
   pretty cool!
 
 * GNU Parallel was used (unfortunately with improper citation) in:
-  Understanding the Impact of E-Commerce Software on the Adoption of Structured Data on the Web
+  Understanding the Impact of E-Commerce Software on the Adoption of
+  Structured Data on the Web
   http://link.springer.com/chapter/10.1007/978-3-642-38366-3_9#page-1
 
 * GNU Parallel was used (unfortunately with improper citation) in:

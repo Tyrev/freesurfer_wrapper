@@ -262,9 +262,9 @@
 
 <h1 id="DIFFERENCES-BETWEEN-GNU-Parallel-AND-ALTERNATIVES">DIFFERENCES BETWEEN GNU Parallel AND ALTERNATIVES</h1>
 
-<p>There are a lot programs with some of the functionality of GNU <b>parallel</b>. GNU <b>parallel</b> strives to include the best of the functionality without sacrificing ease of use.</p>
+<p>There are a lot programs that share functionality with GNU <b>parallel</b>. Some of these are specialized tools, and while GNU <b>parallel</b> can emulate many of them, a specialized tool can be better at a given task. GNU <b>parallel</b> strives to include the best of the general functionality without sacrificing ease of use.</p>
 
-<p><b>parallel</b> has existed since 2002 and as GNU <b>parallel</b> since 2010. A lot of the alternatives have not had the vitality to survive that long, but have come and gone during that time.</p>
+<p><b>parallel</b> has existed since 2002-01-06 and as GNU <b>parallel</b> since 2010. A lot of the alternatives have not had the vitality to survive that long, but have come and gone during that time.</p>
 
 <p>GNU <b>parallel</b> is actively maintained with a new release every month since 2010. Most other alternatives are fleeting interests of the developers with irregular releases and only maintained for a few years.</p>
 
@@ -618,6 +618,8 @@
 
 <pre><code>  ls | xargs -d &quot;\n&quot; -P8 -I {} bash -c &quot;wc {} &gt;{}.wc&quot;
   ls | xargs -d &quot;\n&quot; -P8 -I {} bash -c &quot;echo {}; ls {}|wc&quot;</code></pre>
+
+<p>A more extreme example can be found on: https://unix.stackexchange.com/q/405552/</p>
 
 <p>https://www.gnu.org/software/findutils/</p>
 
@@ -3847,7 +3849,7 @@
 
 <p>Copyright (C) 2008-2010 Ole Tange, http://ole.tange.dk</p>
 
-<p>Copyright (C) 2010-2021 Ole Tange, http://ole.tange.dk and Free Software Foundation, Inc.</p>
+<p>Copyright (C) 2010-2022 Ole Tange, http://ole.tange.dk and Free Software Foundation, Inc.</p>
 
 <p>Parts of the manual concerning <b>xargs</b> compatibility is inspired by the manual of <b>xargs</b> from GNU findutils 4.4.2.</p>
 

@@ -7,7 +7,7 @@
 # after which 'env_parallel' works
 #
 #
-# Copyright (C) 2016-2021 Ole Tange, http://ole.tange.dk and Free
+# Copyright (C) 2016-2022 Ole Tange, http://ole.tange.dk and Free
 # Software Foundation, Inc.
 #
 # This program is free software; you can redistribute it and/or modify
@@ -25,8 +25,10 @@
 # or write to the Free Software Foundation, Inc., 51 Franklin St,
 # Fifth Floor, Boston, MA 02110-1301 USA
 #
-# SPDX-FileCopyrightText: 2021 Ole Tange, http://ole.tange.dk and Free Software and Foundation, Inc.
+# SPDX-FileCopyrightText: 2021-2022 Ole Tange, http://ole.tange.dk and Free Software and Foundation, Inc.
 # SPDX-License-Identifier: GPL-3.0-or-later
+
+# shellcheck disable=SC2006
 
 env_parallel() {
     # env_parallel.bash
@@ -62,8 +64,9 @@ env_parallel() {
 	typeset -p "$@"
     }
     _ignore_HARDCODED() {
-	# These names cannot be detected
-	echo '(_|TIMEOUT|GROUPS|FUNCNAME|DIRSTACK|PIPESTATUS|USERNAME|BASHPID|BASH_[A-Z_]+)'
+	# Copying $RANDOM will cause it not to be random
+	# The rest cannot be detected as read-only
+	echo '(RANDOM|_|TIMEOUT|GROUPS|FUNCNAME|DIRSTACK|PIPESTATUS|USERNAME|BASHPID|BASH_[A-Z_]+)'
     }
     _ignore_READONLY() {
 	# shellcheck disable=SC1078,SC1079,SC2026
@@ -384,8 +387,8 @@ _parset_main() {
 	return 255
     fi
     if [ "$_parset_NAME" = "--version" ] ; then
-	echo "parset 20210822 (GNU parallel `parallel --minversion 1`)"
-	echo "Copyright (C) 2007-2021 Ole Tange, http://ole.tange.dk and Free Software"
+	echo "parset 20220322 (GNU parallel `parallel --minversion 1`)"
+	echo "Copyright (C) 2007-2022 Ole Tange, http://ole.tange.dk and Free Software"
 	echo "Foundation, Inc."
 	echo "License GPLv3+: GNU GPL version 3 or later <https://gnu.org/licenses/gpl.html>"
 	echo "This is free software: you are free to change and redistribute it."
