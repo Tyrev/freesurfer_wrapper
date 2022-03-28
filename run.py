@@ -4,21 +4,16 @@ Command-line wrapper tool to execute parallel runs of FreeSurfer recon-all and s
 This file can also be imported as a module and contains the following functions:
 
     * argument_parser -  parser for command-line options, arguments and sub-commands.
-    * run_command - 
-    * handle_workers - creates a pool of parallel worker processes running commands.
+    * run_command - select and run the commands
     * worker - invokes a subprocess running the command.
-    * recon - formats recon-all command string.
-    * edit - formats mri_gcut and mri_binarize command string.
-    * recon_edit - formats a cp and recon-all command string.
-    * parse_input_file - parses the input tables.
 
 """
 
 import argparse
 import multiprocessing as mp
-import os
 import subprocess
 import sys
+import pandas as pd
 
 
 def argument_parser(args: list) -> "ArgumentParser.parse_args":
@@ -39,16 +34,28 @@ def argument_parser(args: list) -> "ArgumentParser.parse_args":
     parser = argparse.ArgumentParser(description="Command-line wrapper tool to execute parallel runs of FreeSurfer recon-all and some pial edits algorithms.")
     subparsers = parser.add_subparsers(dest="command")
 
-    recon = subparsers.add_parser('recon', help='Run FreeSurfer recon-all.')
-    recon.add_argument('-i', '--input', type=str, help='Tab separated file. First column: unique ID. Second column: path to dcm/nii file.', required=True)
+    recon = subparsers.add_parser('recon_all', help='Run FreeSurfer recon-all [CROSS].')
+    recon.add_argument('-i', '--input', type=str, help='Tab separated file. Required columns: id (unique ID), dcm_path (path to dcm/nii file).', required=True)
     recon.add_argument('-p', '--parallel', type=int, help='Number of parallel runs (default: number of CPUs).', default=mp.cpu_count())
+   
+    recon_base = subparsers.add_parser('recon_base', help='Run FreeSurfer recon-all [BASE].')
+    recon_base.add_argument('-i', '--input', type=str, help='Path to recon_base_input.txt file used for base processing. Each line must be a command "recon-all -base <subject> -tp <unique_id> -tp <unique_id> ... -all"', required=True)
+    recon_base.add_argument('-p', '--parallel', type=int, help='Number of parallel runs (default: number of CPUs).', default=mp.cpu_count())
     
-    segHA = subparsers.add_parser('segment_hip_amg', help='Run segmentation of hippocampal subfields and nuclei of the amygdala.')
-    segHA.add_argument('-i', '--input', type=str, help='Tab separated file. First column: unique ID. Second column: path to dcm/nii file.', required=True)
+    recon_long = subparsers.add_parser('recon_long', help='Run FreeSurfer recon-all [LONG].')
+    recon_long.add_argument('-i', '--input', type=str, help='Path to recon_long_input.txt file used for long processing. Each line must be a command "recon-all -long <unique_id> <subject> -all', required=True)
+    recon_long.add_argument('-p', '--parallel', type=int, help='Number of parallel runs (default: number of CPUs).', default=mp.cpu_count())
+   
+    segHA = subparsers.add_parser('segment_HA', help='Run [CROSS] segmentation of hippocampal subfields and nuclei of the amygdala.')
+    segHA.add_argument('-i', '--input', type=str, help='Tab separated file. Required columns: id (unique ID) from subject processed with recon-all [CROSS]', required=True)
     segHA.add_argument('-p', '--parallel', type=int, help='Number of parallel FS runs (default: number of CPUs).', default=mp.cpu_count())
     
+    segHA_long = subparsers.add_parser('segment_HA_long', help='Run [LONG] segmentation of hippocampal subfields and nuclei of the amygdala.')
+    segHA_long.add_argument('-i', '--input', type=str, help='Tab separated file. Required columns: subject (base ID) from subject processed with recon-all [BASE])', required=True)
+    segHA_long.add_argument('-p', '--parallel', type=int, help='Number of parallel FS runs (default: number of CPUs).', default=mp.cpu_count())
+    
     edit = subparsers.add_parser('edit', help='Run mri_gcut and mri_binarize for pial edits.')
-    edit.add_argument('-i', '--input', type=str, help='Tab separated file. First column: unique ID. Second column: path to dcm/nii file. Third column: tissue ratio', required=True)
+    edit.add_argument('-i', '--input', type=str, help='Tab separated file. Required columns column: id (unique ID) from subject processed with recon-all [CROSS], ratio: threshold to value (%) of WM intensity.', required=True)
     edit.add_argument('-p', '--parallel', type=int, help='Number of parallel FS runs (default: number of CPUs).', default=mp.cpu_count())
     
     recon_edit = subparsers.add_parser('recon_edit', help='Re-run recon-all for pial edits.')
@@ -56,81 +63,6 @@ def argument_parser(args: list) -> "ArgumentParser.parse_args":
     recon_edit.add_argument('-p', '--parallel', type=int, help='Number of parallel FS runs (default: number of CPUs).', default=mp.cpu_count())
    
     return parser.parse_args()
-
-def recon(recon_args: list) -> str:
-    """
-    Formats recon-all command string.
-    
-    Parameters
-    ----------
-    recon_args : list
-        recon-all arguments list
-
-    Returns
-    -------
-    recon-all [args]
-    
-    """
-
-    subjid = recon_args[0]
-    volume = recon_args[1]
-    cmd_line = f"recon-all -all -s {subjid} -i {volume}"
-
-    return cmd_line
-
-def edit(edit_args: list) -> str:
-    """
-    Formats mri_gcut and mri_binarize command string.
-    mri_gcut performs skull stripping algorithm based on graph cut.
-    mri_binarize binarizes the edited mask.
-
-    Parameters
-    ----------
-    edit_args : list
-        mri_gcut and mri_binarize arguments list
-
-    Returns
-    -------
-    mri_gcut [args] && mri_binarize [args]
-    
-    """
-
-    subjid = edit_args[0]
-    tissue_ratio = edit_args[2]
-    subjects_dir = os.environ['SUBJECTS_DIR'] # SUBJECTS_DIR environment variable set in Dockerfile
-    
-    cmd_mri_gcut = f"mri_gcut -110 -T {tissue_ratio} -mult {subjects_dir}/{subjid}/mri/brainmask.auto.mgz {subjects_dir}/{subjid}/mri/T1.mgz {subjects_dir}/{subjid}/mri/brainmask.tmp{tissue_ratio}.mgz {subjects_dir}/{subjid}/mri/brainmask.gcutsT{tissue_ratio}.mgz"
-    cmd_mri_binarize = f"mri_binarize --i {subjects_dir}/{subjid}/mri/brainmask.gcutsT{tissue_ratio}.mgz --o {subjects_dir}/{subjid}/mri/brainmask.gcutsT{tissue_ratio}.mgz --binval 999 --min 1"
-    cmd_line = f"{cmd_mri_gcut} && {cmd_mri_binarize}"
-
-    return cmd_line
-
-def recon_edit(recon_edit_args: list) -> str:
-    """
-    Formats a cp and recon-all command string.
-    cp replaces the original brainmask with the edited brainmask.gcutsT{tissue_ratio}.mgz.
-    recon-all re-runs -autorecon2-wm -autorecon3 stream with the new mask.
-
-    Parameters
-    ----------
-    recon_edit_args : list
-        cp and recon-all arguments list
-
-    Returns
-    -------
-    cp [args] && recon-all [args]
-    
-    """
-
-    subjid = recon_edit_args[0]
-    tissue_ratio = recon_edit_args[2]
-    subjects_dir = os.environ['SUBJECTS_DIR'] # SUBJECTS_DIR environment variable set in Dockerfile
-    
-    cmd_brainmask_cp = f"cp {subjects_dir}/{subjid}/mri/brainmask.tmp{tissue_ratio}.mgz {subjects_dir}/{subjid}/mri/brainmask.auto.mgz && cp {subjects_dir}/{subjid}/mri/brainmask.tmp{tissue_ratio}.mgz {subjects_dir}/{subjid}/mri/brainmask.mgz"
-    cmd_recon_all_edit = f"recon-all -autorecon2-wm -autorecon3 -s {subjid}"
-    cmd_line = f"{cmd_brainmask_cp} && {cmd_recon_all_edit}"
-
-    return cmd_line
 
 def worker(cmd: str) -> "subprocess.run":
     """
@@ -149,57 +81,9 @@ def worker(cmd: str) -> "subprocess.run":
 
     return subprocess.run(cmd, shell=True)
 
-def parse_input_file(input_file: str) -> "List[List[str]]":
+def run_command(args: list):
     """
-    Parses the input tables.
-
-    Parameters
-    ----------
-    input_file : str
-        Tab-separated .txt file.
-
-    Returns
-    -------
-    File lines and columns parsed as a list of lists.
-    
-    """
-
-    with open(input_file) as f:
-        lines = [line.rstrip().split('\t') for line in f]
-    return lines
-
-def handle_workers(p: int, command: "function", input_file: str):
-    """
-    Creates a pool of parallel worker processes running commands.
-    Workers will be called until all lines from the input file are processed.
-
-    Parameters
-    ----------
-    p : int
-        The number of parallel processes.
-    command :  function
-        Function returning the command-line string to pass the worker.
-    input_file : str
-        Tab-separated .txt file.
-
-    Returns
-    -------
-    None
-    
-    """
-
-    # FS args are parsed from the input files
-    # and formatted into recon/edit/recon_edit command-lines
-    fs_args = parse_input_file(input_file) 
-    cmd_lines = [command(args) for args in fs_args] 
-
-    with mp.Pool(p) as pool:
-        res = pool.map_async(worker, cmd_lines) # Pass the command to the worker which will invoke a subprocess
-        print(res.get())
-
-def run_command(args):
-    """
-    Pass the appropriate command function to the worker handler.
+    Pass the appropriate command function to the worker.
 
     Parameters
     ----------
@@ -212,19 +96,41 @@ def run_command(args):
     
     """
 
-    if args.command == "recon":
-        # QUICKFIX: use GNU parallel. The original code with multiprocessing is crashing.
-        cmd=f"parallel --tmpdir tmpdir/ --lb -j {args.parallel} --colsep '\t' recon-all -all -s {{1}} -i {{2}} :::: {args.input}"
+    if args.command == "recon_all":
+        cmd=f"parallel --tmpdir tmpdir/ --lb -j {args.parallel} --header : recon-all -all -s {{id}} -i {{dcm_path}} :::: {args.input}"
         worker(cmd)
-        #handle_workers(p=args.parallel, command=recon, input_file=args.input)
-    if args.command == "segment_hip_amg":
-        # QUICKFIX: use GNU parallel. The original code with multiprocessing is crashing.
-        cmd=f"parallel --tmpdir tmpdir/ --lb -j {args.parallel} --colsep '\t' segmentHA_T1.sh {{1}} :::: {args.input}"
+        
+    if args.command == "recon_base":
+        cmd=f"parallel --tmpdir tmpdir/ --lb -j {args.parallel} --colsep '\t' {{1}} :::: {args.input}"
         worker(cmd)
-    if args.command == "edit":
-        handle_workers(p=args.parallel, command=edit, input_file=args.input)
+    
+    if args.command == "recon_long":
+        cmd=f"parallel --tmpdir tmpdir/ --lb -j {args.parallel} --colsep '\t' {{1}} :::: {args.input}"
+        worker(cmd)
+        
+    if args.command == "segment_HA":
+        cmd=f"parallel --tmpdir tmpdir/ --lb -j {args.parallel} --header : segmentHA_T1.sh {{id}} :::: {args.input}"
+        worker(cmd)
+    
+    if args.command == "segment_HA_long":
+        subjects = pd.read_csv(args.input, sep='\t', usecols=['subject'])['subject'].unique()
+        subjects_str = ' '.join(subjects)
+        cmd=f"parallel --tmpdir tmpdir/ --lb -j {args.parallel} segmentHA_T1_long.sh ::: {subjects_str}"
+        worker(cmd)
+        
+    if args.command == "edit":  
+        cmd=f"parallel --tmpdir tmpdir/ --lb -j {args.parallel} --header : mri_gcut -110 -T {{ratio}} -mult $SUBJECTS_DIR/{{id}}/mri/brainmask.auto.mgz $SUBJECTS_DIR/{{id}}/mri/T1.mgz $SUBJECTS_DIR/{{id}}/mri/brainmask.tmp{{ratio}}.mgz $SUBJECTS_DIR/{{id}}/mri/brainmask.gcutsT{{ratio}}.mgz :::: {args.input}"
+        worker(cmd)
+        cmd=f"parallel --tmpdir tmpdir/ --lb -j {args.parallel} --header : mri_binarize --i $SUBJECTS_DIR/{{id}}/mri/brainmask.gcutsT{{ratio}}.mgz --o $SUBJECTS_DIR/{{id}}/mri/brainmask.gcutsT{{ratio}}.mgz --binval 999 --min 1 :::: {args.input}"
+        worker(cmd)
+        
     if args.command == "recon_edit":
-        handle_workers(p=args.parallel, command=recon_edit, input_file=args.input)
+        cmd=f"parallel --tmpdir tmpdir/ --lb -j {args.parallel} --header : cp $SUBJECTS_DIR/{{id}}/mri/brainmask.tmp{{ratio}}.mgz $SUBJECTS_DIR/{{id}}/mri/brainmask.auto.mgz :::: {args.input}"
+        worker(cmd)
+        cmd=f"parallel --tmpdir tmpdir/ --lb -j {args.parallel} --header : cp $SUBJECTS_DIR/{{id}}/mri/brainmask.tmp{{ratio}}.mgz $SUBJECTS_DIR/{{id}}/mri/brainmask.mgz :::: {args.input}"
+        worker(cmd)
+        cmd=f"parallel --tmpdir tmpdir/ --lb -j {args.parallel} --header : recon-all -autorecon2-wm -autorecon3 -s {{id}} :::: {args.input}"
+        worker(cmd)
 
 if __name__ == '__main__':
     args = argument_parser(sys.argv[1:])
