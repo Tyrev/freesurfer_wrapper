@@ -3,4 +3,4 @@ __pycache__
 license.txt
 .vscode
 recon*_input.txt
-tmpdir/
+freesurfer-linux-centos7_x86_64-dev.tar.gz
